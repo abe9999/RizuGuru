@@ -8,7 +8,7 @@
 <script>
 export default {
   props: {
-    imageUrl: String,
+    imageUrl: Number,
   },
 };
 </script>

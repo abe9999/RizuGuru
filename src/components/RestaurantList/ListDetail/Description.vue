@@ -3,9 +3,9 @@
     <div class="item-detail">
       <p class="restaurant-name">{{ restaurantData.name }}</p>
       <div class="restaurant-detail">
-        <p class="restaurant-description" v-if="restaurantData.distance < 20000">現在地から{{ restaurantData.distance }}m</p>
-        <p class="restaurant-description">{{ restaurantData.category.join(' ／ ') }}</p>
-        <p class="restaurant-description">休：{{ restaurantData.regular_holiday }}</p>
+        <p class="restaurant-description" v-if="restaurantData.distance < 20000">現在地から{{ distance }}</p>
+        <p class="restaurant-description">{{ genre }}</p>
+        <p class="restaurant-description">休：{{ restaurantData.regularHoliday }}</p>
         <tags :tags="tags" />
       </div>
     </div>
@@ -15,12 +15,33 @@
 <script>
 import Tags from "@/components/RestaurantList/ListDetail/Tags.vue";
 export default {
+  data() {
+    return {
+      genre: "",
+    };
+  },
   components: {
     Tags,
   },
   props: {
     restaurantData: Object,
     tags: Array,
+  },
+  mounted() {
+    var genres = [];
+    this.restaurantData.restaurantToGenre.forEach((data) =>
+      genres.push(data.genre.name)
+    );
+    this.genre = genres.join(" ／ ");
+  },
+  computed: {
+    distance() {
+      if (this.restaurantData.distance >= 1000) {
+        return (this.restaurantData.distance / 1000).toFixed(1) + "km";
+      } else {
+        return this.restaurantData.distance + "m";
+      }
+    },
   },
 };
 </script>

@@ -1,7 +1,6 @@
 <template>
   <router-link :to="`/Restaurant/Detail/${restaurantData.id}`" tag="div" class="item">
     <b-row>
-      <!-- <ImageBox :imageUrl="restaurantData.image" /> -->
       <ImageBox :imageUrl="restaurantData.id" />
       <Description :restaurantData="restaurantData" :tags="tags" />
     </b-row>
@@ -25,14 +24,9 @@ export default {
     restaurantData: Object,
   },
   mounted() {
-    this.$axios
-      .get(`https://rizugurufunctions.azurewebsites.net/api/GetTag/${this.restaurantData.id}`)
-      .then((res) => {
-        this.tags = res.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    this.restaurantData.restaurantToTag.forEach(data => {
+      this.tags.push(data.tag.tagContent);
+    });
   },
 };
 </script>

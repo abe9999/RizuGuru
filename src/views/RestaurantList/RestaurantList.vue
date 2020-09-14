@@ -3,7 +3,7 @@
     <SearchBar />
     <hr />
     <ListCounter :countValue="restaurantCount" />
-    <div v-for="(data, index) in restaurantDatas" :key="index">
+    <div v-for="(data, index) in restaurantData" :key="index">
       <b-container class="d-flex justify-content-center" fluid>
         <ListDetail :restaurantData="data" />
       </b-container>
@@ -22,7 +22,7 @@ export default {
   data() {
     return {
       restaurantCount: Number,
-      restaurantDatas: Object,
+      restaurantData: Object,
       statesData: Object,
       currentLat: 0,
       currentLng: 0,
@@ -80,17 +80,17 @@ export default {
     this.keyword = this.$store.getters["Search/states"].keyword;
 
     this.$axios
-      .get("https://rizugurufunctions.azurewebsites.net/api/GetDetailAll")
+      .get("http://localhost:7071/api/GetAllDetailForList")
       .then((res) => {
-        this.restaurantDatas = res.data;
-        for (var i = 0; i < this.restaurantDatas.length; i++) {
+        this.restaurantData = res.data;
+        for (var i = 0; i < this.restaurantData.length; i++) {
           this.restaurantsPos[i] = {
-            id: this.restaurantDatas[i].id,
-            lat: this.restaurantDatas[i].latitude,
-            lng: this.restaurantDatas[i].longitude,
+            id: this.restaurantData[i].id,
+            lat: this.restaurantData[i].latitude,
+            lng: this.restaurantData[i].longitude,
           };
         }
-        for (var j = 0; j < this.restaurantDatas.length; j++) {
+        for (var j = 0; j < this.restaurantData.length; j++) {
           var distance = this.geoDistance(
             this.currentLat,
             this.currentLng,
@@ -98,12 +98,12 @@ export default {
             this.restaurantsPos[j].lng,
             0
           );
-          this.restaurantDatas[j].distance = distance;
+          this.restaurantData[j].distance = distance;
         }
 
         // 検索条件が入力されていた場合の処理
         if (this.keyword != "") {
-          this.restaurantDatas = Enumerable.from(this.restaurantDatas)
+          this.restaurantData = Enumerable.from(this.restaurantData)
             .where(
               (x) =>
                 x.name.includes(this.keyword) == true ||
@@ -112,20 +112,20 @@ export default {
             )
             .toArray();
         } else {
-          this.restaurantDatas = Enumerable.from(this.restaurantDatas)
+          this.restaurantData = Enumerable.from(this.restaurantData)
             .orderBy((x) => x.distance)
             .toArray();
         }
 
         // 絞り込みを行っていた場合の処理
         if (this.statesData.isFiltered) {
-          this.restaurantDatas = Enumerable.from(this.restaurantDatas)
+          this.restaurantData = Enumerable.from(this.restaurantData)
             .where((x) => x.distance <= this.statesData.distance.value)
             .toArray();
         }
 
         // 検索結果件数の取得処理
-        this.restaurantCount = this.restaurantDatas.length;
+        this.restaurantCount = this.restaurantData.length;
       })
       .catch((err) => {
         console.log(err);
