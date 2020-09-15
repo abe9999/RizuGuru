@@ -9,7 +9,7 @@
 export default {
   data() {
     return {
-      url: `https://strizuguru.blob.core.windows.net/image/RestaurantList/${this.imageUrl}-1.jpg`,
+      url: `https://strizuguru.blob.core.windows.net/images/RestaurantList/${this.imageUrl}-1.jpg`,
     };
   },
   props: {
