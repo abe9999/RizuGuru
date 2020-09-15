@@ -14,12 +14,6 @@
       </button>
     </div>
     <div class="search">
-      <!-- <p>
-        <input type="search" v-model="setKeyword" placeholder="駅名やジャンルから検索" class="search-input" />
-        <button>
-          <router-link to="/RestaurantList/Search/">検索</router-link>
-        </button>
-      </p>-->
       <b-input-group size="sm" class="mb-2">
         <b-form-input type="search" v-model="setKeyword" placeholder="駅名やジャンルから検索"></b-form-input>
         <b-input-group-prepend is-text>
