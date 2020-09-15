@@ -2,10 +2,13 @@
   <div class="list-wrapper">
     <SearchBar />
     <hr />
-    <ListCounter :countValue="restaurantCount" />
+    <ListCounter :countValue="restaurantCount" v-show="!loading" />
+    <b-container class="d-flex justify-content-center" fluid>
+      <img class="loading" src="@/assets/images/loading.gif" v-show="loading" />
+    </b-container>
     <div v-for="(data, index) in restaurantData" :key="index">
       <b-container class="d-flex justify-content-center" fluid>
-        <ListDetail :restaurantData="data" />
+        <ListDetail :restaurantData="data" v-show="!loading" />
       </b-container>
       <hr />
     </div>
@@ -28,6 +31,7 @@ export default {
       currentLng: 0,
       restaurantsPos: [],
       keyword: "",
+      loading: true,
     };
   },
   components: {
@@ -83,6 +87,7 @@ export default {
       .get("https://func-rizuguru.azurewebsites.net/api/GetAllDetail")
       .then((res) => {
         this.restaurantData = res.data;
+        this.loading = false;
         for (var i = 0; i < this.restaurantData.length; i++) {
           this.restaurantsPos[i] = {
             id: this.restaurantData[i].id,
@@ -135,4 +140,8 @@ export default {
 </script>
 
 <style scoped>
+.loading {
+  width: 10%;
+  margin: 10%;
+}
 </style>
