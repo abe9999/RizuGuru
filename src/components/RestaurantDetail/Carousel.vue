@@ -18,7 +18,7 @@
       <b-carousel-slide
         v-for="(imgPath, index) in imgPaths"
         :key="index"
-        v-bind:img-src="require(`@/assets/images/RestaurantDetail/${routeId}-${imgPath}.jpg`)"
+        v-bind:img-src="`https://strizuguru.blob.core.windows.net/image/RestaurantDetail/${routeId}-${imgPath}.jpg`"
       ></b-carousel-slide>
     </b-carousel>
   </div>
