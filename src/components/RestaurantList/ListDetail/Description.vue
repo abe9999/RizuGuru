@@ -3,7 +3,7 @@
     <div class="item-detail">
       <p class="restaurant-name">{{ restaurantData.name }}</p>
       <div class="restaurant-detail">
-        <p class="restaurant-description" v-if="restaurantData.distance < 20000">現在地から{{ distance }}</p>
+        <p class="restaurant-description">現在地から{{ distance }}</p>
         <p class="restaurant-description">{{ genre }}</p>
         <p class="restaurant-description">休：{{ restaurantData.regularHoliday }}</p>
         <tags :tags="tags" />

@@ -9,7 +9,7 @@
 
 <script>
 import Category from "@/components/RestaurantDetail/CategoryName.vue";
-import axios from "axios";
+// import axios from "axios";
 
 export default {
   /* eslint-disable */
@@ -32,29 +32,48 @@ export default {
       var map;
       var marker;
 
-      axios
-        .get(`https://rizugurufunctions.azurewebsites.net/api/GetDetail/${this.$route.params.id}`)
-        .then((res) => {
-          map = new google.maps.Map(document.getElementById("map"), {
-            gestureHandling: "greedy",
-            center: new google.maps.LatLng(
-              res.data.latitude,
-              res.data.longitude
-            ),
-            zoom: 16,
-          });
+      // axios
+      //   .get(`https://func-rizuguru.azurewebsites.net/api/GetDetail?id=${this.$route.params.id}`)
+      //   .then((res) => {
+      //     map = new google.maps.Map(document.getElementById("map"), {
+      //       gestureHandling: "greedy",
+      //       center: new google.maps.LatLng(
+      //         res.data.latitude,
+      //         res.data.longitude
+      //       ),
+      //       zoom: 16,
+      //     });
 
-          marker = new google.maps.Marker({
-            position: new google.maps.LatLng(
-              res.data.latitude,
-              res.data.longitude
-            ),
-            map: map,
-          });
-        })
-        .catch((err) => {
-          console.log(err);
+      //     marker = new google.maps.Marker({
+      //       position: new google.maps.LatLng(
+      //         res.data.latitude,
+      //         res.data.longitude
+      //       ),
+      //       map: map,
+      //     });
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
+
+      setTimeout(() => {
+        map = new google.maps.Map(document.getElementById("map"), {
+          gestureHandling: "greedy",
+          center: new google.maps.LatLng(
+            this.detail.latitude,
+            this.detail.longitude
+          ),
+          zoom: 16,
         });
+
+        marker = new google.maps.Marker({
+          position: new google.maps.LatLng(
+            this.detail.latitude,
+            this.detail.longitude
+          ),
+          map: map,
+        });
+      }, 500);
     },
   },
   created() {

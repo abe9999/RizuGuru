@@ -4,7 +4,6 @@
     <hr />
     <div class="menu-list">
       <table class="menu-list-tbl">
-        <!-- <tr v-for="(menu, index) in MenuItems" :key="index"> -->
           <tr v-for="(menu, index) in menus" :key="index">
           <td>{{ menu.name }}</td>
           <td>{{ menu.price }}円</td>
@@ -47,8 +46,7 @@ export default {
   },
   mounted: function () {
     this.$axios
-      // .get(`https://rizugurufunctions.azurewebsites.net/api/GetMenuList/${this.$route.params.id}`)
-      .get(`http://localhost:7071/api/GetMenu?id=${this.$route.params.id}`)
+      .get(`https://func-rizuguru.azurewebsites.net/api/GetMenu?id=${this.$route.params.id}`)
       .then((res) => (this.menus = res.data))
       .catch((err) => {
         console.log(err);

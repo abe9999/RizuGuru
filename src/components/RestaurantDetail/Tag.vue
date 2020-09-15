@@ -2,7 +2,7 @@
   <div class="tag">
     <Category category="サービス・特徴" />
     <hr />
-    <p v-for="(tag, index) in tags" :key="index" class="tags">{{ tag }}</p>
+    <p v-for="(data, index) in detail.restaurantToTag" :key="index" class="tags">{{ data.tag.tagContent }}</p>
     <hr />
   </div>
 </template>
@@ -13,22 +13,14 @@ import Category from "@/components/RestaurantDetail/CategoryName.vue";
 export default {
   data() {
     return {
-      tagIds: [],
       tags: [],
     };
   },
   components: {
     Category,
   },
-  mounted: function () {
-    this.$axios
-      .get(`https://rizugurufunctions.azurewebsites.net/api/GetTag/${this.$route.params.id}`)
-      .then((res) => {
-        this.tags = res.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  props: {
+    detail: Object,
   },
 };
 </script>

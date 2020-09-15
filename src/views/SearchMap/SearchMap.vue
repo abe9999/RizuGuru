@@ -47,7 +47,9 @@ export default {
             });
 
             axios
-              .get("https://rizugurufunctions.azurewebsites.net/api/GetDetailAll")
+              .get(
+                "https://func-rizuguru.azurewebsites.net/api/GetAllDetail"
+              )
               .then((res) => {
                 for (var i = 0; i < res.data.length; i++) {
                   markers[i] = new google.maps.Marker({

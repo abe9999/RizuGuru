@@ -1,9 +1,9 @@
 <template>
-  <div class="link" v-if="detail.links">
+  <div class="link" v-if="detail.link">
     <Category category="ホームページ・SNS" />
     <hr />
-    <a v-for="(link, index) in detail.links" :href="link.url" :key="index" target="_blank">
-      <img :src="require(`@/assets/images/RestaurantDetail/${link.icon}`)" class="icon" />
+    <a v-for="(link, index) in detail.link" :href="link.url" :key="index" target="_blank">
+      <img :src="require(`@/assets/images/RestaurantDetail/${link.linkGenre.path}`)" class="icon" />
     </a>
     <hr />
   </div>
@@ -16,22 +16,9 @@ export default {
   props: {
     detail: Object,
   },
-  data() {
-    return {
-      // links: [],
-    };
-  },
   components: {
     Category,
   },
-  // mounted: function () {
-  //   this.$axios
-  //     .get(`http://localhost:8080/api/RestaurantLink/${this.$route.params.id}`)
-  //     .then((res) => (this.links = res.data))
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // },
 };
 </script>
 

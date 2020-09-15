@@ -8,7 +8,7 @@
         <Link :detail="detail" />
         <Access :detail="detail" />
         <Payment :detail="detail" />
-        <Tag />
+        <Tag :detail="detail" />
       </b-tab>
       <b-tab title="メニュー">
         <MenuList :detail="detail" />
@@ -48,11 +48,10 @@ export default {
     Tag,
     Map,
   },
-  mounted: function () {
+  mounted() {
     this.$axios
       .get(
-        // `https://rizugurufunctions.azurewebsites.net/api/GetDetail/${this.$route.params.id}`
-        // `http://localhost:7071/api/GetDetail?id=${this.$route.params.id}`
+        `https://func-rizuguru.azurewebsites.net/api/GetDetail?id=${this.$route.params.id}`
       )
       .then((res) => (this.detail = res.data))
       .catch((err) => {

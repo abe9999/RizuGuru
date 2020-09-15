@@ -80,7 +80,7 @@ export default {
     this.keyword = this.$store.getters["Search/states"].keyword;
 
     this.$axios
-      .get("http://localhost:7071/api/GetAllDetailForList")
+      .get("https://func-rizuguru.azurewebsites.net/api/GetAllDetail")
       .then((res) => {
         this.restaurantData = res.data;
         for (var i = 0; i < this.restaurantData.length; i++) {
