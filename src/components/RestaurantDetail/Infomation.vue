@@ -1,5 +1,5 @@
 <template>
-  <div class="info" >
+  <div class="info">
     <Category category="店舗情報" />
     <hr />
     <table class="info-tbl">
@@ -31,9 +31,9 @@ import Category from "@/components/RestaurantDetail/CategoryName.vue";
 
 export default {
   props: {
-    detail: Object
+    detail: Object,
   },
-    components: {
+  components: {
     Category,
   },
 };

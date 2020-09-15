@@ -9,12 +9,12 @@
       <p>リーズナブルなグルメアプリ</p>
     </div>
     <div class="button">
-      <button>
-        <router-link to="/RestaurantList/CurrentLocation">現在地から探す</router-link>
-      </button>
+      <router-link to="/RestaurantList/CurrentLocation">
+        <b-button variant="success">現在地から探す</b-button>
+      </router-link>
     </div>
     <div class="search">
-      <b-input-group size="sm" class="mb-2">
+      <b-input-group class="mb-2">
         <b-form-input type="search" v-model="setKeyword" placeholder="駅名やジャンルから検索"></b-form-input>
         <b-input-group-prepend is-text>
           <router-link to="/RestaurantList/Search/" class="icon">
