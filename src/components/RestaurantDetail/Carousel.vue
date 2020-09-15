@@ -11,10 +11,6 @@
       @sliding-start="onSlideStart"
       @sliding-end="onSlideEnd"
     >
-      <!-- <b-carousel-slide
-        v-for="(imgPath, index) in imgPaths"
-        :key="index"
-      v-bind:img-src="require(`@/assets/images/RestaurantDetail/${imgPath.image_path}`)"-->
       <b-carousel-slide
         v-for="(imgPath, index) in imgPaths"
         :key="index"
@@ -42,14 +38,6 @@ export default {
       this.sliding = false;
     },
   },
-  // mounted: function () {
-  //   this.$axios
-  //     .get(`http://localhost:8080/api/RestaurantImage/${this.$route.params.id}`)
-  //     .then((res) => (this.imgPaths = res.data))
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // },
 };
 </script>
 

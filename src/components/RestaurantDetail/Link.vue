@@ -1,5 +1,5 @@
 <template>
-  <div class="link" v-if="detail.link">
+  <div class="link" v-if="detail.link && detail.link.length > 0">
     <Category category="ホームページ・SNS" />
     <hr />
     <a v-for="(link, index) in detail.link" :href="link.url" :key="index" target="_blank">

@@ -112,8 +112,10 @@ export default {
             .where(
               (x) =>
                 x.name.includes(this.keyword) == true ||
-                x.category.includes(this.keyword) == true ||
-                x.access.find((x) => x.includes(this.keyword)) != undefined
+                x.restaurantToGenre.find((x) =>
+                  x.genre.name.includes(this.keyword)
+                ) != undefined ||
+                x.access.includes(this.keyword) == true
             )
             .toArray();
         } else {
