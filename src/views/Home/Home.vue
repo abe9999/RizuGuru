@@ -9,17 +9,18 @@
       <p>リーズナブルなグルメアプリ</p>
     </div>
     <div class="button">
-      <router-link to="/RestaurantList/CurrentLocation">
-        <b-button variant="success">現在地から探す</b-button>
-      </router-link>
+      <b-button variant="success" @click="search()">現在地から探す</b-button>
     </div>
     <div class="search">
       <b-input-group class="mb-2">
-        <b-form-input type="search" v-model="setKeyword" placeholder="駅名やジャンルから検索"></b-form-input>
-        <b-input-group-prepend is-text>
-          <router-link to="/RestaurantList/Search/" class="icon">
-            <b-icon icon="search"></b-icon>
-          </router-link>
+        <b-form-input
+          type="search"
+          v-model="setKeyword"
+          placeholder="駅名やジャンルから検索"
+          @keydown.enter="search()"
+        />
+        <b-input-group-prepend is-text class="icon" @click="search()">
+          <b-icon icon="search"></b-icon>
         </b-input-group-prepend>
       </b-input-group>
     </div>
@@ -37,7 +38,7 @@ export default {
       keyword: "",
     };
   },
-  mounted: function () {
+  mounted() {
     if (navigator.geolocation) {
       // 現在地の取得
       navigator.geolocation.getCurrentPosition(
@@ -67,6 +68,11 @@ export default {
       },
     },
   },
+  methods: {
+    search() {
+      this.$router.push("/RestaurantList");
+    },
+  },
 };
 </script>
 
@@ -94,5 +100,6 @@ export default {
 
 .icon {
   color: gray;
+  cursor: pointer;
 }
 </style>
