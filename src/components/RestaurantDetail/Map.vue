@@ -73,7 +73,7 @@ export default {
           ),
           map: map,
         });
-      }, 500);
+      }, 1000);
     },
   },
   created() {

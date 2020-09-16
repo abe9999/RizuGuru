@@ -27,9 +27,6 @@ export default {
       restaurantCount: Number,
       restaurantData: Object,
       statesData: Object,
-      currentLat: 0,
-      currentLng: 0,
-      restaurantsPos: [],
       keyword: "",
       loading: true,
     };
@@ -79,50 +76,47 @@ export default {
   mounted() {
     this.statesData = this.$store.getters["Filtering/states"];
     var currentPos = this.$store.getters["Location/states"];
-    this.currentLat = currentPos.lat;
-    this.currentLng = currentPos.lng;
     this.keyword = this.$store.getters["Search/states"].keyword;
 
     this.$axios
-      .get("https://func-rizuguru.azurewebsites.net/api/GetAllDetail")
+      .get(
+        `https://func-rizuguru.azurewebsites.net/api/GetAllDetail?word=${this.keyword}`
+      )
       .then((res) => {
         this.restaurantData = res.data;
         this.loading = false;
         for (var i = 0; i < this.restaurantData.length; i++) {
-          this.restaurantsPos[i] = {
-            id: this.restaurantData[i].id,
-            lat: this.restaurantData[i].latitude,
-            lng: this.restaurantData[i].longitude,
-          };
-        }
-        for (var j = 0; j < this.restaurantData.length; j++) {
           var distance = this.geoDistance(
-            this.currentLat,
-            this.currentLng,
-            this.restaurantsPos[j].lat,
-            this.restaurantsPos[j].lng,
+            currentPos.lat,
+            currentPos.lng,
+            this.restaurantData[i].latitude,
+            this.restaurantData[i].longitude,
             0
           );
-          this.restaurantData[j].distance = distance;
+          this.restaurantData[i].distance = distance;
         }
 
+        this.restaurantData = Enumerable.from(this.restaurantData)
+          .orderBy((x) => x.distance)
+          .toArray();
+
         // 検索条件が入力されていた場合の処理
-        if (this.keyword != "") {
-          this.restaurantData = Enumerable.from(this.restaurantData)
-            .where(
-              (x) =>
-                x.name.includes(this.keyword) == true ||
-                x.restaurantToGenre.find((x) =>
-                  x.genre.name.includes(this.keyword)
-                ) != undefined ||
-                x.access.includes(this.keyword) == true
-            )
-            .toArray();
-        } else {
-          this.restaurantData = Enumerable.from(this.restaurantData)
-            .orderBy((x) => x.distance)
-            .toArray();
-        }
+        // if (this.keyword != "") {
+        //   this.restaurantData = Enumerable.from(this.restaurantData)
+        //     .where(
+        //       (x) =>
+        //         x.name.includes(this.keyword) == true ||
+        //         x.restaurantToGenre.find((x) =>
+        //           x.genre.name.includes(this.keyword)
+        //         ) != undefined ||
+        //         x.access.includes(this.keyword) == true
+        //     )
+        //     .toArray();
+        // } else {
+        //   this.restaurantData = Enumerable.from(this.restaurantData)
+        //     .orderBy((x) => x.distance)
+        //     .toArray();
+        // }
 
         // 絞り込みを行っていた場合の処理
         if (this.statesData.isFiltered) {
