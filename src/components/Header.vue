@@ -8,7 +8,7 @@
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
       <b-collapse id="nav-collapse" is-nav>
-        <b-navbar-nav>
+        <!-- <b-navbar-nav>
           <b-nav-item>
             <router-link to="/" class="nav-link text-light">Home</router-link>
           </b-nav-item>
@@ -27,7 +27,7 @@
           <b-nav-item>
             <router-link to="/Login" class="nav-link text-light">ログイン</router-link>
           </b-nav-item>
-        </b-navbar-nav>
+        </b-navbar-nav> -->
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto"></b-navbar-nav>
       </b-collapse>

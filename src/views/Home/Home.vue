@@ -15,7 +15,12 @@
     </div>
     <div class="search">
       <b-input-group class="mb-2">
-        <b-form-input type="search" v-model="setKeyword" placeholder="駅名やジャンルから検索"></b-form-input>
+        <b-form-input
+          type="search"
+          v-model="setKeyword"
+          @keydown.enter="search"
+          placeholder="駅名やジャンルから検索"
+        ></b-form-input>
         <b-input-group-prepend is-text>
           <router-link to="/RestaurantList/Search/" class="icon">
             <b-icon icon="search"></b-icon>
@@ -65,6 +70,12 @@ export default {
       set(value) {
         this.$store.dispatch("Search/setKeyword", value);
       },
+    },
+  },
+  methods: {
+    search: (event) => {
+      if (event.keyCode !== 13) return;
+      window.location.href = "/#/RestaurantList/Search/"
     },
   },
 };
