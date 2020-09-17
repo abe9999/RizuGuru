@@ -1,8 +1,8 @@
 <template>
-  <b-col class="image-box">
-    <!-- <img :src="require(`@/assets/images/RestaurantList/${imageUrl}`)"> -->
-    <img :src="this.url" />
-  </b-col>
+    <b-col cols="12" md="4" class="image-box">
+      <!-- <img :src="require(`@/assets/images/RestaurantList/${imageUrl}`)"> -->
+      <img :src="this.url" />
+    </b-col>
 </template>
 
 <script>
@@ -21,15 +21,21 @@ export default {
 <style scoped>
 .image-box {
   text-align: center;
+  width: 100%;
+  margin: auto 0;
 }
 
 .image-box img {
-  width: 50%;
+  width: 80%;
 }
 
 @media (max-width: 560px) {
+  .image-box {
+    margin: 0 auto;
+  }
+
   .image-box img {
-    width: 100%;
+    width: 50%;
   }
 }
 </style>

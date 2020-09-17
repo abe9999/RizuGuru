@@ -24,7 +24,7 @@ export default {
     restaurantData: Object,
   },
   mounted() {
-    this.restaurantData.restaurantToTag.forEach(data => {
+    this.restaurantData.restaurantToTag.forEach((data) => {
       this.tags.push(data.tag.tagContent);
     });
   },
@@ -53,7 +53,6 @@ a {
   .item {
     width: 100%;
     margin: 0 auto;
-    margin-right: -10px;
   }
 }
 </style>

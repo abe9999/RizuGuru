@@ -126,6 +126,11 @@ export default {
 </script>
 
 <style scoped>
+.list-wrapper {
+  width: 90%;
+  margin: 0 auto;
+}
+
 .loading {
   width: 10%;
   margin: 10%;

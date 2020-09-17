@@ -1,12 +1,14 @@
 <template>
-  <b-col>
-    <div class="item-detail">
-      <p class="restaurant-name">{{ restaurantData.name }}</p>
-      <div class="restaurant-detail">
-        <p class="restaurant-description">現在地から{{ distance }}</p>
-        <p class="restaurant-description">{{ genre }}</p>
-        <p class="restaurant-description">休：{{ restaurantData.regularHoliday }}</p>
-        <tags :tags="tags" />
+  <b-col cols="12" md="8">
+    <div class="item-detail-wrapper">
+      <div class="item-detail">
+        <p class="restaurant-name">{{ restaurantData.name }}</p>
+        <div class="restaurant-detail">
+          <p class="restaurant-description">現在地から{{ distance }}</p>
+          <p class="restaurant-description">{{ genre }}</p>
+          <p class="restaurant-description">休：{{ restaurantData.regularHoliday }}</p>
+          <tags :tags="tags" />
+        </div>
       </div>
     </div>
   </b-col>
@@ -48,6 +50,7 @@ export default {
 
 <style scoped>
 .item-detail {
+  margin-left: 20px;
   flex: auto;
 }
 
@@ -64,9 +67,15 @@ export default {
 }
 
 @media (max-width: 560px) {
+  .item-detail-wrapper {
+    width: 100%;
+    margin-top: 10px;
+  }
+
   .restaurant-name {
     font-size: medium;
     font-weight: bold;
+    margin-bottom: 0px;
   }
 
   .restaurant-detail {
@@ -75,6 +84,7 @@ export default {
 
   .restaurant-description {
     font-size: small;
+    margin-bottom: 0px;
   }
 }
 </style>

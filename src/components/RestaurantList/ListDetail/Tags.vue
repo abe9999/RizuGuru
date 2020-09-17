@@ -27,7 +27,7 @@ export default {
 
 @media (max-width: 560px) {
   .tags p {
-    font-size: 5px;
+    font-size: 10px;
     font-weight: bold;
   }
 }
