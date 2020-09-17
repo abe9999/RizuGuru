@@ -11,11 +11,6 @@
 import Category from "@/components/RestaurantDetail/CategoryName.vue";
 
 export default {
-  data() {
-    return {
-      tags: [],
-    };
-  },
   components: {
     Category,
   },

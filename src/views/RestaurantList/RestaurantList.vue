@@ -100,26 +100,16 @@ export default {
           .orderBy((x) => x.distance)
           .toArray();
 
-        // 検索条件が入力されていた場合の処理
-        // if (this.keyword != "") {
-        //   this.restaurantData = Enumerable.from(this.restaurantData)
-        //     .where(
-        //       (x) =>
-        //         x.name.includes(this.keyword) == true ||
-        //         x.restaurantToGenre.find((x) =>
-        //           x.genre.name.includes(this.keyword)
-        //         ) != undefined ||
-        //         x.access.includes(this.keyword) == true
-        //     )
-        //     .toArray();
-        // } else {
-        //   this.restaurantData = Enumerable.from(this.restaurantData)
-        //     .orderBy((x) => x.distance)
-        //     .toArray();
-        // }
-
         // 絞り込みを行っていた場合の処理
         if (this.statesData.isFiltered) {
+          this.$axios
+            .get(
+              `https://func-rizuguru.azurewebsites.net/api/Filtering?word=${this.keyword}&station=${this.statesData.station}&genre=${this.statesData.genre}&minPrice=${this.statesData.budget.value[0]}&maxPrice=${this.statesData.budget.value[1]}&tagId=`
+            )
+            .then((res) => (this.restaurantData = res.data))
+            .catch((err) => {
+              console.log(err);
+            });
           this.restaurantData = Enumerable.from(this.restaurantData)
             .where((x) => x.distance <= this.statesData.distance.value)
             .toArray();

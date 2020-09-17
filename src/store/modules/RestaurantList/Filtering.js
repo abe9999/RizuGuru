@@ -3,7 +3,7 @@ const Filtering = {
   state: {
     isFiltered: false,
     station: "",
-    category: "",
+    genre: "",
     distance: {
       value: 700,
     },
@@ -26,8 +26,8 @@ const Filtering = {
     setStationKeyword(state, keyword) {
       state.station = keyword;
     },
-    setCategoryKeyword(state, keyword) {
-      state.category = keyword;
+    setGenreKeyword(state, keyword) {
+      state.genre = keyword;
     },
     setDistance(state, value) {
       state.distance.value = value;
@@ -49,8 +49,8 @@ const Filtering = {
         case "station":
           context.commit("setStationKeyword", keyword);
           break;
-        case "category":
-          context.commit("setCategoryKeyword", keyword);
+        case "genre":
+          context.commit("setGenreKeyword", keyword);
           break;
       }
     },

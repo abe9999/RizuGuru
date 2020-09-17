@@ -124,9 +124,6 @@ export default {
     tagToggle(index) {
       this.$store.dispatch("Filtering/tagToggle", index);
     },
-    filtered() {
-      // this.$store.dispatch("Filtering/filtered");
-    },
   },
   computed: {
     // ストアの読み込み
