@@ -132,7 +132,11 @@ export default {
 }
 
 .loading {
-  width: 10%;
-  margin: 10%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150px;
+  height: 150px;
 }
 </style>

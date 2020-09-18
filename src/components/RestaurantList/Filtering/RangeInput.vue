@@ -12,7 +12,10 @@
             ref="slider"
             v-model="rangeSlider"
             v-bind="options"
-            :tooltip="'active'"
+            :tooltip="'always'"
+            :tooltip-placement="'top'"
+            :marks="true"
+            :hide-label="true"
             :use-keyboard="false"
             :tooltip-formatter="formatter"
             number
