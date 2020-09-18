@@ -23,7 +23,6 @@
           <b-icon icon="search"></b-icon>
         </b-input-group-prepend>
       </b-input-group>
-      <input type="text" v-model="tag.content" @keydown.enter="test()" />
     </div>
   </div>
 </template>
@@ -37,9 +36,6 @@ export default {
       imgPath: require("@/assets/images/ロゴ.jpg"),
       currentLocation: {},
       keyword: "",
-      tag: {
-        content: "",
-      },
     };
   },
   mounted() {
@@ -75,11 +71,6 @@ export default {
   methods: {
     search() {
       this.$router.push("/RestaurantList");
-    },
-    test() {
-      this.$axios.post("http://localhost:7071/api/AddTag", {
-        content: this.tag.content,
-      });
     },
   },
 };
