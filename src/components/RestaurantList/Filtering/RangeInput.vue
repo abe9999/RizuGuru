@@ -106,6 +106,10 @@ input {
   vertical-align: middle;
 }
 
+.vue-slider {
+  margin-top: 20px;
+}
+
 .vue-slider-process {
   background-color: #689e39;
 }
