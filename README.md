@@ -1,4 +1,4 @@
-# router-test
+# RizuGuru
 
 ## Project setup
 ```
