@@ -8,6 +8,10 @@ import Filtering from "../views/RestaurantList/Filtering.vue";
 import RestaurantDetail from "../views/RestaurantDetail/RestaurantDetail.vue";
 import SearchMap from "../views/SearchMap/SearchMap.vue";
 import RestaurantRegistration from "../views/RestaurantRegistration/RestaurantRegistration.vue";
+import AddressToCoord from "../views/AddressToCoord.vue";
+import DistanceFromStation from "../views/DistanceFromStation.vue";
+import HomeTest from "../views/Home/HomeTest.vue";
+import MenuRegistration from "../views/MenuRegistration/MenuRegistration.vue";
 
 Vue.use(VueRouter);
 
@@ -30,14 +34,6 @@ const routes = [
     component: RestaurantList,
   },
   {
-    path: "/RestaurantList/CurrentLocation",
-    component: RestaurantList,
-  },
-  {
-    path: "/RestaurantList/Search/",
-    component: RestaurantList,
-  },
-  {
     path: "/Restaurant/Detail/:id",
     component: RestaurantDetail,
   },
@@ -53,6 +49,22 @@ const routes = [
     path: "/RestaurantList/Filtering",
     component: Filtering,
   },
+  {
+    path: "/AddressToCoord",
+    component: AddressToCoord,
+  },
+  {
+    path: "/DistanceFromStation",
+    component: DistanceFromStation,
+  },
+  {
+    path: "/HomeTest",
+    component: HomeTest,
+  },
+  {
+    path: "/Menu/Registration/:id",
+    component: MenuRegistration
+  }
 ];
 
 const router = new VueRouter({
