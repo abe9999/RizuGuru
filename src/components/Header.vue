@@ -22,7 +22,7 @@
             <router-link to="/Restaurant/Registration" class="nav-link text-light">店舗追加</router-link>
           </b-nav-item>-->
           <b-nav-item>
-            <router-link to="/RestaurantList/CurrentLocation" class="nav-link text-light">現在地から探す</router-link>
+            <router-link to="/RestaurantList" class="nav-link text-light">現在地から探す</router-link>
           </b-nav-item>
           <b-nav-item>
             <router-link to="/SearchMap" class="nav-link text-light">マップから検索</router-link>
