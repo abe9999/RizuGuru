@@ -9,7 +9,6 @@
 
 <script>
 import Category from "@/components/RestaurantDetail/CategoryName.vue";
-// import axios from "axios";
 
 export default {
   /* eslint-disable */

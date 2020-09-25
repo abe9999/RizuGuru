@@ -36,5 +36,10 @@ export default {
     Header,
     Footer,
   },
+  created() {
+    var script = document.createElement("script");
+    script.src = process.env.VUE_APP_URL;
+    document.body.appendChild(script);
+  },
 };
 </script>
