@@ -279,7 +279,62 @@ export default {
     },
     submitButtonAction() {
       // 登録処理を入れる
-
+      var genreIds = Enumerable.from(this.selectFormList)
+        .where((x) => x.value.value != null)
+        .select((x) => x.value.value)
+        .toArray();
+      var tagIds = Enumerable.from(this.tagFormList.data)
+        .where((x) => x.state == true)
+        .select((x) => x.id)
+        .toArray();
+      var linkGenreIds = [];
+      var urls = [];
+      if (this.textFormList.homePage.value != "") {
+        linkGenreIds.push(1);
+        urls.push(this.textFormList.homePage.value);
+      }
+      if (this.textFormList.twitter.value != "") {
+        linkGenreIds.push(3);
+        urls.push(this.textFormList.twitter.value);
+      }
+      if (this.textFormList.facebook.value != "") {
+        linkGenreIds.push(4);
+        urls.push(this.textFormList.facebook.value);
+      }
+      if (this.textFormList.instagram.value != "") {
+        linkGenreIds.push(5);
+        urls.push(this.textFormList.instagram.value);
+      }
+      this.$axios
+        .get(
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${this.textFormList.address.value}&components=country:JP&key=AIzaSyBoh8D4HaNFoW-IzGEm-Lsx5zqPEhdJ398`
+        )
+        .then((res) => {
+          var coord = res.data.results[0].geometry.location;
+          this.$axios.post(
+            "https://func-rizuguru.azurewebsites.net/api/AddRestaurant?",
+            {
+              Name: this.textFormList.name.value,
+              NameKana: this.textFormList.nameKana.value,
+              Address:
+                this.textFormList.address.value +
+                " " +
+                this.textFormList.buildingName.value,
+              Latitude: coord.lat,
+              Longitude: coord.lng,
+              Access: this.textFormList.access.value,
+              PhoneNumber: this.textFormList.phoneNumber.value,
+              OpeningHours: this.textFormList.openingHours.value,
+              RegularHoliday: this.textFormList.regularHoliday.value,
+              PaymentMethod: this.textFormList.paymentMethod.value,
+              GenreId: genreIds,
+              Url: urls,
+              LinkGenreId: linkGenreIds,
+              TagId: tagIds,
+            }
+          );
+        })
+        .catch((err) => alert(err));
       this.$router.push("/RestaurantRegistration/Complete");
     },
     makeToast(variant = null) {
