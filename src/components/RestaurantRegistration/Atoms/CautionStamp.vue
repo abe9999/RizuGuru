@@ -1,11 +1,15 @@
 <template>
-  <span class="caution">{{ caution }}</span>
+  <span class="caution">{{ cautionMessage }}</span>
 </template>
 
 <script>
 export default {
   props: {
-    caution: String,
+    cautionMessage: {
+      type: String,
+      required: true,
+      default: "",
+    },
   },
 };
 </script>

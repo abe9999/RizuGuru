@@ -19,7 +19,7 @@
             <router-link to="/Restaurant/Detail/1" class="nav-link text-light">店舗詳細</router-link>
           </b-nav-item>
           <b-nav-item>
-            <router-link to="/Restaurant/Registration" class="nav-link text-light">店舗追加</router-link>
+            <router-link to="/RestaurantRegistration/Registration" class="nav-link text-light">店舗追加</router-link>
           </b-nav-item>
           <b-nav-item>
             <router-link to="/SearchMap" class="nav-link text-light">マップから検索</router-link>
