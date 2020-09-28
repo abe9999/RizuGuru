@@ -24,9 +24,9 @@ import Enumerable from "linq";
 export default {
   data() {
     return {
-      restaurantCount: Number,
-      restaurantData: Object,
-      statesData: Object,
+      restaurantCount: null,
+      restaurantData: {},
+      statesData: {},
       keyword: "",
       loading: true,
     };
