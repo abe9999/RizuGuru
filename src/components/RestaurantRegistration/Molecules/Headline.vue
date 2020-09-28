@@ -1,14 +1,20 @@
 <template>
-  <h2>
-    <img src="@/assets/images/triangle.png" />
-    {{ headline }}
-  </h2>
+  <div class="wrppaer">
+    <h2>
+      <img src="@/assets/images/triangle.png" />
+      {{ headline }}
+    </h2>
+  </div>
 </template>
 
 <script>
 export default {
   props: {
-    headline: String,
+    headline: {
+      type: String,
+      required: true,
+      default: "HeadLine",
+    },
   },
 };
 </script>

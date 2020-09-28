@@ -7,8 +7,9 @@ import RestaurantList from "../views/RestaurantList/RestaurantList.vue";
 import Filtering from "../views/RestaurantList/Filtering.vue";
 import RestaurantDetail from "../views/RestaurantDetail/RestaurantDetail.vue";
 import SearchMap from "../views/SearchMap/SearchMap.vue";
-import RestaurantRegistration from "../views/RestaurantRegistration/RestaurantRegistration.vue";
 import DistanceFromStation from "../views/DistanceFromStation.vue";
+import RegistrationRegistration from "../views/RestaurantRegistration/Registration.vue";
+import RegistrationComplete from "../views/RestaurantRegistration/Complete.vue";
 
 Vue.use(VueRouter);
 
@@ -39,8 +40,12 @@ const routes = [
     component: SearchMap,
   },
   {
-    path: "/Restaurant/Registration",
-    component: RestaurantRegistration,
+    path: "/RestaurantRegistration/Registration",
+    component: RegistrationRegistration,
+  },
+  {
+    path: "/RestaurantRegistration/Complete",
+    component: RegistrationComplete,
   },
   {
     path: "/RestaurantList/Filtering",
