@@ -10,6 +10,8 @@ import SearchMap from "../views/SearchMap/SearchMap.vue";
 import DistanceFromStation from "../views/DistanceFromStation.vue";
 import RegistrationRegistration from "../views/RestaurantRegistration/Registration.vue";
 import RegistrationComplete from "../views/RestaurantRegistration/Complete.vue";
+import MenuRegistration from "../views/MenuRegistration/MenuRegistration.vue";
+import MenuRegistrationComplete from "../views/MenuRegistration/Complete.vue";
 
 Vue.use(VueRouter);
 
@@ -54,6 +56,14 @@ const routes = [
   {
     path: "/DistanceFromStation",
     component: DistanceFromStation,
+  },
+  {
+    path: "/MenuRegistration/:id",
+    component: MenuRegistration,
+  },
+  {
+    path: "/MenuRegistration/:id/Complete",
+    component: MenuRegistrationComplete,
   },
 ];
 

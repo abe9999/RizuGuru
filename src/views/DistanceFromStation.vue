@@ -1,17 +1,18 @@
 <template>
   <div>
     <input type="text" v-model="address" @keydown.enter="search()" />
-    <ul>
+    <ul v-show="!loading">
       <li v-for="(station, index) in stations" :key="index">
-        {{ station.name }}駅から{{ station.distance }}m(徒歩{{
-          station.duration
-        }})
+        {{ station.name }}駅から徒歩{{ station.duration }}({{
+          station.distance
+        }}m)
       </li>
     </ul>
   </div>
 </template>
 
 <script>
+/* eslint-disable */
 import Enumerable from "linq";
 
 export default {
@@ -20,6 +21,8 @@ export default {
       stations: [],
       address: "",
       coord: {},
+      stationNames: [],
+      loading: true,
     };
   },
   methods: {
@@ -59,6 +62,28 @@ export default {
       return distance;
     },
 
+    async fetchDistance(origin, dest) {
+      return new Promise((resolve, reject) => {
+        let response;
+        var service = new google.maps.DistanceMatrixService();
+        service.getDistanceMatrix(
+          {
+            origins: origin,
+            destinations: [dest],
+            travelMode: "WALKING",
+          },
+          function (resp, status) {
+            if (status !== google.maps.DistanceMatrixStatus.OK) {
+              response = reject(status);
+            } else {
+              response = resolve(resp);
+            }
+          }
+        );
+        return response;
+      });
+    },
+
     search() {
       this.$axios
         .get(
@@ -93,21 +118,21 @@ export default {
           } else {
             this.stations = Enumerable.from(this.stations)
               .where((x) => x.distance <= 800)
+              .take(5)
               .toArray();
           }
-        });
 
-      for (var i = 0; i < this.stations.length; i++) {
-        this.$axios
-          .get(
-            `https://maps.googleapis.com/maps/api/directions/json?origin=${this.stations[i].latitude},${this.stations[i].longitude}&destination=${this.coord.lat},${this.coord.lng}&mode=walking&key=AIzaSyBoh8D4HaNFoW-IzGEm-Lsx5zqPEhdJ398`
-          )
-          .then((res) => {
-            this.stations[i].duration =
-              res.data.routes[0].legs[0].duration.text;
-            console.log(res.data.routes[0].legs[0].duration.text);
+          for (var j = 0; j < this.stations.length; j++) {
+            this.stationNames.push("東京都 " + this.stations[j].name + "駅 | ");
+          }
+
+          this.fetchDistance(this.stationNames, this.address).then((res) => {
+            for (var i = 0; i < res.rows.length; i++) {
+              this.stations[i].duration = res.rows[i].elements[0].duration.text;
+              this.loading = false;
+            }
           });
-      }
+        });
     },
   },
 };

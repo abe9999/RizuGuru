@@ -7,7 +7,12 @@
       :state="validation"
       :placeholder="placeholder"
     />
-    <b-form-input v-else v-model="value" debounce="250" :placeholder="placeholder" />
+    <b-form-input
+      v-else
+      v-model="value"
+      debounce="250"
+      :placeholder="placeholder"
+    />
   </b-col>
 </template>
 
@@ -111,6 +116,20 @@ export default {
               state: true,
             });
             return true;
+          case "price":
+            if (value <= 1000 && value.match(/\d/)) {
+              this.validationSetter({
+                propatyName: this.propatyName,
+                state: true,
+              });
+              return true;
+            } else {
+              this.validationSetter({
+                propatyName: this.propatyName,
+                state: false,
+              });
+              return false;
+            }
           default:
             this.validationSetter({
               propatyName: this.propatyName,
