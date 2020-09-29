@@ -24,7 +24,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .wrapper {
   margin-left: 50px;
   margin-top: 20px;

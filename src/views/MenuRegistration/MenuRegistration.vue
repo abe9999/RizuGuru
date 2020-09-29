@@ -1,24 +1,44 @@
 <template>
-  <div class="wrapper">
+  <div class="menu-wrapper">
     <div v-if="!isConfirm">
       <AlertToast :alertMessage="alertMessage" />
       <Headline headline="メニュー登録" />
       <SubHead subHead="メニュー情報" />
-      <RegistrationForm
-        :textFormGetter="getValueForTextFormList"
-        :textFormSetter="setValueForTextFormList"
-        :textFormValidationStateSetter="setValidationStateForTextFormList"
-        :textFormList="textFormList"
-      />
+      <b-row>
+        <b-col cols="12" md="4">
+          <RegistrationForm
+            :textFormGetter="getValueForTextFormList"
+            :textFormSetter="setValueForTextFormList"
+            :textFormValidationStateSetter="setValidationStateForTextFormList"
+            :textFormList="textFormList"
+          />
+          <Button message="追加" :action="addButtonAction" />
+        </b-col>
+        <b-col cols="12" md="8">
+          <MenuList
+            :menus="menus"
+            @update="updateAction"
+            @remove="removeAction"
+          />
+        </b-col>
+      </b-row>
       <Button message="確認画面に進む" :action="confirmButtonAction" />
     </div>
     <div v-else>
       <Headline headline="メニュー登録入力確認" />
       <SubHead subHead="以下の内容で登録してよろしいですか？" />
-      <table class="resultTable">
-        <tr v-for="(col, index) in confirmList" :key="index">
-          <td>{{ col.key }}</td>
-          <td>{{ col.value }}</td>
+      <table class="resultTable" v-for="(menu, index) in menus" :key="index">
+        <tr>
+          <td>メニュー名</td>
+          <td>{{ menu.name }}</td>
+        </tr>
+        <tr>
+          <td>メニュー名(カナ)</td>
+          <td>{{ menu.nameKana }}</td>
+        </tr>
+        <tr>
+          <td>値段</td>
+          <td>{{ menu.price }}</td>
         </tr>
       </table>
       <Button message="入力画面に戻る" :action="confirmButtonAction" />
@@ -33,7 +53,9 @@ import SubHead from "@/components/RestaurantRegistration/Molecules/SubHead.vue";
 import RegistrationForm from "@/components/MenuRegistration/RegistrationForm.vue";
 import Button from "@/components/RestaurantRegistration/Atoms/Button.vue";
 import AlertToast from "@/components/RestaurantRegistration/Molecules/AlertToast.vue";
+import MenuList from "@/components/MenuRegistration/MenuList.vue";
 import Enumerable from "linq";
+
 export default {
   components: {
     Headline,
@@ -41,6 +63,7 @@ export default {
     RegistrationForm,
     Button,
     AlertToast,
+    MenuList,
   },
   data() {
     return {
@@ -75,8 +98,9 @@ export default {
           validationState: false,
         },
       },
-      confirmList: [],
-      fields: [],
+      menu: {},
+      menus: [],
+      deleteIds: [],
     };
   },
   methods: {
@@ -89,44 +113,63 @@ export default {
     setValidationStateForTextFormList(obj) {
       this.textFormList[`${obj.propatyName}`].validationState = obj.state;
     },
-    confirmButtonAction() {
+    addButtonAction() {
       // 未入力の必須項目の有無を確認
       var textFormStateArr = Enumerable.from(this.textFormList)
         .where((x) => x.value.required == true)
         .select((x) => x.value.validationState)
         .toArray();
-      if (!textFormStateArr.includes(false)) {
-        if (!this.isConfirm) {
-          // 入力画面から確認画面への遷移の場合
-          // 入力フォームの結果を配列化
-          var textFormResult = Enumerable.from(this.textFormList).toArray();
-          textFormResult = textFormResult.map((e) => ({
-            key: e.value.title,
-            value: e.value.value,
-          }));
-          textFormResult.forEach((e) => this.confirmList.push(e));
-        } else {
-          // 確認画面から入力画面への遷移の場合
-          // 結果表示テーブル用の変数を空に
-          this.confirmList = [];
-        }
-        // 表示コンポーネントの切り替え
-        this.isConfirm = !this.isConfirm;
-      } else {
+      if (textFormStateArr.includes(false)) {
         // 未入力の項目がある場合のトースト表示
         this.makeToast("danger");
         this.alertMessage = "未入力の項目があります";
+        return;
       }
+      this.menu = {
+        id: "0000",
+        name: this.textFormList.name.value,
+        nameKana: this.textFormList.nameKana.value,
+        price: this.textFormList.price.value,
+      };
+      this.menus.push(this.menu);
+    },
+    updateAction(menuList) {
+      this.menus = menuList;
+    },
+    removeAction(index) {
+      if (this.menus[index].id != "0000") {
+        this.deleteIds.push(this.menus[index].id);
+      }
+      this.menus.splice(index, 1);
+    },
+    confirmButtonAction() {
+      // 表示コンポーネントの切り替え
+      this.isConfirm = !this.isConfirm;
     },
     submitButtonAction() {
-      // 登録処理を入れる
+      // 登録処理
+      var ids = this.menus.map((m) => {
+        return m.id;
+      });
+      var names = this.menus.map((m) => {
+        return m.name;
+      });
+      var nameKanas = this.menus.map((m) => {
+        return m.nameKana;
+      });
+      var prices = this.menus.map((m) => {
+        return m.price;
+      });
       this.$axios
         .post("https://func-rizuguru.azurewebsites.net/api/AddMenu?", {
+          Id: ids,
           RestaurantId: this.$route.params.id,
-          Name: this.textFormList.name.value,
-          NameKana: this.textFormList.nameKana.value,
+          Name: names,
+          NameKana: nameKanas,
+          Price: prices,
+          DeleteId: this.deleteIds,
         })
-        .catch((err) => alert(err));
+        .catch((err) => console.log(err));
       this.$router.push(`/MenuRegistration/${this.$route.params.id}/Complete/`);
     },
     makeToast(variant = null) {
@@ -137,25 +180,42 @@ export default {
       });
     },
   },
+  mounted() {
+    this.$axios
+      .get(
+        `https://func-rizuguru.azurewebsites.net/api/GetMenu?id=${this.$route.params.id}`
+      )
+      .then((res) => {
+        this.menus = Enumerable.from(res.data)
+          .orderBy((x) => x.sortId)
+          .toArray();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },
 };
 </script>
 
 <style scoped>
-.wrapper {
-  margin-left: 50px;
-  margin-top: 20px;
+.menu-wrapper {
+  width: 95%;
+  margin: 20px auto 0 auto;
   font-size: 0.9em;
 }
-
+.basic {
+  margin-left: 7%;
+}
 .resultTable {
-  margin: 0 auto;
+  margin: 0 auto 20px auto;
   width: 80%;
 }
-
 .resultTable td {
   padding: 5px 10px;
 }
-
+.resultTable td:nth-child(odd) {
+  width: 30%;
+}
 .resultTable tr:nth-child(2n) {
   background-color: #f6f6f6;
 }

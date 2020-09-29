@@ -11,6 +11,7 @@
       :placeholder="textForm.placeholder"
       :cautionMessage="textForm.cautionMessage"
       :validationSetter="textFormValidationStateSetter"
+      class="input-form"
     />
   </div>
 </template>
@@ -30,3 +31,10 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.basic {
+  width: 100%;
+  text-align: center;
+}
+</style>
