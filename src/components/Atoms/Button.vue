@@ -2,7 +2,7 @@
   <b-container>
     <b-row class="search-button-wrapper">
       <b-col>
-        <router-link to="/Restaurantlist" class="search-button" @click.native="clickAction">検索</router-link>
+        <div class="search-button" @click="action">{{ message }}</div>
       </b-col>
     </b-row>
   </b-container>
@@ -11,15 +11,14 @@
 <script>
 export default {
   props: {
-    action: {
-      name: String,
+    message: {
+      type: String,
       required: true,
+      default: "Button",
     },
-  },
-  methods: {
-    clickAction() {
-      this.$store.dispatch("Filtering/filtered");
-      // this.$emit(`${this.actionName}`);
+    action: {
+      type: Function,
+      required: true,
     },
   },
 };
@@ -28,11 +27,12 @@ export default {
 <style scoped>
 .search-button-wrapper {
   text-align: center;
-  margin: 40px;
+  margin-top: 20px;
 }
 
 .search-button {
   padding: 5px 40px;
+  cursor: pointer;
   color: white;
   font-size: large;
   background-color: #33691e;

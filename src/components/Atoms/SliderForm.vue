@@ -1,69 +1,70 @@
 <template>
   <div>
-    <b-container fluid>
-      <b-row>
-        <b-col>
-          <InputTitle :individuality="individuality" />
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col>
-          <vue-slider
-            ref="slider"
-            v-model="rangeSlider"
-            v-bind="options"
-            :tooltip="'always'"
-            :tooltip-placement="'top'"
-            :marks="true"
-            :hide-label="true"
-            :use-keyboard="false"
-            :tooltip-formatter="formatter"
-            number
-          />
-        </b-col>
-      </b-row>
-    </b-container>
+    <vue-slider
+      ref="slider"
+      v-model="rangeSlider"
+      v-bind="options"
+      :tooltip="'always'"
+      :tooltip-placement="'top'"
+      :marks="true"
+      :hide-label="true"
+      :use-keyboard="false"
+      :tooltip-formatter="formatter"
+      number
+    />
   </div>
 </template>
 
 <script>
-import InputTitle from "@/components/RestaurantList/Filtering/InputTitle.vue";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/default.css";
-
 export default {
   components: {
-    InputTitle,
     VueSlider,
+  },
+  props: {
+    getter: {
+      type: Function,
+      required: true,
+    },
+    setter: {
+      type: Function,
+      required: true,
+    },
+    propertyName: {
+      type: String,
+      required: true,
+    },
+    interval: {
+      type: Number,
+      required: true,
+      default: 100,
+    },
+    min: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    max: {
+      type: Number,
+      required: true,
+      default: 1000,
+    },
   },
   data() {
     return {
       options: {
-        min: this.individuality.min,
-        max: this.individuality.max,
-        interval: this.individuality.interval,
+        min: this.min,
+        max: this.max,
+        interval: this.interval,
         adsorb: true,
         enableCross: false,
       },
     };
   },
-  props: {
-    type: {
-      name: String,
-      required: true,
-    },
-    individuality: {
-      data: Object,
-      required: true,
-    },
-    state: {
-      value: Number,
-      required: true,
-    },
-  },
   methods: {
     formatter(value) {
-      switch (this.type) {
+      switch (this.propertyName) {
         case "distance":
           if (value < 1000) {
             return `${value}m`;
@@ -79,11 +80,10 @@ export default {
     // ストアのゲッター・セッター
     rangeSlider: {
       get() {
-        var value = this.state.value;
-        return value;
+        return this.getter(this.propertyName);
       },
       set(value) {
-        this.$emit("setRange", this.type, value);
+        this.setter({ propertyName: this.propertyName, value: value });
       },
     },
     getWidth() {
@@ -93,7 +93,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 input {
   width: 100%;
   height: 30px;

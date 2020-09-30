@@ -1,134 +1,149 @@
 <template>
-  <div class="list-wrapper">
-    <SearchBar />
-    <hr />
-    <ListCounter :countValue="restaurantCount" v-show="!loading" />
-    <b-container class="d-flex justify-content-center" fluid>
-      <img class="loading" src="@/assets/images/loading.gif" v-show="loading" />
-    </b-container>
-    <div v-for="(data, index) in restaurantData" :key="index">
-      <b-container class="d-flex justify-content-center" fluid>
-        <ListDetail :restaurantData="data" v-show="!loading" />
+  <div class="wrapper">
+    <div v-if="!isFiltering">
+      <b-container class="d-flex justifiy-content-center" fluid>
+        <List
+          :filteringButtonAction="filteringButtonAction"
+          :restaurantList="restaurantData"
+          v-if="!loading"
+        />
+        <img
+          class="loading"
+          src="@/assets/images/loading.gif"
+          v-else-if="loading"
+        />
       </b-container>
-      <hr />
+    </div>
+
+    <div v-else>
+      <Filtering
+        :searchButtonAction="searchButtonActionFromFiltering"
+        :filteringItemData="filtering"
+        :getter="getFilterValue"
+        :setter="setFilterValue"
+        :tagSwitcher="tagStateSwitcher"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import ListDetail from "@/components/RestaurantList/ListDetail/Main.vue";
-import SearchBar from "@/components/RestaurantList/ListDetail/SearchBar.vue";
-import ListCounter from "@/components/RestaurantList/ListDetail/ListCounter.vue";
 import Enumerable from "linq";
+import List from "@/components/Templates/RestaurantList/List.vue";
+import Filtering from "@/components/Templates/RestaurantList/Filtering.vue";
+import { searchRestaurantList } from "@/plugins/searchRestaurantList.js";
 
 export default {
+  components: {
+    List,
+    Filtering,
+  },
   data() {
     return {
+      isFiltering: false,
+      restaurantData: [],
       restaurantCount: null,
-      restaurantData: {},
-      statesData: {},
       keyword: "",
       loading: true,
+      filtering: {
+        keyword: {
+          value: "",
+        },
+        station: {
+          propertyName: "station",
+          displayName: "駅",
+          icon: require("@/assets/images/地図マーカーのアイコン素材1.png"),
+          required: false,
+          placeholder: "池袋駅",
+          value: "",
+        },
+        genre: {
+          propertyName: "genre",
+          displayName: "ジャンル",
+          icon: require("@/assets/images/ご飯のアイコン.png"),
+          required: false,
+          placeholder: "ラーメン",
+          value: "",
+        },
+        distance: {
+          propertyName: "distance",
+          displayName: "現在地からの距離",
+          icon: require("@/assets/images/歩くアイコン.png"),
+          interval: 100,
+          min: 0,
+          max: 1500,
+          value: 0,
+        },
+        budget: {
+          propertyName: "budget",
+          displayName: "予算",
+          icon: require("@/assets/images/キュートながま口財布アイコン.png"),
+          interval: 100,
+          min: 0,
+          max: 1000,
+          value: [300, 700],
+        },
+        tags: {
+          propertyName: "tag",
+          displayName: "こだわり",
+          icon: require("@/assets/images/タグアイコン2.png"),
+          value: [],
+        },
+      },
     };
   },
-  components: {
-    SearchBar,
-    ListCounter,
-    ListDetail,
-  },
   methods: {
-    geoDistance(lat1, lng1, lat2, lng2, precision) {
-      // 引数precision は小数点以下の桁数（距離の精度）
-      var distance = 0;
-      if (Math.abs(lat1 - lat2) < 0.00001 && Math.abs(lng1 - lng2) < 0.00001) {
-        distance = 0;
-      } else {
-        lat1 = (lat1 * Math.PI) / 180;
-        lng1 = (lng1 * Math.PI) / 180;
-        lat2 = (lat2 * Math.PI) / 180;
-        lng2 = (lng2 * Math.PI) / 180;
-
-        var A = 6378140;
-        var B = 6356755;
-        var F = (A - B) / A;
-
-        var P1 = Math.atan((B / A) * Math.tan(lat1));
-        var P2 = Math.atan((B / A) * Math.tan(lat2));
-
-        var X = Math.acos(
-          Math.sin(P1) * Math.sin(P2) +
-            Math.cos(P1) * Math.cos(P2) * Math.cos(lng1 - lng2)
-        );
-        var L =
-          (F / 8) *
-          (((Math.sin(X) - X) * Math.pow(Math.sin(P1) + Math.sin(P2), 2)) /
-            Math.pow(Math.cos(X / 2), 2) -
-            ((Math.sin(X) - X) * Math.pow(Math.sin(P1) - Math.sin(P2), 2)) /
-              Math.pow(Math.sin(X), 2));
-
-        distance = A * (X + L);
-        var decimal_no = Math.pow(10, precision);
-        distance = Math.round((decimal_no * distance) / 1) / decimal_no; // kmに変換するときは(1000で割る)
-      }
-      return distance;
+    filteringButtonAction() {
+      this.isFiltering = !this.isFiltering;
+    },
+    searchButtonActionFromFiltering() {
+      searchRestaurantList(
+        Enumerable.from(this.filtering)
+          .select((x) => x.value.value)
+          .toArray()
+      ).then((res) => {
+        this.restaurantData = res;
+        this.loading = !this.loading;
+      });
+      this.isFiltering = !this.isFiltering;
+    },
+    getFilterValue(propertyName) {
+      return this.filtering[`${propertyName}`].value;
+    },
+    setFilterValue(obj) {
+      this.filtering[`${obj.propertyName}`].value = obj.value;
+    },
+    tagStateSwitcher(index) {
+      this.filtering.tags.states[index].value = !this.filtering.tags.states[
+        index
+      ].value;
     },
   },
   mounted() {
-    this.statesData = this.$store.getters["Filtering/states"];
-    var currentPos = this.$store.getters["Location/states"];
-    this.keyword = this.$store.getters["Search/states"].keyword;
+    this.filtering.keyword.value = this.$store.getters["Search/states"].keyword;
+    searchRestaurantList(this.filtering.keyword.value).then((res) => {
+      this.restaurantData = res;
+      this.loading = !this.loading;
+    });
 
     this.$axios
-      .get(
-        `https://func-rizuguru.azurewebsites.net/api/GetAllDetail?word=${this.keyword}`
-      )
+      .get(`https://func-rizuguru.azurewebsites.net/api/GetTag?`)
       .then((res) => {
-        this.restaurantData = res.data;
-        this.loading = false;
-        for (var i = 0; i < this.restaurantData.length; i++) {
-          var distance = this.geoDistance(
-            currentPos.lat,
-            currentPos.lng,
-            this.restaurantData[i].latitude,
-            this.restaurantData[i].longitude,
-            0
-          );
-          this.restaurantData[i].distance = distance;
-        }
-
-        this.restaurantData = Enumerable.from(this.restaurantData)
-          .orderBy((x) => x.distance)
-          .toArray();
-
-        // 絞り込みを行っていた場合の処理
-        if (this.statesData.isFiltered) {
-          this.$axios
-            .get(
-              `https://func-rizuguru.azurewebsites.net/api/Filtering?word=${this.keyword}&station=${this.statesData.station}&genre=${this.statesData.genre}&minPrice=${this.statesData.budget.value[0]}&maxPrice=${this.statesData.budget.value[1]}&tagId=`
-            )
-            .then((res) => (this.restaurantData = res.data))
-            .catch((err) => {
-              console.log(err);
-            });
-          this.restaurantData = Enumerable.from(this.restaurantData)
-            .where((x) => x.distance <= this.statesData.distance.value)
-            .toArray();
-        }
-
-        // 検索結果件数の取得処理
-        this.restaurantCount = this.restaurantData.length;
-      })
-      .catch((err) => {
-        console.log(err);
+        this.filtering.tags.states = res.data
+          .filter((e) => e.id > 10)
+          .map((e) => {
+            e.state = false;
+            return e;
+          });
       });
   },
 };
 </script>
 
 <style scoped>
-.list-wrapper {
-  width: 90%;
-  margin: 0 auto;
+.wrapper {
+  margin-left: 50px;
+  margin-top: 20px;
 }
 
 .loading {
