@@ -1,6 +1,12 @@
 <template>
   <div>
-    <SearchBar buttonMessage="絞り込む" :buttonAction="filteringButtonAction" />
+    <SearchBar
+      buttonMessage="絞り込む"
+      :buttonAction="filteringButtonAction"
+      :getter="getSearchKeyword"
+      :setter="setSearchKeyword"
+      :searchButtonAction="searchButtonAction"
+    />
     <hr />
     <div
       class="list-item"
@@ -24,6 +30,9 @@ export default {
   props: {
     filteringButtonAction: Function,
     restaurantList: Array,
+    getSearchKeyword: Function,
+    setSearchKeyword: Function,
+    searchButtonAction: Function,
   },
 };
 </script>

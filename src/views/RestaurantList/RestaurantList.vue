@@ -4,7 +4,10 @@
       <b-container class="d-flex justifiy-content-center" fluid>
         <List
           :filteringButtonAction="filteringButtonAction"
-          :restaurantList="restaurantData"
+          :restaurantList="restaurantList"
+          :getSearchKeyword="getSearchKeyword"
+          :setSearchKeyword="setSearchKeyword"
+          :searchButtonAction="searchButtonAction"
           v-if="!loading"
         />
         <img
@@ -17,7 +20,7 @@
 
     <div v-else>
       <Filtering
-        :searchButtonAction="searchButtonActionFromFiltering"
+        :searchButtonAction="filteringSearchButtonAction"
         :filteringItemData="filtering"
         :getter="getFilterValue"
         :setter="setFilterValue"
@@ -28,10 +31,10 @@
 </template>
 
 <script>
-import Enumerable from "linq";
 import List from "@/components/Templates/RestaurantList/List.vue";
 import Filtering from "@/components/Templates/RestaurantList/Filtering.vue";
 import { searchRestaurantList } from "@/plugins/searchRestaurantList.js";
+import { getTagsList } from "@/plugins/getTagsList.js";
 
 export default {
   components: {
@@ -93,17 +96,32 @@ export default {
     };
   },
   methods: {
+    getSearchKeyword() {
+      return this.keyword;
+    },
+    setSearchKeyword(value) {
+      this.keyword = value;
+    },
     filteringButtonAction() {
       this.isFiltering = !this.isFiltering;
     },
-    searchButtonActionFromFiltering() {
+    filteringSearchButtonAction() {
+      var fil = this.filtering;
+      var keyword = fil.keyword.value;
+      var station = fil.station.value;
+      var genre = fil.genre.value;
+      // var distance = fil.distance.value;
+      var budget = [fil.budget.value[0], fil.budget.value[1]];
+      var tags = fil.tags.value.filter((x) => x.state == true).map((x) => x.id);
       searchRestaurantList(
-        Enumerable.from(this.filtering)
-          .select((x) => x.value.value)
-          .toArray()
+        keyword,
+        station,
+        genre,
+        budget[0],
+        budget[1],
+        tags
       ).then((res) => {
         this.restaurantData = res;
-        this.loading = !this.loading;
       });
       this.isFiltering = !this.isFiltering;
     },
@@ -114,28 +132,37 @@ export default {
       this.filtering[`${obj.propertyName}`].value = obj.value;
     },
     tagStateSwitcher(index) {
-      this.filtering.tags.states[index].value = !this.filtering.tags.states[
-        index
-      ].value;
+      this.filtering.tags.value[index].state = !this.filtering.tags.value[index]
+        .state;
+    },
+    searchButtonAction() {
+      // 現在地と検索キーワードを元に検索結果を表示
+      var query = this.$route.query;
+      searchRestaurantList(this.keyword, query.lat, query.lng).then((res) => {
+        this.restaurantData = res;
+      });
     },
   },
-  mounted() {
-    this.filtering.keyword.value = this.$store.getters["Search/states"].keyword;
-    searchRestaurantList(this.filtering.keyword.value).then((res) => {
+  created() {
+    // 現在地と検索キーワードを元に検索結果を表示
+    var query = this.$route.query;
+    searchRestaurantList(query.keyword, query.lat, query.lng).then((res) => {
       this.restaurantData = res;
       this.loading = !this.loading;
     });
 
-    this.$axios
-      .get(`https://func-rizuguru.azurewebsites.net/api/GetTag?`)
-      .then((res) => {
-        this.filtering.tags.states = res.data
-          .filter((e) => e.id > 10)
-          .map((e) => {
-            e.state = false;
-            return e;
-          });
-      });
+    // DBに存在するタグを取得
+    getTagsList().then((res) => {
+      this.filtering.tags.value = res;
+    });
+
+    // 検索フォームに前画面のキーワードを代入
+    this.keyword = query.keyword;
+  },
+  computed: {
+    restaurantList() {
+      return this.restaurantData;
+    },
   },
 };
 </script>

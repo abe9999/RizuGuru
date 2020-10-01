@@ -1,6 +1,12 @@
 <template>
   <div>
-    <InputFormForSearch :message="buttonMessage" :action="buttonAction" />
+    <InputFormForSearch
+      :message="buttonMessage"
+      :action="buttonAction"
+      :getter="getter"
+      :setter="setter"
+      :searchButtonAction="searchButtonAction"
+    />
   </div>
 </template>
 
@@ -13,6 +19,9 @@ export default {
   props: {
     buttonAction: Function,
     buttonMessage: String,
+    getter: Function,
+    setter: Function,
+    searchButtonAction: Function,
   },
 };
 </script>

@@ -36,7 +36,7 @@
         <TagFormUnit
           :title="filteringItemData.tags.displayName"
           :required="filteringItemData.tags.required"
-          :tagFormList="filteringItemData.tags.states"
+          :tagFormList="filteringItemData.tags.value"
           :action="tagSwitcher"
         />
       </b-col>

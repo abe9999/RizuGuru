@@ -1,10 +1,10 @@
 import { getGeoDistance } from "@/plugins/getGeoDistance.js";
-import { getGeoLocation } from "@/plugins/getGeoLocation.js";
-const axios = require("axios");
+import { getCurrentLocation } from "@/plugins/getCurrentLocation.js";
+import axios from "axios";
+
 export function searchRestaurantList(...args) {
-    console.log("filtering!" + JSON.stringify(args[1]));
     switch (args.length) {
-        case 1:
+        case 3:
             // ホーム画面から検索を行った場合
             return getRestaurantListFromHome(args);
         case 6:
@@ -17,10 +17,27 @@ export function searchRestaurantList(...args) {
 
 async function getRestaurantListFromHome(args) {
     return new Promise((resolve) => {
-        axios.get(`https://func-rizuguru.azurewebsites.net/api/GetAllDetail?word=${args[0]}`)
+        var currentLocation = {}
+        getCurrentLocation().then(res => {
+            currentLocation = res
+            axios.get(`https://func-rizuguru.azurewebsites.net/api/GetAllDetail?word=${args[0]}&lat=${currentLocation.lat}&lng=${currentLocation.lng}`)
+                .then((res) => {
+                    var result = res.data
+                    resolve(Promise.all(result))
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        })
+    })
+}
+
+async function getRestaurantListFromFiltering(args) {
+    return new Promise((resolve) => {
+        axios.get(`https://func-rizuguru.azurewebsites.net/api/Filtering?word=${args[0]}&station=${args[1]}&genre=${args[2]}&minPrice=${args[3]}&maxPrice=${args[4]}&tagId=${args[5]}`)
             .then((res) => {
                 var result = res.data
-                getGeoLocation().then(res => {
+                getCurrentLocation().then(res => {
                     result.forEach(element => {
                         getGeoDistance(
                             res.lat,
@@ -30,32 +47,8 @@ async function getRestaurantListFromHome(args) {
                             0
                         ).then(res => { element.distance = res });
                     });
-                    resolve(result);
+                    resolve(Promise.all(result))
                 })
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    })
-}
-
-async function getRestaurantListFromFiltering(args) {
-    return new Promise((resolve) => {
-        axios.get(`https://func-rizuguru.azurewebsites.net/api/Filtering?word=${args[0]}&station=${args[1]}&genre=${args[2]}&minPrice=${args[3]}&maxPrice=${args[4]}&tagId=${args[5]}`)
-            .then((res) => {
-                var result = res.data
-                result.forEach(element => {
-                    getGeoLocation().then(res => {
-                        element.distance = getGeoDistance(
-                            res.lat,
-                            res.lng,
-                            element.latitude,
-                            element.longitude,
-                            0
-                        );
-                    })
-                });
-                resolve(result);
             })
             .catch((err) => {
                 console.log(err);

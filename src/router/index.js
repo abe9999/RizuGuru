@@ -30,6 +30,7 @@ const routes = [
     component: Login,
   },
   {
+    name: "RestaurantList",
     path: "/RestaurantList",
     component: RestaurantList,
   },

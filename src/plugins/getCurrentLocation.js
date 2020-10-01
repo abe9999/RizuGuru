@@ -1,4 +1,4 @@
-export function getGeoLocation() {
+export function getCurrentLocation() {
     if (navigator.geolocation) {
         return getCurrentLocationAsync();
     } else {
