@@ -9,17 +9,19 @@
       <p>リーズナブルなグルメアプリ</p>
     </div>
     <div class="button">
-      <b-button variant="success" @click="search()">現在地から探す</b-button>
+      <b-button variant="success" @click="searchByCurrentLocationBtn()"
+        >現在地から探す</b-button
+      >
     </div>
     <div class="search">
       <b-input-group class="mb-2">
         <b-form-input
           type="search"
-          v-model="setKeyword"
+          v-model="keyword"
           placeholder="駅名やジャンルから検索"
-          @keydown.enter="search()"
+          @keydown.enter="searchByTextForm()"
         />
-        <b-input-group-prepend is-text class="icon" @click="search()">
+        <b-input-group-prepend is-text class="icon" @click="searchByTextForm()">
           <b-icon icon="search"></b-icon>
         </b-input-group-prepend>
       </b-input-group>
@@ -28,8 +30,7 @@
 </template>
 
 <script>
-// @ is an alias to /src
-
+import { getCurrentLocation } from "@/plugins/getCurrentLocation.js";
 export default {
   data() {
     return {
@@ -39,38 +40,32 @@ export default {
     };
   },
   mounted() {
-    if (navigator.geolocation) {
-      // 現在地の取得
-      navigator.geolocation.getCurrentPosition(
-        function (position) {
-          // 緯度経度の取得
-          this.currentLocation.lat = position.coords.latitude;
-          this.currentLocation.lng = position.coords.longitude;
-          this.$store.dispatch("Location/setLocation", {
-            value: this.currentLocation,
-          });
-        }.bind(this),
-        function () {
-          alert("位置情報取得に失敗しました");
-        }
-      );
-    } else {
-      alert("この端末では位置情報が取得できません");
-    }
-  },
-  computed: {
-    setKeyword: {
-      get() {
-        return this.$store.getters["Search/states"].keyword;
-      },
-      set(value) {
-        this.$store.dispatch("Search/setKeyword", value);
-      },
-    },
+    getCurrentLocation().then((res) => (this.currentLocation = res));
   },
   methods: {
-    search() {
-      this.$router.push("/RestaurantList");
+    searchByCurrentLocationBtn() {
+      if (!this.currentLocation.lat) {
+        alert("この端末では位置情報が取得できません");
+      } else {
+        this.$router.push({
+          name: "RestaurantList",
+          query: {
+            keyword: this.keyword,
+            lat: this.currentLocation.lat,
+            lng: this.currentLocation.lng,
+          },
+        });
+      }
+    },
+    searchByTextForm() {
+      this.$router.push({
+        name: "RestaurantList",
+        query: {
+          keyword: this.keyword,
+          lat: this.currentLocation.lat,
+          lng: this.currentLocation.lng,
+        },
+      });
     },
   },
 };

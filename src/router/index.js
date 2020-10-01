@@ -31,8 +31,14 @@ const routes = [
     component: Login,
   },
   {
+    name: "RestaurantList",
     path: "/RestaurantList",
     component: RestaurantList,
+  },
+  {
+    name: "Filtering",
+    path: "/RestaurantList/Filtering",
+    component: Filtering,
   },
   {
     path: "/Restaurant/Detail/:id",
@@ -53,10 +59,6 @@ const routes = [
   {
     path: "/RestaurantRegistration/Complete",
     component: RegistrationComplete,
-  },
-  {
-    path: "/RestaurantList/Filtering",
-    component: Filtering,
   },
   {
     path: "/DistanceFromStation",
