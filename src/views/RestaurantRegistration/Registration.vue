@@ -350,14 +350,14 @@ export default {
 
 <style scoped>
 .wrapper {
-  margin-left: 50px;
-  margin-top: 20px;
+  width: 95%;
+  margin: 0 auto;
   font-size: 0.9em;
 }
 
 .resultTable {
+  width: 90%;
   margin: 0 auto;
-  width: 80%;
 }
 
 .resultTable td {

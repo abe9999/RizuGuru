@@ -21,8 +21,8 @@ export default {
 
 <style scoped>
 h2 {
+  margin-top: 2%;
   padding-bottom: 20px;
-  margin-left: -10px;
 }
 
 img {

@@ -16,6 +16,7 @@ export default {
 <style scoped>
 h5 {
   padding-bottom: 20px;
+  margin-left: 1%;
 }
 
 img {

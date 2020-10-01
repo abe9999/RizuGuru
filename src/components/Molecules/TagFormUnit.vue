@@ -38,6 +38,7 @@ export default {
 <style scoped>
 .wrapper {
   width: 100%;
+  margin: 0 auto;
 }
 .form-wrapper {
   background-color: #f6f6f6;
