@@ -8,6 +8,9 @@
     </b-row>
     <b-row>
       <b-col class="content">
+        <b-row>
+          <p>現在の検索キーワード：{{ filteringItemData.keyword.value }}</p>
+        </b-row>
         <!-- 駅キーワード入力欄 -->
         <InputFormUnitWithIcon
           :itemData="filteringItemData.station"

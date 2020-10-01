@@ -7,7 +7,7 @@ export function searchRestaurantList(...args) {
         case 3:
             // ホーム画面から検索を行った場合
             return getRestaurantListFromHome(args);
-        case 6:
+        case 8:
             // 店舗一覧画面で絞り込み検索を行った場合
             return getRestaurantListFromFiltering(args);
         default:
@@ -15,6 +15,7 @@ export function searchRestaurantList(...args) {
     }
 }
 
+// ホーム画面から検索
 async function getRestaurantListFromHome(args) {
     return new Promise((resolve) => {
         var currentLocation = {}
@@ -32,9 +33,10 @@ async function getRestaurantListFromHome(args) {
     })
 }
 
+// 絞り込み画面から検索
 async function getRestaurantListFromFiltering(args) {
     return new Promise((resolve) => {
-        axios.get(`https://func-rizuguru.azurewebsites.net/api/Filtering?word=${args[0]}&station=${args[1]}&genre=${args[2]}&minPrice=${args[3]}&maxPrice=${args[4]}&tagId=${args[5]}`)
+        axios.get(`https://func-rizuguru.azurewebsites.net/api/Filtering?word=${args[0]}&lat=${args[1]}&lng=${args[2]}&station=${args[3]}&genre=${args[4]}&minPrice=${args[5]}&maxPrice=${args[6]}&tagId=${args[7]}`)
             .then((res) => {
                 var result = res.data
                 getCurrentLocation().then(res => {
