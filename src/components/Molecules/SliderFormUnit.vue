@@ -41,7 +41,7 @@ export default {
 
 <style lang="scss" scoped>
 .wrapper {
-  width: 90%;
+  width: 100%;
 }
 // input {
 //   width: 100%;

@@ -80,6 +80,7 @@ export default {
 
 <style scoped>
 .main {
+  width: 100%;
   margin: 20px auto;
   font-size: 0.9em;
 }

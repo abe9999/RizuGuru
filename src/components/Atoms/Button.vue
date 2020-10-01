@@ -39,5 +39,6 @@ export default {
   border-radius: 5px;
   display: inline-block;
   text-align: center;
+  margin-bottom: 10px;
 }
 </style>

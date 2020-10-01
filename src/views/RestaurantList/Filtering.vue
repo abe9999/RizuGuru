@@ -106,3 +106,10 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.wrapper {
+  width: 100%;
+  margin: 0 auto;
+}
+</style>
