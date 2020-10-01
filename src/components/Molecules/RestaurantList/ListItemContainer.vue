@@ -36,6 +36,7 @@ export default {
   padding: 15px;
   background-color: #f6f6f6;
   border-radius: 15px;
+  margin: 0 auto;
 }
 
 @media (max-width: 560px) {

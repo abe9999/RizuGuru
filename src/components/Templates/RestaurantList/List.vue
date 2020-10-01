@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="wrapper">
     <SearchBar
       buttonMessage="絞り込む"
       :buttonAction="filteringButtonAction"
@@ -38,4 +38,10 @@ export default {
 </script>
 
 <style scoped>
+@media (min-width: 560px) {
+  .list-item {
+    width: 70%;
+    margin: 0 auto;
+  }
+}
 </style>

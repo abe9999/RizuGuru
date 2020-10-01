@@ -86,8 +86,8 @@ export default {
 
 <style scoped>
 .wrapper {
-  margin-left: 50px;
-  margin-top: 20px;
+  width: 95%;
+  margin: 10px auto 0 auto;
 }
 
 .loading {

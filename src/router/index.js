@@ -7,7 +7,6 @@ import RestaurantList from "../views/RestaurantList/RestaurantList.vue";
 import Filtering from "../views/RestaurantList/Filtering.vue";
 import RestaurantDetail from "../views/RestaurantDetail/RestaurantDetail.vue";
 import SearchMap from "../views/SearchMap/SearchMap.vue";
-import DistanceFromStation from "../views/DistanceFromStation.vue";
 import RegistrationRegistration from "../views/RestaurantRegistration/Registration.vue";
 import RegistrationRegistrationTest from "../views/RestaurantRegistration/RegistrationTest.vue";
 import RegistrationComplete from "../views/RestaurantRegistration/Complete.vue";
@@ -59,10 +58,6 @@ const routes = [
   {
     path: "/RestaurantRegistration/Complete",
     component: RegistrationComplete,
-  },
-  {
-    path: "/DistanceFromStation",
-    component: DistanceFromStation,
   },
   {
     path: "/MenuRegistration/:id",

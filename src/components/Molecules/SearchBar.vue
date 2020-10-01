@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="search-input">
     <InputFormForSearch
       :message="buttonMessage"
       :action="buttonAction"
@@ -27,4 +27,10 @@ export default {
 </script>
 
 <style scoped>
+@media (min-width: 560px) {
+  .search-input {
+    width: 70%;
+    margin: 0 auto;
+  }
+}
 </style>

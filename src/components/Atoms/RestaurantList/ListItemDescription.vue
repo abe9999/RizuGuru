@@ -68,7 +68,7 @@ export default {
 @media (max-width: 560px) {
   .wrapper {
     width: 100%;
-    margin: 0;
+    margin: 0 auto;
   }
 
   .title {
