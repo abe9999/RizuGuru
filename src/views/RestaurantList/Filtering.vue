@@ -12,7 +12,6 @@
 
 <script>
 import Filtering from "@/components/Templates/RestaurantList/Filtering.vue";
-// import { searchRestaurantList } from "@/plugins/searchRestaurantList.js";
 import { getTagsList } from "@/plugins/getTagsList.js";
 export default {
   components: {
@@ -79,6 +78,7 @@ export default {
           lng: query.lng,
           station: fil.station.value,
           genre: fil.genre.value,
+          distance: fil.distance.value,
           minPrice: fil.budget.value[0],
           maxPrice: fil.budget.value[1],
           tag: fil.tags.value.filter((x) => x.state == true).map((x) => x.id),
