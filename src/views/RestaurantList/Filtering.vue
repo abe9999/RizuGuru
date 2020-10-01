@@ -46,7 +46,7 @@ export default {
           interval: 100,
           min: 0,
           max: 1500,
-          value: 0,
+          value: 1500,
         },
         budget: {
           propertyName: "budget",
@@ -55,7 +55,7 @@ export default {
           interval: 100,
           min: 0,
           max: 1000,
-          value: [300, 700],
+          value: [0, 1000],
         },
         tags: {
           propertyName: "tag",
