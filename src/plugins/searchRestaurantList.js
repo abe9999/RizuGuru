@@ -1,5 +1,3 @@
-// import { getGeoDistance } from "@/plugins/getGeoDistance.js";
-// import { getCurrentLocation } from "@/plugins/getCurrentLocation.js";
 import axios from "axios";
 
 export function searchRestaurantList(args) {

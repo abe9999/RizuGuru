@@ -51,10 +51,10 @@ export default {
           propertyName: "distance",
           displayName: "現在地からの距離",
           icon: require("@/assets/images/歩くアイコン.png"),
-          interval: 100,
+          interval: 5000,
           min: 0,
-          max: 1500,
-          value: 1500,
+          max: 30000,
+          value: 5000,
         },
         budget: {
           propertyName: "budget",
@@ -88,9 +88,9 @@ export default {
           distance: fil.distance.value,
           minPrice: fil.budget.value[0],
           maxPrice: fil.budget.value[1],
-          tagsId: fil.tagsId.value
+          tagsId: [fil.tagsId.value
             .filter((x) => x.state == true)
-            .map((x) => x.id),
+            .map((x) => x.id)],
         },
       });
     },
