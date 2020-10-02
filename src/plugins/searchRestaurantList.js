@@ -21,7 +21,7 @@ async function getRestaurantListFromHome(args) {
         var currentLocation = {}
         getCurrentLocation().then(res => {
             currentLocation = res
-            axios.get(`https://func-rizuguru.azurewebsites.net/api/GetAllDetail?word=${args[0]}&lat=${currentLocation.lat}&lng=${currentLocation.lng}`)
+            axios.get(`https://func-rizuguru.azurewebsites.net/api/GetAllDetail?keyword=${args[0]}&lat=${currentLocation.lat}&lng=${currentLocation.lng}`)
                 .then((res) => {
                     var result = res.data
                     resolve(Promise.all(result))
@@ -36,7 +36,7 @@ async function getRestaurantListFromHome(args) {
 // 絞り込み画面から検索
 async function getRestaurantListFromFiltering(args) {
     return new Promise((resolve) => {
-        axios.get(`https://func-rizuguru.azurewebsites.net/api/Filtering?word=${args[0]}&lat=${args[1]}&lng=${args[2]}&station=${args[3]}&genre=${args[4]}&distance=${args[5]}&minPrice=${args[6]}&maxPrice=${args[7]}&tagId=${args[8]}`)
+        axios.get(`https://func-rizuguru.azurewebsites.net/api/Filtering?keyword=${args[0]}&lat=${args[1]}&lng=${args[2]}&station=${args[3]}&genre=${args[4]}&distance=${args[5]}&minPrice=${args[6]}&maxPrice=${args[7]}&tagId=${args[8]}`)
             .then((res) => {
                 var result = res.data
                 getCurrentLocation().then(res => {
