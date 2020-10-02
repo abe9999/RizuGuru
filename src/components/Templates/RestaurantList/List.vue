@@ -8,6 +8,7 @@
       :searchButtonAction="searchButtonAction"
     />
     <hr />
+    <Counter :value="restaurantCount" />
     <div
       class="list-item"
       v-for="(restaurantData, index) in restaurantList"
@@ -20,16 +21,19 @@
 </template>
 
 <script>
+import Counter from "@/components/Atoms/RestaurantList/Counter.vue";
 import SearchBar from "@/components/Molecules/SearchBar.vue";
 import ListItemContainer from "@/components/Molecules/RestaurantList/ListItemContainer.vue";
 export default {
   components: {
+    Counter,
     SearchBar,
     ListItemContainer,
   },
   props: {
     filteringButtonAction: Function,
     restaurantList: Array,
+    restaurantCount: Number,
     getSearchKeyword: Function,
     setSearchKeyword: Function,
     searchButtonAction: Function,

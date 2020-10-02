@@ -5,6 +5,7 @@
         <List
           :filteringButtonAction="filteringButtonAction"
           :restaurantList="restaurantList"
+          :restaurantCount="restaurantCount"
           :getSearchKeyword="getSearchKeyword"
           :setSearchKeyword="setSearchKeyword"
           :searchButtonAction="searchButtonAction"
@@ -21,7 +22,6 @@
 </template>
 
 <script>
-// import Enumerable from "linq";
 import List from "@/components/Templates/RestaurantList/List.vue";
 import { searchRestaurantList } from "@/plugins/searchRestaurantList.js";
 
@@ -62,6 +62,7 @@ export default {
       this.loading = true;
       searchRestaurantList(this.query).then((res) => {
         this.restaurantData = res;
+        this.restaurantCount = res.length;
         // ローディングのくるくるを非表示に
         this.loading = false;
       });
