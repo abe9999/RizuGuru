@@ -1,18 +1,20 @@
 <template>
-  <div>
-    <vue-slider
-      ref="slider"
-      v-model="rangeSlider"
-      v-bind="options"
-      :tooltip="'always'"
-      :tooltip-placement="'top'"
-      :marks="true"
-      :hide-label="true"
-      :use-keyboard="false"
-      :tooltip-formatter="formatter"
-      number
-    />
-  </div>
+  <b-col>
+    <div class="wrapper">
+      <vue-slider
+        ref="slider"
+        v-model="rangeSlider"
+        v-bind="options"
+        :tooltip="'always'"
+        :tooltip-placement="'top'"
+        :marks="true"
+        :hide-label="true"
+        :use-keyboard="false"
+        :tooltip-formatter="formatter"
+        number
+      />
+    </div>
+  </b-col>
 </template>
 
 <script>
@@ -94,16 +96,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-input {
-  width: 100%;
-  height: 30px;
-  margin-bottom: 15px;
-}
-
-.icon {
-  width: 20px;
-  margin-right: 5px;
-  vertical-align: middle;
+.wrapper {
+  width: 90%;
+  margin: 0 auto;
 }
 
 .vue-slider {

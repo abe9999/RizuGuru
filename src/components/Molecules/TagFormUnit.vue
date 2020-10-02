@@ -36,11 +36,10 @@ export default {
 </script>
 
 <style scoped>
-.wrapper {
-  width: 100%;
-  margin: 0 auto;
-}
 .form-wrapper {
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-top: 2.5%;
   background-color: #f6f6f6;
   border-radius: 5px;
 }

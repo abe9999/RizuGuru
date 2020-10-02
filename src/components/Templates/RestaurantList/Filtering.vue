@@ -8,8 +8,13 @@
     </b-row>
     <b-row>
       <b-col class="content">
-        <b-row>
-          <p>現在の検索キーワード：{{ filteringItemData.keyword.value }}</p>
+        <b-row v-if="filteringItemData.keyword.value">
+          <p>現在の検索キーワード：</p>
+          <ul class="keyword-list">
+            <li v-for="(keyword, index) in keywordArr" :key="index">
+              {{ keyword }}
+            </li>
+          </ul>
         </b-row>
         <!-- 駅キーワード入力欄 -->
         <InputFormUnitWithIcon
@@ -75,6 +80,18 @@ export default {
     setter: Function,
     tagSwitcher: Function,
   },
+  data() {
+    return {
+      keywordArr: [],
+    };
+  },
+  created() {
+    var keyword = this.filteringItemData.keyword.value;
+    if (keyword) {
+      // eslint-disable-next-line no-irregular-whitespace
+      this.keywordArr = keyword.split(/[ 　]/);
+    }
+  },
 };
 </script>
 
@@ -92,5 +109,20 @@ export default {
 
 .content div {
   margin: 30px 0;
+}
+
+.keyword-list {
+  list-style: none;
+  display: flex;
+  padding: 0;
+}
+
+.keyword-list li {
+  margin-left: 15px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: white;
+  background-color: #689e39;
+  border-radius: 5px;
 }
 </style>
