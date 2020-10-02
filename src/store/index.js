@@ -5,6 +5,7 @@ import Filtering from "./modules/RestaurantList/Filtering.js";
 import UserData from "./modules/UserData.js";
 import Location from "./modules/Location.js";
 import Search from "./modules/Search.js";
+import Auth from "./modules/Auth.js"
 
 Vue.use(Vuex);
 
@@ -13,7 +14,8 @@ const store = new Vuex.Store({
     Filtering,
     UserData,
     Location,
-    Search
+    Search,
+    Auth
   },
   strict: true,
   plugins: [createPersistedState({

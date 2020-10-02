@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Header />
+    <Header v-show="isAuthed"/>
     <router-view />
     <Footer />
   </div>
@@ -35,6 +35,12 @@ export default {
   components: {
     Header,
     Footer,
+  },
+  computed: {
+    isAuthed() {
+      // ログイン状態取得
+      return this.$store.getters["Auth/getAuth"];
+    },
   },
 };
 </script>
