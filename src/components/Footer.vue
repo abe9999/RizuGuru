@@ -7,7 +7,7 @@
         v-if="!isAuthed"
         @click="administratorLogin"
         variant="outline-success"
-        >管理者ページ</b-button
+        >管理者ログイン</b-button
       >
       <b-button
         class="item"
