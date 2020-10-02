@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <Header v-show="isAuthed"/>
+    <Admin v-if="isAuthed"/>
+    <Header v-else />
     <router-view />
     <Footer />
   </div>
@@ -30,10 +31,12 @@
 
 <script>
 import Header from "./components/Header.vue";
+import Admin from "./components/HeaderForAdmin.vue";
 import Footer from "./components/Footer.vue";
 export default {
   components: {
     Header,
+    Admin,
     Footer,
   },
   computed: {
