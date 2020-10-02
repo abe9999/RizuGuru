@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import Enumerable from "linq";
+// import Enumerable from "linq";
 import List from "@/components/Templates/RestaurantList/List.vue";
 import { searchRestaurantList } from "@/plugins/searchRestaurantList.js";
 
@@ -31,7 +31,7 @@ export default {
   },
   data() {
     return {
-      query: [],
+      query: {},
       restaurantData: [],
       restaurantCount: null,
       keyword: "",
@@ -48,33 +48,31 @@ export default {
     filteringButtonAction() {
       this.$router.push({
         name: "Filtering",
-        query: {
-          keyword: this.$route.query.keyword,
-          lat: this.$route.query.lat,
-          lng: this.$route.query.lng,
-        },
+        query: this.query,
       });
     },
     searchButtonAction() {
-      // 現在地と検索キーワードを元に検索結果を表示
-      var query = this.$route.query;
-      searchRestaurantList(this.keyword, query.lat, query.lng).then((res) => {
+      // 入力フォームの検索ボタンをしたときの処理
+      this.query.keyword = this.keyword;
+      this.searchRestaurantList();
+    },
+    searchRestaurantList() {
+      // 店舗検索処理
+      // ローディングのくるくるを表示
+      this.loading = true;
+      searchRestaurantList(this.query).then((res) => {
         this.restaurantData = res;
+        // ローディングのくるくるを非表示に
+        this.loading = false;
       });
     },
   },
-  created() {
-    // 現在地と検索キーワードを元に検索結果を表示
-    var query = Enumerable.from(this.$route.query)
-      .select((x) => x.value)
-      .toArray();
-    console.log(query);
-    searchRestaurantList(...query).then((res) => {
-      this.restaurantData = res;
-      this.loading = !this.loading;
-    });
+  mounted() {
+    this.query = this.$route.query;
     // 検索フォームに前画面のキーワードを代入
-    this.keyword = query.keyword;
+    this.keyword = this.query.keyword;
+    // 検索処理を実行
+    this.searchRestaurantList();
   },
   computed: {
     restaurantList() {

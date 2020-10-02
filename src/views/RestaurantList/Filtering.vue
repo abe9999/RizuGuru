@@ -6,6 +6,12 @@
       :getter="getFilterValue"
       :setter="setFilterValue"
       :tagSwitcher="tagStateSwitcher"
+      v-if="!loading"
+    />
+    <img
+      class="loading"
+      src="@/assets/images/loading.gif"
+      v-else-if="loading"
     />
   </div>
 </template>
@@ -19,7 +25,9 @@ export default {
   },
   data() {
     return {
+      loading: true,
       filtering: {
+        query: {},
         keyword: {
           value: this.$route.query.keyword,
         },
@@ -28,7 +36,7 @@ export default {
           displayName: "駅",
           icon: require("@/assets/images/地図マーカーのアイコン素材1.png"),
           required: false,
-          placeholder: "池袋駅",
+          placeholder: "四ツ谷駅",
           value: "",
         },
         genre: {
@@ -57,7 +65,7 @@ export default {
           max: 1000,
           value: [0, 1000],
         },
-        tags: {
+        tagsId: {
           propertyName: "tag",
           displayName: "こだわり",
           icon: require("@/assets/images/タグアイコン2.png"),
@@ -68,20 +76,21 @@ export default {
   },
   methods: {
     filteringSearchButtonAction() {
-      var query = this.$route.query;
       var fil = this.filtering;
       this.$router.push({
         name: "RestaurantList",
         query: {
-          keyword: query.keyword,
-          lat: query.lat,
-          lng: query.lng,
+          keyword: this.query.keyword,
+          lat: this.query.lat,
+          lng: this.query.lng,
           station: fil.station.value,
           genre: fil.genre.value,
           distance: fil.distance.value,
           minPrice: fil.budget.value[0],
           maxPrice: fil.budget.value[1],
-          tag: fil.tags.value.filter((x) => x.state == true).map((x) => x.id),
+          tagsId: fil.tagsId.value
+            .filter((x) => x.state == true)
+            .map((x) => x.id),
         },
       });
     },
@@ -92,17 +101,30 @@ export default {
       this.filtering[`${obj.propertyName}`].value = obj.value;
     },
     tagStateSwitcher(index) {
-      this.filtering.tags.value[index].state = !this.filtering.tags.value[index]
-        .state;
+      this.filtering.tagsId.value[index].state = !this.filtering.tagsId.value[
+        index
+      ].state;
     },
   },
-  created() {
+  mounted() {
+    this.query = this.$route.query;
     // DBに存在するタグを取得
     getTagsList().then((res) => {
-      this.filtering.tags.value = res;
+      this.filtering.tagsId.value = res;
+      var keys = Object.keys(this.query);
+      keys.forEach((key) => {
+        if (key == "minPrice") {
+          this.filtering.budget.value[0] = this.query[key];
+        } else if (key == "maxPrice") {
+          this.filtering.budget.value[1] = this.query[key];
+        } else if (key != "tagsId") {
+          if (this.filtering[key]) {
+            this.filtering[key].value = this.query[key];
+          }
+        }
+      });
+      this.loading = false;
     });
-    var query = this.$route.query;
-    console.log(query);
   },
 };
 </script>
@@ -110,6 +132,15 @@ export default {
 <style scoped>
 .wrapper {
   width: 100%;
-  margin: 0 auto;
+  margin: 20px auto 0 auto;
+}
+
+.loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150px;
+  height: 150px;
 }
 </style>

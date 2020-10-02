@@ -1,5 +1,5 @@
 <template>
-  <b-container class="main">
+  <b-container class="wrapper">
     <b-row>
       <b-col>
         <!-- ページタイトル -->
@@ -7,7 +7,7 @@
       </b-col>
     </b-row>
     <b-row>
-      <b-col class="content">
+      <b-col class="container">
         <b-row v-if="filteringItemData.keyword.value">
           <p>現在の検索キーワード：</p>
           <ul class="keyword-list">
@@ -42,9 +42,9 @@
         />
         <!-- こだわりタグ選択欄 -->
         <TagFormUnit
-          :title="filteringItemData.tags.displayName"
-          :required="filteringItemData.tags.required"
-          :tagFormList="filteringItemData.tags.value"
+          :title="filteringItemData.tagsId.displayName"
+          :required="filteringItemData.tagsId.required"
+          :tagFormList="filteringItemData.tagsId.value"
           :action="tagSwitcher"
         />
       </b-col>
@@ -96,19 +96,10 @@ export default {
 </script>
 
 <style scoped>
-.main {
+.wrapper {
   width: 100%;
   margin: 20px auto;
   font-size: 0.9em;
-}
-
-.mark {
-  color: #2e603b;
-  background-color: white;
-}
-
-.content div {
-  margin: 30px 0;
 }
 
 .keyword-list {
