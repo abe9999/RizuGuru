@@ -63,7 +63,7 @@ export default {
           },
           min: 100,
           max: 2500,
-          value: 800,
+          value: 2500,
         },
         budget: {
           propertyName: "budget",
