@@ -7,11 +7,12 @@
         v-bind="options"
         :tooltip="'always'"
         :tooltip-placement="'top'"
-        :marks="true"
+        :adsorb="true"
+        :marks="marks"
+        :included="true"
         :hide-label="true"
         :use-keyboard="false"
         :tooltip-formatter="formatter"
-        number
       />
     </div>
   </b-col>
@@ -39,8 +40,15 @@ export default {
     },
     interval: {
       type: Number,
-      required: true,
-      default: 100,
+      required: false,
+    },
+    marks: {
+      type: Object,
+      required: false,
+    },
+    data: {
+      type: Array,
+      required: false,
     },
     min: {
       type: Number,
@@ -59,7 +67,6 @@ export default {
         min: this.min,
         max: this.max,
         interval: this.interval,
-        adsorb: true,
         enableCross: false,
       },
     };
@@ -69,9 +76,11 @@ export default {
       switch (this.propertyName) {
         case "distance":
           if (value < 1000) {
-            return `${value}m`;
+            return `${this.marks[value]}m`;
+          } else if (value < 2500) {
+            return `${this.marks[value] / 1000}km`;
           } else {
-            return `${value / 1000}km`;
+            return `${this.marks[value]}`;
           }
         case "budget":
           return `${value}円`;

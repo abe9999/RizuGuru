@@ -29,6 +29,7 @@ async function getRestaurantListFromHome(args) {
 
 // 絞り込み画面から検索
 async function getRestaurantListFromFiltering(args) {
+    args.distance == 2500 ? args.distance = "" : args.distance
     return new Promise((resolve) => {
         axios.get(`https://func-rizuguru.azurewebsites.net/api/Filtering?keyword=${args.keyword}&lat=${args.lat}&lng=${args.lng}&station=${args.station}&genre=${args.genre}&distance=${args.distance}&minPrice=${args.minPrice}&maxPrice=${args.maxPrice}&tagId=${args.tagsId}`)
             .then((res) => {

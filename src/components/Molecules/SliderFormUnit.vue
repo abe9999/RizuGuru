@@ -6,6 +6,7 @@
       :setter="setter"
       :propertyName="itemData.propertyName"
       :interval="itemData.interval"
+      :marks="itemData.marks"
       :min="itemData.min"
       :max="itemData.max"
     />

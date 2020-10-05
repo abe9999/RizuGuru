@@ -51,10 +51,19 @@ export default {
           propertyName: "distance",
           displayName: "現在地からの距離",
           icon: require("@/assets/images/歩くアイコン.png"),
-          interval: 200,
-          min: 0,
-          max: 2000,
-          value: 1000,
+          marks: {
+            100: "100",
+            300: "300",
+            500: "600",
+            800: "800",
+            1000: "1000",
+            1500: "1500",
+            2000: "2000",
+            2500: "上限なし",
+          },
+          min: 100,
+          max: 2500,
+          value: 800,
         },
         budget: {
           propertyName: "budget",
@@ -113,7 +122,13 @@ export default {
       this.filtering.tagsId.value = res;
       var keys = Object.keys(this.query);
       keys.forEach((key) => {
-        if (key == "minPrice") {
+        if (key == "distance") {
+          if (this.query[key] == "") {
+            this.filtering.distance.value = 2500;
+          } else {
+            this.filtering.distance.value = this.query[key];
+          }
+        } else if (key == "minPrice") {
           this.filtering.budget.value[0] = this.query[key];
         } else if (key == "maxPrice") {
           this.filtering.budget.value[1] = this.query[key];
