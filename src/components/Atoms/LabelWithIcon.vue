@@ -25,7 +25,7 @@ export default {
 
 <style scoped>
 .wrapper {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .icon {
