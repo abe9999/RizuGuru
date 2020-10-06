@@ -2,7 +2,11 @@
   <div id="detail">
     <Carousel />
     <RestaurantName :detail="detail" />
-    <b-tabs active-nav-item-class="font-weight-bold" content-class="mt-3" justified>
+    <b-tabs
+      active-nav-item-class="font-weight-bold"
+      content-class="mt-3"
+      justified
+    >
       <b-tab title="店舗情報">
         <Infomation :detail="detail" />
         <Link :detail="detail" />
@@ -30,6 +34,7 @@ import Access from "@/components/RestaurantDetail/Access.vue";
 import Payment from "@/components/RestaurantDetail/Payment.vue";
 import Tag from "@/components/RestaurantDetail/Tag.vue";
 import Map from "@/components/RestaurantDetail/Map.vue";
+import { getDetail } from "@/plugins/getDetail.js";
 
 export default {
   data() {
@@ -49,11 +54,16 @@ export default {
     Map,
   },
   mounted() {
-    this.$axios
-      .get(
-        `https://func-rizuguru.azurewebsites.net/api/GetDetail?id=${this.$route.params.id}`
-      )
-      .then((res) => (this.detail = res.data))
+    // this.$axios
+    //   .get(
+    //     `https://func-rizuguru.azurewebsites.net/api/GetDetail?id=${this.$route.params.id}`
+    //   )
+    //   .then((res) => (this.detail = res.data))
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+    getDetail(this.$route.params.id)
+      .then((res) => (this.detail = res))
       .catch((err) => {
         console.log(err);
       });

@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { searchRestaurantList } from "@/plugins/searchRestaurantList.js";
 
 export default {
   /* eslint-disable */
@@ -37,29 +37,48 @@ export default {
             map: map,
           });
 
-          axios
-            .get("https://func-rizuguru.azurewebsites.net/api/GetAllDetail?keyword=&lat=0&lng=0")
-            .then((res) => {
-              for (var i = 0; i < res.data.length; i++) {
-                markers[i] = new google.maps.Marker({
-                  map: map,
-                  id: res.data[i].id,
-                  position: new google.maps.LatLng(
-                    res.data[i].latitude,
-                    res.data[i].longitude
-                  ),
-                  icon: {
-                    url: require("@/assets/images/ロゴ2.png"),
-                    scaledSize: new google.maps.Size(35, 35),
-                  },
-                  title: res.data[i].name,
-                  animation: google.maps.Animation.DROP,
-                });
-              }
-            })
-            .catch((err) => {
-              console.log(err);
-            });
+          // axios
+          //   .get("https://func-rizuguru.azurewebsites.net/api/GetAllDetail?keyword=&lat=0&lng=0")
+          //   .then((res) => {
+          //     for (var i = 0; i < res.data.length; i++) {
+          //       markers[i] = new google.maps.Marker({
+          //         map: map,
+          //         id: res.data[i].id,
+          //         position: new google.maps.LatLng(
+          //           res.data[i].latitude,
+          //           res.data[i].longitude
+          //         ),
+          //         icon: {
+          //           url: require("@/assets/images/ロゴ2.png"),
+          //           scaledSize: new google.maps.Size(35, 35),
+          //         },
+          //         title: res.data[i].name,
+          //         animation: google.maps.Animation.DROP,
+          //       });
+          //     }
+          //   })
+          //   .catch((err) => {
+          //     console.log(err);
+          //   });
+
+          searchRestaurantList({ keyword: "", lat: 0, lng: 0 }).then((res) => {
+            for (var i = 0; i < res.length; i++) {
+              markers[i] = new google.maps.Marker({
+                map: map,
+                id: res[i].id,
+                position: new google.maps.LatLng(
+                  res[i].latitude,
+                  res[i].longitude
+                ),
+                icon: {
+                  url: require("@/assets/images/ロゴ2.png"),
+                  scaledSize: new google.maps.Size(35, 35),
+                },
+                title: res[i].name,
+                animation: google.maps.Animation.DROP,
+              });
+            }
+          });
 
           google.maps.event.addListener(map, "idle", function () {
             for (var i = 0; i < markers.length; i++) {

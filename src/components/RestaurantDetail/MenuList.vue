@@ -4,7 +4,7 @@
     <hr />
     <div class="menu-list">
       <table class="menu-list-tbl">
-          <tr v-for="(menu, index) in menus" :key="index">
+        <tr v-for="(menu, index) in menus" :key="index">
           <td>{{ menu.name }}</td>
           <td>{{ menu.price }}円</td>
         </tr>
@@ -30,6 +30,7 @@
 
 <script>
 import Category from "@/components/RestaurantDetail/CategoryName.vue";
+import { getMenu } from "@/plugins/getMenu.js";
 
 export default {
   data() {
@@ -44,13 +45,14 @@ export default {
   components: {
     Category,
   },
-  mounted: function () {
-    this.$axios
-      .get(`https://func-rizuguru.azurewebsites.net/api/GetMenu?id=${this.$route.params.id}`)
-      .then((res) => (this.menus = res.data))
-      .catch((err) => {
-        console.log(err);
-      });
+  mounted() {
+    // this.$axios
+    //   .get(`https://func-rizuguru.azurewebsites.net/api/GetMenu?id=${this.$route.params.id}`)
+    //   .then((res) => (this.menus = res.data))
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+    getMenu(this.$route.params.id).then((res) => (this.menus = res));
   },
   computed: {
     MenuItems() {

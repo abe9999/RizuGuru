@@ -55,6 +55,7 @@ import Button from "@/components/RestaurantRegistration/Atoms/Button.vue";
 import AlertToast from "@/components/RestaurantRegistration/Molecules/AlertToast.vue";
 import MenuList from "@/components/MenuRegistration/MenuList.vue";
 import Enumerable from "linq";
+import { getMenu } from "@/plugins/getMenu.js";
 
 export default {
   components: {
@@ -181,18 +182,19 @@ export default {
     },
   },
   mounted() {
-    this.$axios
-      .get(
-        `https://func-rizuguru.azurewebsites.net/api/GetMenu?id=${this.$route.params.id}`
-      )
-      .then((res) => {
-        this.menus = Enumerable.from(res.data)
-          .orderBy((x) => x.sortId)
-          .toArray();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // this.$axios
+    //   .get(
+    //     `https://func-rizuguru.azurewebsites.net/api/GetMenu?id=${this.$route.params.id}`
+    //   )
+    //   .then((res) => {
+    //     this.menus = Enumerable.from(res.data)
+    //       .orderBy((x) => x.sortId)
+    //       .toArray();
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+    getMenu(this.$route.params.id).then((res) => (this.menus = res));
   },
 };
 </script>
