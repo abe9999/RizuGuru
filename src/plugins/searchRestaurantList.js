@@ -16,7 +16,7 @@ export function searchRestaurantList(args) {
 // ホーム画面から検索
 async function getRestaurantListFromHome(args) {
     return new Promise((resolve) => {
-        axios.get(`https://func-rizuguru.azurewebsites.net/api/GetAllDetail?keyword=${args.keyword}&lat=${args.lat}&lng=${args.lng}`)
+        axios.get(`https://func-rizuguru.azurewebsites.net/api/GetRestaurantList?keyword=${args.keyword}&lat=${args.lat}&lng=${args.lng}`)
             .then((res) => {
                 var result = res.data
                 resolve(Promise.all(result))
