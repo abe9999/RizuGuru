@@ -162,6 +162,9 @@ export default {
     },
     confirmButtonAction() {
       // 表示コンポーネントの切り替え
+      if (this.restaurantId == null) {
+        return;
+      }
       this.isConfirm = !this.isConfirm;
     },
     submitButtonAction() {
