@@ -116,6 +116,18 @@ export default {
               state: true,
             });
             return true;
+          case "access":
+            this.validationSetter({
+              propatyName: this.propatyName,
+              state: true,
+            });
+            return true;
+          case "paymentMethod":
+            this.validationSetter({
+              propatyName: this.propatyName,
+              state: true,
+            });
+            return true;
           case "price":
             if (value <= 1000 && value.match(/\d/)) {
               this.validationSetter({

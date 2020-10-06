@@ -215,8 +215,6 @@ export default {
       this.textFormList[`${obj.propatyName}`].value = obj.value;
     },
     setValidationStateForTextFormList(obj) {
-      console.log(obj);
-      // console.log(this.textFormList[`${obj.propatyName}`].validationState);
       this.textFormList[`${obj.propatyName}`].validationState = obj.state;
     },
     getValueForSelectFormList(propatyName) {
