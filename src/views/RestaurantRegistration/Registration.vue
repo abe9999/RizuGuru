@@ -41,6 +41,9 @@ import RegistrationForm from "@/components/RestaurantRegistration/Templates/Regi
 import Button from "@/components/RestaurantRegistration/Atoms/Button.vue";
 import AlertToast from "@/components/RestaurantRegistration/Molecules/AlertToast.vue";
 import Enumerable from "linq";
+import { getGenresList } from "@/plugins/getGenresList.js";
+import { getTagsList } from "@/plugins/getTagsList.js";
+
 export default {
   components: {
     Headline,
@@ -187,22 +190,18 @@ export default {
     };
   },
   mounted() {
-    this.$axios
-      .get(`https://func-rizuguru.azurewebsites.net/api/GetGenre?`)
-      .then((res) => {
-        this.genreOptions = res.data;
-        this.genreOptions.unshift({ id: null, name: "未選択" });
-      });
-    this.$axios
-      .get(`https://func-rizuguru.azurewebsites.net/api/GetTag?`)
-      .then((res) => {
-        this.tagFormList.data = res.data
-          .filter((e) => e.id > 10)
-          .map((e) => {
-            e.state = false;
-            return e;
-          });
-      });
+    getGenresList().then((res) => {
+      this.genreOptions = res;
+      this.genreOptions.unshift({ id: null, name: "未選択" });
+    });
+    getTagsList().then((res) => {
+      this.tagFormList.data = res
+        .filter((e) => e.id > 10)
+        .map((e) => {
+          e.state = false;
+          return e;
+        });
+    });
   },
   methods: {
     getValueForTextFormList(propatyName) {
