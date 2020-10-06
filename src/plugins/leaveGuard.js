@@ -1,4 +1,4 @@
-const completeViewPathList = ["/RestaurantRegistration/Complete/", "/MenuRegistration/Complete/"]
+const completeViewPathList = ["/RestaurantRegistration/Complete", "/MenuRegistration/Complete"]
 export const leaveGuard = {
     beforeRouteLeave(to, from, next) {
         // completeViewPathListに含まれていないパスに遷移する場合、アラートを表示する。
