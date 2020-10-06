@@ -14,7 +14,11 @@
             :textFormList="textFormList"
             v-if="restaurantId"
           />
-          <Button message="追加" :action="addButtonAction" v-if="restaurantId" />
+          <Button
+            message="追加"
+            :action="addButtonAction"
+            v-if="restaurantId"
+          />
         </b-col>
         <b-col cols="12" md="8">
           <MenuList
@@ -59,6 +63,7 @@ import AlertToast from "@/components/RestaurantRegistration/Molecules/AlertToast
 import MenuList from "@/components/MenuRegistration/MenuList.vue";
 import Enumerable from "linq";
 import { getMenu } from "@/plugins/getMenu.js";
+import { leaveGuard } from "@/plugins/leaveGuard.js";
 
 export default {
   components: {
@@ -70,6 +75,7 @@ export default {
     AlertToast,
     MenuList,
   },
+  mixins: [leaveGuard],
   data() {
     return {
       isConfirm: false,

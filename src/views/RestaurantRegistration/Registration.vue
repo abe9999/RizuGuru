@@ -43,6 +43,7 @@ import AlertToast from "@/components/RestaurantRegistration/Molecules/AlertToast
 import Enumerable from "linq";
 import { getGenresList } from "@/plugins/getGenresList.js";
 import { getTagsList } from "@/plugins/getTagsList.js";
+import { leaveGuard } from "@/plugins/leaveGuard.js";
 
 export default {
   components: {
@@ -52,6 +53,7 @@ export default {
     Button,
     AlertToast,
   },
+  mixins: [leaveGuard],
   data() {
     return {
       isConfirm: false,
@@ -117,10 +119,11 @@ export default {
         },
         access: {
           title: "交通手段",
-          required: false,
+          required: true,
           propatyName: "access",
           placeholder: "四ツ谷駅から徒歩5分",
           value: "",
+          validationState: false,
         },
         paymentMethod: {
           title: "支払方法",
@@ -128,6 +131,7 @@ export default {
           propatyName: "paymentMethod",
           placeholder: "現金、クレジットカード",
           value: "",
+          validationState: false,
         },
         homePage: {
           title: "ホームページ",
@@ -211,6 +215,8 @@ export default {
       this.textFormList[`${obj.propatyName}`].value = obj.value;
     },
     setValidationStateForTextFormList(obj) {
+      console.log(obj);
+      // console.log(this.textFormList[`${obj.propatyName}`].validationState);
       this.textFormList[`${obj.propatyName}`].validationState = obj.state;
     },
     getValueForSelectFormList(propatyName) {
