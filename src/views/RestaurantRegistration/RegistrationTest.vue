@@ -456,6 +456,7 @@ export default {
 .wrapper {
   width: 95%;
   margin: 0 auto;
+  margin-top: 20px;
   font-size: 0.9em;
 }
 
