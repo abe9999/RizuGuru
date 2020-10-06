@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import { formValidation } from "@/plugins/formValidation.js";
 export default {
   props: {
     getter: {
@@ -43,105 +44,47 @@ export default {
     validationSetter: {
       type: Function,
       required: false,
+      default: () => {},
     },
+  },
+  data() {
+    return {
+      validation: false,
+    };
   },
   computed: {
     value: {
       get() {
+        // 親コンポーネントから入力値を取得
         return this.getter(this.propertyName);
       },
       set(value) {
+        if (this.required) {
+          // 入力フォームが必須の場合
+          // バリデーション
+          this.validation = formValidation(this.propertyName, value);
+          // 親コンポーネントにバリデーションの結果を渡す
+          this.validationSetter({
+            propertyName: this.propertyName,
+            state: this.validation,
+          });
+        }
+        // 親コンポーネントに入力値を渡す
         this.setter({ propertyName: this.propertyName, value: value });
       },
     },
-    validation() {
-      const value = this.getter(this.propertyName);
-      if (value && value.length > 0) {
-        switch (this.propertyName) {
-          case "name":
-            this.validationSetter({
-              propertyName: this.propertyName,
-              state: true,
-            });
-            return true;
-          case "nameKana":
-            // eslint-disable-next-line no-irregular-whitespace
-            if (value.match(/^[ァ-ヶー　]+$/)) {
-              this.validationSetter({
-                propertyName: this.propertyName,
-                state: true,
-              });
-              return true;
-            } else {
-              this.validationSetter({
-                propertyName: this.propertyName,
-                state: false,
-              });
-              return false;
-            }
-          case "phoneNumber":
-            if (
-              value.match(/^0\d{2,3}-\d{1,4}-\d{4}$/) ||
-              value.match(/^0\d{1}-\d{4}-\d{4}$/) ||
-              value.match(/^0\d{2}-\d{4}-\d{4}$/) ||
-              value.match(/^0\d{3}-\d{6}$/)
-            ) {
-              this.validationSetter({
-                propertyName: this.propertyName,
-                state: true,
-              });
-              return true;
-            } else {
-              this.validationSetter({
-                propertyName: this.propertyName,
-                state: false,
-              });
-              return false;
-            }
-          case "address":
-            this.validationSetter({
-              propertyName: this.propertyName,
-              state: true,
-            });
-            return true;
-          case "openingHours":
-            this.validationSetter({
-              propertyName: this.propertyName,
-              state: true,
-            });
-            return true;
-          case "regularHoliday":
-            this.validationSetter({
-              propertyName: this.propertyName,
-              state: true,
-            });
-            return true;
-          case "price":
-            if (value <= 1000 && value.match(/\d/)) {
-              this.validationSetter({
-                propertyName: this.propertyName,
-                state: true,
-              });
-              return true;
-            } else {
-              this.validationSetter({
-                propertyName: this.propertyName,
-                state: false,
-              });
-              return false;
-            }
-          default:
-            this.validationSetter({
-              propertyName: this.propertyName,
-              state: false,
-            });
-            return false;
-        }
-      } else {
-        this.validationSetter({ propertyName: this.propertyName, state: false });
-        return false;
-      }
-    },
+  },
+  mounted() {
+    if (this.required) {
+      // 入力フォームが必須の場合
+      // 画面表示時にバリデーション実行
+      this.validation = formValidation(this.propertyName, this.value);
+      // 親コンポーネントにバリデーションの結果を渡す
+      this.validationSetter({
+        propertyName: this.propertyName,
+        state: this.validation,
+      });
+    }
   },
 };
 </script>
