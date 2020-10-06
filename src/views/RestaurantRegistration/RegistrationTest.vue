@@ -36,15 +36,16 @@
 
 <script>
 /* eslint-disable no-undef */
-import Headline from "@/components/RestaurantRegistration/Molecules/Headline.vue";
-import SubHead from "@/components/RestaurantRegistration/Molecules/SubHead.vue";
-import RegistrationForm from "@/components/RestaurantRegistration/Templates/RegistrationForm.vue";
-import Button from "@/components/RestaurantRegistration/Atoms/Button.vue";
-import AlertToast from "@/components/RestaurantRegistration/Molecules/AlertToast.vue";
 import Enumerable from "linq";
 import { getGenresList } from "@/plugins/getGenresList.js";
 import { getTagsList } from "@/plugins/getTagsList.js";
 import { getStation } from "@/plugins/getStation.js";
+import { leaveGuard } from "@/plugins/leaveGuard.js";
+import Button from "@/components/Atoms/Button.vue";
+import Headline from "@/components/Molecules/Headline.vue";
+import SubHead from "@/components/Molecules/SubHead.vue";
+import AlertToast from "@/components/Molecules/AlertToast.vue";
+import RegistrationForm from "@/components/Templates/RestaurantRegistration/RegistrationForm.vue";
 
 export default {
   components: {
@@ -54,6 +55,7 @@ export default {
     Button,
     AlertToast,
   },
+  mixins: [leaveGuard],
   data() {
     return {
       isConfirm: false,
@@ -63,7 +65,7 @@ export default {
           title: "店名",
           cautionMessage: "",
           required: true,
-          propatyName: "name",
+          propertyName: "name",
           placeholder: "リズグル食堂",
           value: "",
           validationState: false,
@@ -71,7 +73,7 @@ export default {
         nameKana: {
           title: "店名(カナ)",
           required: true,
-          propatyName: "nameKana",
+          propertyName: "nameKana",
           cautionMessage: "※全角カタカナ",
           placeholder: "リズグルショクドウ",
           value: "",
@@ -80,7 +82,7 @@ export default {
         phoneNumber: {
           title: "電話番号",
           required: true,
-          propatyName: "phoneNumber",
+          propertyName: "phoneNumber",
           cautionMessage: "半角数字＋ハイフン",
           placeholder: "03-5919-1033",
           value: "",
@@ -89,7 +91,7 @@ export default {
         address: {
           title: "住所(都道府県・市区町村・番地)",
           required: true,
-          propatyName: "address",
+          propertyName: "address",
           placeholder: "新宿区四谷2-4-1",
           value: "",
           validationState: false,
@@ -97,14 +99,14 @@ export default {
         buildingName: {
           title: "住所(建物名・階数)",
           required: false,
-          propatyName: "buildingName",
+          propertyName: "buildingName",
           placeholder: "ACN四谷ビル6F",
           value: "",
         },
         openingHours: {
           title: "営業時間",
           required: true,
-          propatyName: "openingHours",
+          propertyName: "openingHours",
           placeholder: "10:45〜15:30  17:30〜21:00",
           value: "",
           validationState: false,
@@ -112,7 +114,7 @@ export default {
         regularHoliday: {
           title: "定休日",
           required: true,
-          propatyName: "regularHoliday",
+          propertyName: "regularHoliday",
           placeholder: "土・日・祝",
           value: "",
           validationState: false,
@@ -120,35 +122,35 @@ export default {
         paymentMethod: {
           title: "支払方法",
           required: true,
-          propatyName: "paymentMethod",
+          propertyName: "paymentMethod",
           placeholder: "現金、クレジットカード",
           value: "",
         },
         homePage: {
           title: "ホームページ",
           required: false,
-          propatyName: "homePage",
+          propertyName: "homePage",
           placeholder: "https://rizuguru.jp/",
           value: "",
         },
         twitter: {
           title: "Twitter",
           required: false,
-          propatyName: "twitter",
+          propertyName: "twitter",
           placeholder: "https://twitter.com/rizuguru",
           value: "",
         },
         facebook: {
           title: "Facebook",
           required: false,
-          propatyName: "facebook",
+          propertyName: "facebook",
           placeholder: "https://www.facebook.com/rizuguru",
           value: "",
         },
         instagram: {
           title: "Instagram",
           required: false,
-          propatyName: "instagram",
+          propertyName: "instagram",
           placeholder: "https://instagram.com/rizuguru",
           value: "",
         },
@@ -157,20 +159,20 @@ export default {
         genre1: {
           title: "ジャンル1",
           required: true,
-          propatyName: "genre1",
+          propertyName: "genre1",
           value: null,
           validationState: false,
         },
         genre2: {
           title: "ジャンル2",
           required: false,
-          propatyName: "genre2",
+          propertyName: "genre2",
           value: null,
         },
         genre3: {
           title: "ジャンル3",
           required: false,
-          propatyName: "genre3",
+          propertyName: "genre3",
           value: null,
         },
       },
@@ -203,23 +205,23 @@ export default {
     });
   },
   methods: {
-    getValueForTextFormList(propatyName) {
-      return this.textFormList[`${propatyName}`].value;
+    getValueForTextFormList(propertyName) {
+      return this.textFormList[`${propertyName}`].value;
     },
     setValueForTextFormList(obj) {
-      this.textFormList[`${obj.propatyName}`].value = obj.value;
+      this.textFormList[`${obj.propertyName}`].value = obj.value;
     },
     setValidationStateForTextFormList(obj) {
-      this.textFormList[`${obj.propatyName}`].validationState = obj.state;
+      this.textFormList[`${obj.propertyName}`].validationState = obj.state;
     },
-    getValueForSelectFormList(propatyName) {
-      return this.selectFormList[`${propatyName}`].value;
+    getValueForSelectFormList(propertyName) {
+      return this.selectFormList[`${propertyName}`].value;
     },
     setValueForSelectFormList(obj) {
-      this.selectFormList[`${obj.propatyName}`].value = obj.value;
+      this.selectFormList[`${obj.propertyName}`].value = obj.value;
     },
     setValidationStateForSelectFormList(obj) {
-      this.selectFormList[`${obj.propatyName}`].validationState = obj.state;
+      this.selectFormList[`${obj.propertyName}`].validationState = obj.state;
     },
     tagStateSwitcher(index) {
       this.tagFormList.data[index].state = !this.tagFormList.data[index].state;
