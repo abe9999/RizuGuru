@@ -60,7 +60,7 @@ export default {
           required: true,
           propatyName: "name",
           placeholder: "リズグル食堂",
-          value: "小宮食堂",
+          value: "",
           validationState: false,
         },
         nameKana: {
@@ -69,7 +69,7 @@ export default {
           propatyName: "nameKana",
           cautionMessage: "※全角カタカナ",
           placeholder: "リズグルショクドウ",
-          value: "コミヤショクドウ",
+          value: "",
           validationState: false,
         },
         phoneNumber: {
@@ -78,7 +78,7 @@ export default {
           propatyName: "phoneNumber",
           cautionMessage: "半角数字＋ハイフン",
           placeholder: "03-5919-1033",
-          value: "03-5919-1033",
+          value: "",
           validationState: false,
         },
         address: {
@@ -86,7 +86,7 @@ export default {
           required: true,
           propatyName: "address",
           placeholder: "新宿区四谷2-4-1",
-          value: "東京都稲城市若葉台２丁目１２",
+          value: "",
           validationState: false,
         },
         buildingName: {
@@ -94,14 +94,14 @@ export default {
           required: false,
           propatyName: "buildingName",
           placeholder: "ACN四谷ビル6F",
-          value: "ファインストーリア スカイツインズベルタワー(B棟)",
+          value: "",
         },
         openingHours: {
           title: "営業時間",
           required: true,
           propatyName: "openingHours",
           placeholder: "10:45〜15:30  17:30〜21:00",
-          value: "10:45〜15:30",
+          value: "",
           validationState: false,
         },
         regularHoliday: {
@@ -109,7 +109,7 @@ export default {
           required: true,
           propatyName: "regularHoliday",
           placeholder: "土・日・祝",
-          value: "土・日・祝",
+          value: "",
           validationState: false,
         },
         access: {
@@ -117,14 +117,14 @@ export default {
           required: false,
           propatyName: "access",
           placeholder: "四ツ谷駅から徒歩5分",
-          value: "若葉台駅から徒歩10分",
+          value: "",
         },
         paymentMethod: {
           title: "支払方法",
           required: false,
           propatyName: "paymentMethod",
           placeholder: "現金、クレジットカード",
-          value: "PayPay",
+          value: "",
         },
         homePage: {
           title: "ホームページ",
@@ -160,7 +160,7 @@ export default {
           title: "ジャンル1",
           required: true,
           propatyName: "genre1",
-          value: 1,
+          value: null,
           validationState: false,
         },
         genre2: {
