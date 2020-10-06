@@ -12,6 +12,7 @@ import RegistrationRegistrationTest from "../views/RestaurantRegistration/Regist
 import RegistrationComplete from "../views/RestaurantRegistration/Complete.vue";
 import MenuRegistration from "../views/MenuRegistration/MenuRegistration.vue";
 import MenuRegistrationComplete from "../views/MenuRegistration/Complete.vue";
+import HomeTest from "../views/Home/HomeTest.vue";
 
 Vue.use(VueRouter);
 
@@ -60,12 +61,16 @@ const routes = [
     component: RegistrationComplete,
   },
   {
-    path: "/MenuRegistration/:id",
+    path: "/MenuRegistration",
     component: MenuRegistration,
   },
   {
-    path: "/MenuRegistration/:id/Complete",
+    path: "/MenuRegistration/Complete",
     component: MenuRegistrationComplete,
+  },
+  {
+    path: "/HomeTest",
+    component: HomeTest,
   },
 ];
 

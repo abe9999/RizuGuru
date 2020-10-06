@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { searchRestaurantList } from "@/plugins/searchRestaurantList.js";
+import { getAllDetail } from "@/plugins/getAllDetail.js";
 
 export default {
   /* eslint-disable */
@@ -61,7 +61,7 @@ export default {
           //     console.log(err);
           //   });
 
-          searchRestaurantList({ keyword: "", lat: 0, lng: 0 }).then((res) => {
+          getAllDetail().then((res) => {
             for (var i = 0; i < res.length; i++) {
               markers[i] = new google.maps.Marker({
                 map: map,

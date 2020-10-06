@@ -6,6 +6,7 @@
       <SubHead subHead="メニュー情報" />
       <b-row>
         <b-col cols="12" md="4">
+          <SelectUnit @select="selectAction" />
           <RegistrationForm
             :textFormGetter="getValueForTextFormList"
             :textFormSetter="setValueForTextFormList"
@@ -50,6 +51,7 @@
 <script>
 import Headline from "@/components/RestaurantRegistration/Molecules/Headline.vue";
 import SubHead from "@/components/RestaurantRegistration/Molecules/SubHead.vue";
+import SelectUnit from "@/components/MenuRegistration/SelectUnit.vue";
 import RegistrationForm from "@/components/MenuRegistration/RegistrationForm.vue";
 import Button from "@/components/RestaurantRegistration/Atoms/Button.vue";
 import AlertToast from "@/components/RestaurantRegistration/Molecules/AlertToast.vue";
@@ -61,6 +63,7 @@ export default {
   components: {
     Headline,
     SubHead,
+    SelectUnit,
     RegistrationForm,
     Button,
     AlertToast,
@@ -134,6 +137,11 @@ export default {
       };
       this.menus.push(this.menu);
     },
+    selectAction(selected) {
+      if (selected) {
+        getMenu(selected).then((res) => (this.menus = res));
+      }
+    },
     updateAction(menuList) {
       this.menus = menuList;
     },
@@ -180,21 +188,6 @@ export default {
         solid: true,
       });
     },
-  },
-  mounted() {
-    // this.$axios
-    //   .get(
-    //     `https://func-rizuguru.azurewebsites.net/api/GetMenu?id=${this.$route.params.id}`
-    //   )
-    //   .then((res) => {
-    //     this.menus = Enumerable.from(res.data)
-    //       .orderBy((x) => x.sortId)
-    //       .toArray();
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-    getMenu(this.$route.params.id).then((res) => (this.menus = res));
   },
 };
 </script>
