@@ -54,16 +54,16 @@
 </template>
 
 <script>
-import Headline from "@/components/RestaurantRegistration/Molecules/Headline.vue";
-import SubHead from "@/components/RestaurantRegistration/Molecules/SubHead.vue";
-import SelectUnit from "@/components/MenuRegistration/SelectUnit.vue";
-import RegistrationForm from "@/components/MenuRegistration/RegistrationForm.vue";
-import Button from "@/components/RestaurantRegistration/Atoms/Button.vue";
-import AlertToast from "@/components/RestaurantRegistration/Molecules/AlertToast.vue";
-import MenuList from "@/components/MenuRegistration/MenuList.vue";
 import Enumerable from "linq";
 import { getMenu } from "@/plugins/getMenu.js";
 import { leaveGuard } from "@/plugins/leaveGuard.js";
+import Button from "@/components/Atoms/Button.vue";
+import Headline from "@/components/Molecules/Headline.vue";
+import SubHead from "@/components/Molecules/SubHead.vue";
+import AlertToast from "@/components/Molecules/AlertToast.vue";
+import SelectUnit from "@/components/Molecules/MenuRegistration/SelectUnit.vue";
+import RegistrationForm from "@/components/Templates/MenuRegistration/RegistrationForm.vue";
+import MenuList from "@/components/Templates/MenuRegistration/MenuList.vue";
 
 export default {
   components: {
@@ -85,7 +85,7 @@ export default {
           title: "メニュー名",
           cautionMessage: "",
           required: true,
-          propatyName: "name",
+          propertyName: "name",
           placeholder: "リズグル丼",
           value: "",
           validationState: false,
@@ -93,7 +93,7 @@ export default {
         nameKana: {
           title: "メニュー(カナ)",
           required: false,
-          propatyName: "nameKana",
+          propertyName: "nameKana",
           cautionMessage: "※全角カタカナ",
           placeholder: "リズグルドン",
           value: "",
@@ -102,7 +102,7 @@ export default {
         price: {
           title: "値段",
           required: true,
-          propatyName: "price",
+          propertyName: "price",
           cautionMessage: "※半角数字",
           placeholder: "750",
           value: "",
@@ -116,14 +116,14 @@ export default {
     };
   },
   methods: {
-    getValueForTextFormList(propatyName) {
-      return this.textFormList[`${propatyName}`].value;
+    getValueForTextFormList(propertyName) {
+      return this.textFormList[`${propertyName}`].value;
     },
     setValueForTextFormList(obj) {
-      this.textFormList[`${obj.propatyName}`].value = obj.value;
+      this.textFormList[`${obj.propertyName}`].value = obj.value;
     },
     setValidationStateForTextFormList(obj) {
-      this.textFormList[`${obj.propatyName}`].validationState = obj.state;
+      this.textFormList[`${obj.propertyName}`].validationState = obj.state;
     },
     addButtonAction() {
       // 未入力の必須項目の有無を確認

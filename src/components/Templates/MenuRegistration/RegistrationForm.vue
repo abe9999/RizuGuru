@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import InputFormUnit from "@/components/RestaurantRegistration/Molecules/InputFormUnit.vue";
+import InputFormUnit from "@/components/Molecules/InputFormUnit.vue";
 
 export default {
   components: {
