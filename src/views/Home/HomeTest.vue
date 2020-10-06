@@ -14,32 +14,17 @@
       >
     </div>
     <div class="search">
-      <b-input-group class="mb-2">
-        <b-form-input
-          id="input-area"
-          type="search"
-          v-model="keyword"
-          list="my-list-id"
-          placeholder="駅名やジャンルから検索"
-          @keydown.enter="searchByTextForm()"
-          @input="searchStation()"
-        />
-        <b-input-group-prepend is-text class="icon" @click="searchByTextForm()">
+      <vue-tags-input
+        v-model="tag"
+        :tags="tags"
+        :autocomplete-items="autocompleteItems"
+        :add-only-from-autocomplete="true"
+        placeholder="駅名やジャンルから検索"
+        @tags-changed="update"
+      />
+      <!-- <b-input-group-prepend is-text class="icon" @click="searchByTextForm()">
           <b-icon icon="search"></b-icon>
-        </b-input-group-prepend>
-      </b-input-group>
-      <datalist id="my-list-id">
-        <option v-for="(station, index) in stations" :key="index">
-          {{ station.name }}
-        </option>
-      </datalist>
-      <!-- <VueSuggestInput
-        v-model="selected"
-        :items="stationNames"
-        :max-suggest="5"
-        @input="searchStation()"
-      >
-      </VueSuggestInput> -->
+        </b-input-group-prepend> -->
     </div>
   </div>
 </template>
@@ -47,25 +32,28 @@
 <script>
 /* eslint-disable */
 import { getCurrentLocation } from "@/plugins/getCurrentLocation.js";
-import VueSuggestInput from "vue-suggest-input";
-import "vue-suggest-input/dist/vue-suggest-input.css";
+import VueTagsInput from "@johmun/vue-tags-input";
+import { getStation } from "@/plugins/getStation.js";
 
 export default {
   components: {
-    VueSuggestInput,
+    VueTagsInput,
   },
   data() {
     return {
       imgPath: require("@/assets/images/ロゴ.jpg"),
       currentLocation: {},
       keyword: "",
-      selected: "",
-      stations: [],
-      stationNames: [],
+      tag: "",
+      tags: [],
+      autocompleteItems: [],
+      debounce: null,
     };
   },
   mounted() {
     getCurrentLocation().then((res) => (this.currentLocation = res));
+    var element = document.querySelector("input");
+    element.setAttribute("v-on:keydown.enter", "searchByTextForm()");
   },
   methods: {
     searchByCurrentLocationBtn() {
@@ -86,40 +74,32 @@ export default {
       this.$router.push({
         name: "RestaurantList",
         query: {
-          keyword: this.keyword,
+          keyword: this.tags[0].text,
           lat: this.currentLocation.lat,
           lng: this.currentLocation.lng,
         },
       });
     },
-    // async searchStation() {
-    //   var searchWord = document.querySelector(".search input").value;
-    //   if (searchWord == 0) {
-    //     this.stationNames = [];
-    //   } else {
-    //     this.$axios
-    //       .get(
-    //         `https://func-rizuguru.azurewebsites.net/api/GetStation?word=${searchWord}`
-    //       )
-    //       .then((res) => {
-    //         this.stationNames = res.data.map((e) => e.name);
-    //       });
-    //   }
-    // },
-    async searchStation() {
-      var searchWord = document.getElementById("input-area").value;
-      if (searchWord.length == 0) {
-        this.stations = [];
-      } else {
-        await this.$axios
-          .get(
-            `https://func-rizuguru.azurewebsites.net/api/GetStation?word=${searchWord}`
-          )
-          .then((res) => {
-            this.stations = res.data.splice(0, 5);
-          });
-      }
+    update(newTags) {
+      this.autocompleteItems = [];
+      this.tags = newTags;
     },
+    initItems() {
+      clearTimeout(this.debounce);
+      this.debounce = setTimeout(() => {
+        getStation(this.tag)
+          .then((response) => {
+            var stations = response.splice(0, 5);
+            this.autocompleteItems = stations.map((a) => {
+              return { text: a.name };
+            });
+          })
+          .catch(() => console.warn("Oh. Something went wrong"));
+      }, 600);
+    },
+  },
+  watch: {
+    tag: "initItems",
   },
 };
 </script>
@@ -132,18 +112,12 @@ export default {
   text-align: center;
 }
 
+.vue-tags-input {
+  margin: 0 auto;
+}
+
 .button {
   margin-bottom: 20px;
-}
-
-.search-input {
-  width: 200px;
-}
-
-.mb-2 {
-  width: 80%;
-  max-width: 500px;
-  margin: 0 auto;
 }
 
 .icon {

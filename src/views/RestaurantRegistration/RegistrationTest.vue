@@ -158,7 +158,7 @@ export default {
           title: "ジャンル1",
           required: true,
           propatyName: "genre1",
-          value: 1,
+          value: null,
           validationState: false,
         },
         genre2: {
