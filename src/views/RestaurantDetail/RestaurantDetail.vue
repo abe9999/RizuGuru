@@ -54,14 +54,6 @@ export default {
     Map,
   },
   mounted() {
-    // this.$axios
-    //   .get(
-    //     `https://func-rizuguru.azurewebsites.net/api/GetDetail?id=${this.$route.params.id}`
-    //   )
-    //   .then((res) => (this.detail = res.data))
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
     getDetail(this.$route.params.id)
       .then((res) => (this.detail = res))
       .catch((err) => {

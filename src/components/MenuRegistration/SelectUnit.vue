@@ -5,6 +5,7 @@
       <b-form-select
         v-model="selected"
         :options="options"
+        :required="true"
         size="sm"
         class="mt-3"
         @change="select"

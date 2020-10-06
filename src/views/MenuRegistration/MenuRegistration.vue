@@ -12,8 +12,9 @@
             :textFormSetter="setValueForTextFormList"
             :textFormValidationStateSetter="setValidationStateForTextFormList"
             :textFormList="textFormList"
+            v-if="restaurantId"
           />
-          <Button message="追加" :action="addButtonAction" />
+          <Button message="追加" :action="addButtonAction" v-if="restaurantId" />
         </b-col>
         <b-col cols="12" md="8">
           <MenuList
@@ -80,7 +81,7 @@ export default {
           required: true,
           propatyName: "name",
           placeholder: "リズグル丼",
-          value: "リズグル丼",
+          value: "",
           validationState: false,
         },
         nameKana: {
@@ -89,7 +90,7 @@ export default {
           propatyName: "nameKana",
           cautionMessage: "※全角カタカナ",
           placeholder: "リズグルドン",
-          value: "リズグルドン",
+          value: "",
           validationState: false,
         },
         price: {
@@ -98,10 +99,11 @@ export default {
           propatyName: "price",
           cautionMessage: "※半角数字",
           placeholder: "750",
-          value: "750",
+          value: "",
           validationState: false,
         },
       },
+      restaurantId: null,
       menu: {},
       menus: [],
       deleteIds: [],
@@ -139,6 +141,7 @@ export default {
     },
     selectAction(selected) {
       if (selected) {
+        this.restaurantId = selected;
         getMenu(selected).then((res) => (this.menus = res));
       }
     },
@@ -172,14 +175,14 @@ export default {
       this.$axios
         .post("https://func-rizuguru.azurewebsites.net/api/AddMenu?", {
           Id: ids,
-          RestaurantId: this.$route.params.id,
+          RestaurantId: this.restaurantId,
           Name: names,
           NameKana: nameKanas,
           Price: prices,
           DeleteId: this.deleteIds,
         })
         .catch((err) => console.log(err));
-      this.$router.push(`/MenuRegistration/${this.$route.params.id}/Complete/`);
+      this.$router.push(`/MenuRegistration/Complete/`);
     },
     makeToast(variant = null) {
       this.$bvToast.toast("未入力の項目があります", {

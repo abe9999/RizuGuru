@@ -35,7 +35,7 @@
             >
           </b-nav-item>
           <b-nav-item>
-            <router-link to="/MenuRegistration/21" class="nav-link text-light"
+            <router-link to="/MenuRegistration" class="nav-link text-light"
               >メニュー追加</router-link
             >
           </b-nav-item>
