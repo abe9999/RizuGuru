@@ -124,7 +124,7 @@ export default {
         },
         paymentMethod: {
           title: "支払方法",
-          required: false,
+          required: true,
           propatyName: "paymentMethod",
           placeholder: "現金、クレジットカード",
           value: "",

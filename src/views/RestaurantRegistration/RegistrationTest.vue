@@ -44,6 +44,7 @@ import AlertToast from "@/components/RestaurantRegistration/Molecules/AlertToast
 import Enumerable from "linq";
 import { getGenresList } from "@/plugins/getGenresList.js";
 import { getTagsList } from "@/plugins/getTagsList.js";
+import { getStation } from "@/plugins/getStation.js";
 
 export default {
   components: {
@@ -64,7 +65,7 @@ export default {
           required: true,
           propatyName: "name",
           placeholder: "リズグル食堂",
-          value: "小宮食堂",
+          value: "",
           validationState: false,
         },
         nameKana: {
@@ -73,7 +74,7 @@ export default {
           propatyName: "nameKana",
           cautionMessage: "※全角カタカナ",
           placeholder: "リズグルショクドウ",
-          value: "コミヤショクドウ",
+          value: "",
           validationState: false,
         },
         phoneNumber: {
@@ -82,7 +83,7 @@ export default {
           propatyName: "phoneNumber",
           cautionMessage: "半角数字＋ハイフン",
           placeholder: "03-5919-1033",
-          value: "03-5919-1033",
+          value: "",
           validationState: false,
         },
         address: {
@@ -90,7 +91,7 @@ export default {
           required: true,
           propatyName: "address",
           placeholder: "新宿区四谷2-4-1",
-          value: "東京都稲城市若葉台２丁目１２",
+          value: "",
           validationState: false,
         },
         buildingName: {
@@ -98,14 +99,14 @@ export default {
           required: false,
           propatyName: "buildingName",
           placeholder: "ACN四谷ビル6F",
-          value: "ファインストーリア スカイツインズベルタワー(B棟)",
+          value: "",
         },
         openingHours: {
           title: "営業時間",
           required: true,
           propatyName: "openingHours",
           placeholder: "10:45〜15:30  17:30〜21:00",
-          value: "10:45〜15:30",
+          value: "",
           validationState: false,
         },
         regularHoliday: {
@@ -113,15 +114,15 @@ export default {
           required: true,
           propatyName: "regularHoliday",
           placeholder: "土・日・祝",
-          value: "土・日・祝",
+          value: "",
           validationState: false,
         },
         paymentMethod: {
           title: "支払方法",
-          required: false,
+          required: true,
           propatyName: "paymentMethod",
           placeholder: "現金、クレジットカード",
-          value: "PayPay",
+          value: "",
         },
         homePage: {
           title: "ホームページ",
@@ -184,7 +185,7 @@ export default {
       accesses: [],
       stations: [],
       coord: {},
-      stationNames: [],
+      stationCoords: [],
     };
   },
   mounted() {
@@ -365,79 +366,77 @@ export default {
         )
         .then((res) => {
           this.coord = res.data.results[0].geometry.location;
-          this.$axios
-            .get("https://func-rizuguru.azurewebsites.net/api/GetStation?word=")
-            .then((res) => {
-              this.stations = res.data;
-              for (var i = 0; i < this.stations.length; i++) {
-                var distance = this.geoDistance(
-                  this.coord.lat,
-                  this.coord.lng,
-                  this.stations[i].latitude,
-                  this.stations[i].longitude,
-                  0
-                );
-                this.stations[i].distance = distance;
-              }
+          getStation("").then((res) => {
+            this.stations = res;
+            for (var i = 0; i < this.stations.length; i++) {
+              var distance = this.geoDistance(
+                this.coord.lat,
+                this.coord.lng,
+                this.stations[i].latitude,
+                this.stations[i].longitude,
+                0
+              );
+              this.stations[i].distance = distance;
+            }
 
+            this.stations = Enumerable.from(this.stations)
+              .select((x) => x)
+              .orderBy((x) => x.distance)
+              .toArray();
+
+            if (this.stations[0].distance > 800) {
+              this.stations = this.stations.slice(0, 1);
+            } else {
               this.stations = Enumerable.from(this.stations)
-                .select((x) => x)
-                .orderBy((x) => x.distance)
+                .where((x) => x.distance <= 800)
+                .take(5)
                 .toArray();
+            }
 
-              if (this.stations[0].distance > 800) {
-                this.stations = this.stations.slice(0, 1);
-              } else {
-                this.stations = Enumerable.from(this.stations)
-                  .where((x) => x.distance <= 800)
-                  .take(5)
-                  .toArray();
-              }
+            for (var j = 0; j < this.stations.length; j++) {
+              this.stationCoords.push(
+                `${this.stations[j].latitude},${this.stations[j].longitude}`
+              );
+            }
 
-              for (var j = 0; j < this.stations.length; j++) {
-                this.stationNames.push(
-                  "東京都 " + this.stations[j].name + "駅 | "
+            this.fetchDistance(
+              this.stationCoords,
+              this.textFormList.address.value
+            ).then((res) => {
+              for (var i = 0; i < res.rows.length; i++) {
+                this.accesses.push(
+                  this.stations[i].name +
+                    "駅から徒歩" +
+                    res.rows[i].elements[0].duration.text
                 );
               }
 
-              this.fetchDistance(
-                this.stationNames,
-                this.textFormList.address.value
-              ).then((res) => {
-                for (var i = 0; i < res.rows.length; i++) {
-                  this.accesses.push(
-                    this.stations[i].name +
-                      "駅から徒歩" +
-                      res.rows[i].elements[0].duration.text
-                  );
-                }
-
-                this.$axios
-                  .post(
-                    "https://func-rizuguru.azurewebsites.net/api/AddRestaurant?",
-                    {
-                      Name: this.textFormList.name.value,
-                      NameKana: this.textFormList.nameKana.value,
-                      Address:
-                        this.textFormList.address.value +
-                        " " +
-                        this.textFormList.buildingName.value,
-                      Latitude: this.coord.lat,
-                      Longitude: this.coord.lng,
-                      Access: this.accesses.join(" "),
-                      PhoneNumber: this.textFormList.phoneNumber.value,
-                      OpeningHours: this.textFormList.openingHours.value,
-                      RegularHoliday: this.textFormList.regularHoliday.value,
-                      PaymentMethod: this.textFormList.paymentMethod.value,
-                      GenreId: genreIds,
-                      Url: urls,
-                      LinkGenreId: linkGenreIds,
-                      TagId: tagIds,
-                    }
-                  )
-                  .then(this.$router.push("/RestaurantRegistration/Complete"));
-              });
+              this.$axios
+                .post(
+                  "https://func-rizuguru.azurewebsites.net/api/AddRestaurant?",
+                  {
+                    Name: this.textFormList.name.value,
+                    NameKana: this.textFormList.nameKana.value,
+                    Address:
+                      this.textFormList.address.value +
+                      " " +
+                      this.textFormList.buildingName.value,
+                    Latitude: this.coord.lat,
+                    Longitude: this.coord.lng,
+                    Access: this.accesses.join(" "),
+                    PhoneNumber: this.textFormList.phoneNumber.value,
+                    OpeningHours: this.textFormList.openingHours.value,
+                    RegularHoliday: this.textFormList.regularHoliday.value,
+                    PaymentMethod: this.textFormList.paymentMethod.value,
+                    GenreId: genreIds,
+                    Url: urls,
+                    LinkGenreId: linkGenreIds,
+                    TagId: tagIds,
+                  }
+                )
+                .then(this.$router.push("/RestaurantRegistration/Complete"));
             });
+          });
         });
     },
     makeToast(variant = null) {
