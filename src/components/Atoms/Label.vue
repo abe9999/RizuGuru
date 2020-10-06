@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import RequiredStamp from "@/components/RestaurantRegistration/Atoms/RequiredStamp.vue";
-import CautionStamp from "@/components/RestaurantRegistration/Atoms/CautionStamp.vue";
+import RequiredStamp from "@/components/Atoms/RequiredStamp.vue";
+import CautionStamp from "@/components/Atoms/CautionStamp.vue";
 
 export default {
   components: {

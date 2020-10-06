@@ -7,9 +7,9 @@
 </template>
 
 <script>
-import Headline from "@/components/RestaurantRegistration/Molecules/Headline.vue";
-import SubHead from "@/components/RestaurantRegistration/Molecules/SubHead.vue";
-import Button from "@/components/RestaurantRegistration/Atoms/Button.vue";
+import Headline from "@/components/Molecules/Headline.vue";
+import SubHead from "@/components/Molecules/SubHead.vue";
+import Button from "@/components/Atoms/Button.vue";
 export default {
   components: {
     Headline,
