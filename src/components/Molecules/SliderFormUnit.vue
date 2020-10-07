@@ -1,6 +1,10 @@
 <template>
   <div class="wrapper">
-    <LabelWithIcon :title="itemData.displayName" :icon="itemData.icon" />
+    <LabelWithIcon
+      class="label"
+      :title="itemData.displayName"
+      :icon="itemData.icon"
+    />
     <SliderForm
       :getter="getter"
       :setter="setter"
@@ -30,12 +34,12 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-div {
-  margin-bottom: 10px;
-}
-
+<style scoped>
 .wrapper {
   width: 100%;
+}
+
+.label {
+  margin-bottom: 15px;
 }
 </style>

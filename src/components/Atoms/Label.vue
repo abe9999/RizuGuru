@@ -38,6 +38,5 @@ export default {
 <style scoped>
 label {
   display: flex;
-  padding-bottom: 5px;
 }
 </style>

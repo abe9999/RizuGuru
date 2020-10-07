@@ -1,6 +1,7 @@
 <template>
   <div class="wrapper">
     <Label
+      class="label"
       :title="title"
       :required="required"
       :cautionMessage="cautionMessage"
@@ -39,12 +40,12 @@ export default {
 </script>
 
 <style scoped>
-div {
-  margin-bottom: 10px;
-}
-
 .wrapper {
   width: 100%;
   margin: 0 auto;
+}
+
+.label {
+  margin-bottom: 15px;
 }
 </style>

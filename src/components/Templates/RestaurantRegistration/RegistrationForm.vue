@@ -1,6 +1,7 @@
 <template>
   <div class="basic">
     <InputFormUnit
+      class="form"
       v-for="(textForm, index) in textFormList"
       :key="index"
       :getter="textFormGetter"
@@ -13,6 +14,7 @@
       :validationSetter="textFormValidationStateSetter"
     />
     <SelectFormUnit
+      class="form"
       v-for="(selectForm, index) in selectFormList"
       :key="index"
       :getter="selectFormGetter"
@@ -24,6 +26,7 @@
       :validationSetter="selectFormValidationStateSetter"
     />
     <TagFormUnit
+      class="form"
       :title="tagFormList.title"
       :required="tagFormList.required"
       :tagFormList="tagFormList.data"
@@ -58,3 +61,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.form {
+  margin-bottom: 25px;
+}
+</style>

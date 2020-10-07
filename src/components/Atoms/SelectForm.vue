@@ -73,7 +73,7 @@ export default {
 
 <style scoped>
 select {
-  width: 90%;
+  width: 100%;
   height: 30px;
   margin-bottom: 15px;
   border: 1.5px solid gray;

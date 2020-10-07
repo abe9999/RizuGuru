@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <Label :title="title" :required="required" />
+    <Label class="label" :title="title" :required="required" />
     <SelectForm
       :getter="getter"
       :setter="setter"
@@ -34,16 +34,12 @@ export default {
 </script>
 
 <style scoped>
-select {
-  width: 90%;
-  height: 30px;
-  margin-bottom: 15px;
-  border: 1.5px solid gray;
-  border-radius: 3px;
-}
-
 .wrapper {
   width: 100%;
   margin: 0 auto;
+}
+
+.label {
+  margin-bottom: 15px;
 }
 </style>

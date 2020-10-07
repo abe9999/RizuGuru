@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <Label :title="title" :required="required" />
+    <Label class="label" :title="title" :required="required" />
     <b-row class="form-wrapper">
       <ToggleTag
         v-for="(tagData, index) in tagFormList"
@@ -42,5 +42,9 @@ export default {
   margin-top: 2.5%;
   background-color: #f6f6f6;
   border-radius: 5px;
+}
+
+.label {
+  margin-bottom: 15px;
 }
 </style>

@@ -1,6 +1,10 @@
 <template>
   <div class="wrapper">
-    <LabelWithIcon :title="itemData.displayName" :icon="itemData.icon" />
+    <LabelWithIcon
+      class="label"
+      :title="itemData.displayName"
+      :icon="itemData.icon"
+    />
     <InputForm
       :getter="getter"
       :setter="setter"
@@ -30,11 +34,11 @@ export default {
 </script>
 
 <style scoped>
-div {
-  margin-bottom: 10px;
-}
-
 .wrapper {
   width: 100%;
+}
+
+.label {
+  margin-bottom: 25px;
 }
 </style>

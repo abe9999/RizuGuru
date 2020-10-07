@@ -1,9 +1,7 @@
 <template>
-  <label>
-    <div class="wrapper">
-      <img :src="icon" class="icon" />
-      <label>{{ title }}</label>
-    </div>
+  <label class="wrapper">
+    <img :src="icon" class="icon" />
+    {{ title }}
   </label>
 </template>
 

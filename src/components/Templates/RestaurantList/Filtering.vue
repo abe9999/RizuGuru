@@ -18,30 +18,35 @@
         </b-row>
         <!-- 駅キーワード入力欄 -->
         <InputFormUnitWithIcon
+          class="form"
           :itemData="filteringItemData.station"
           :getter="getter"
           :setter="setter"
         />
         <!-- カテゴリーキーワード入力欄 -->
         <InputFormUnitWithIcon
+          class="form"
           :itemData="filteringItemData.genre"
           :getter="getter"
           :setter="setter"
         />
         <!-- 現在地からの距離選択欄 -->
         <SliderFormUnit
+          class="form"
           :itemData="filteringItemData.distance"
           :getter="getter"
           :setter="setter"
         />
         <!-- 予算選択欄 -->
         <SliderFormUnit
+          class="form"
           :itemData="filteringItemData.budget"
           :getter="getter"
           :setter="setter"
         />
         <!-- こだわりタグ選択欄 -->
         <TagFormUnit
+          class="form"
           :title="filteringItemData.tagsId.displayName"
           :required="filteringItemData.tagsId.required"
           :tagFormList="filteringItemData.tagsId.value"
@@ -100,6 +105,10 @@ export default {
   width: 100%;
   margin: 20px auto;
   font-size: 0.9em;
+}
+
+.form {
+  margin-bottom: 25px;
 }
 
 .keyword-list {
