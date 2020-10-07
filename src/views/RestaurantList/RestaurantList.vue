@@ -11,11 +11,7 @@
           :searchButtonAction="searchButtonAction"
           v-if="!loading"
         />
-        <img
-          class="loading"
-          src="@/assets/images/loading.gif"
-          v-else-if="loading"
-        />
+        <Loading v-else-if="loading" />
       </b-container>
     </div>
   </div>
@@ -23,11 +19,13 @@
 
 <script>
 import List from "@/components/Templates/RestaurantList/List.vue";
+import Loading from "@/components/Atoms/loading.vue";
 import { searchRestaurantList } from "@/plugins/searchRestaurantList.js";
 
 export default {
   components: {
     List,
+    Loading,
   },
   data() {
     return {
@@ -87,14 +85,5 @@ export default {
 .wrapper {
   width: 95%;
   margin: 10px auto 0 auto;
-}
-
-.loading {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 150px;
-  height: 150px;
 }
 </style>
