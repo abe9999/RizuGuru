@@ -5,6 +5,8 @@
         ref="slider"
         v-model="rangeSlider"
         v-bind="options"
+        :process-style="{ backgroundColor: '#689e39' }"
+        :tooltip-style="{ backgroundColor: '#689e39', borderColor: '#689e39'}"
         :tooltip="'always'"
         :tooltip-placement="'top'"
         :adsorb="true"
@@ -112,29 +114,5 @@ export default {
 
 .vue-slider {
   margin-top: 20px;
-}
-
-.vue-slider-process {
-  background-color: #689e39;
-}
-
-.vue-slider-dot {
-  @at-root &-handle {
-    background-color: #689e39;
-  }
-  @at-root &-focus {
-    box-shadow: none;
-  }
-  @at-root &-disabled {
-    cursor: not-allowed;
-    background-color: red;
-  }
-  @at-root &-tooltip {
-    @at-root &-inner {
-      padding: 5px 15px;
-      border-color: #689e39;
-      background-color: #689e39;
-    }
-  }
 }
 </style>

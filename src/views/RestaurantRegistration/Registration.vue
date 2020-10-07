@@ -1,37 +1,73 @@
 <template>
-  <div class="wrapper">
-    <div v-if="!isConfirm">
+  <section class="wrapper">
+    <b-container v-if="!isConfirm">
       <AlertToast :alertMessage="alertMessage" />
-      <Headline headline="店舗登録" />
-      <SubHead subHead="店舗情報" />
-      <RegistrationForm
-        :textFormList="textFormList"
-        :selectFormList="selectFormList"
-        :tagFormList="tagFormList"
-        :genreOptions="genreOptions"
-        :textFormGetter="getValueForTextFormList"
-        :textFormSetter="setValueForTextFormList"
-        :textFormValidationStateSetter="setValidationStateForTextFormList"
-        :selectFormGetter="getValueForSelectFormList"
-        :selectFormSetter="setValueForSelectFormList"
-        :selectFormValidationStateSetter="setValidationStateForSelectFormList"
-        :tagStateSwitcher="tagStateSwitcher"
-      />
-      <Button message="確認画面に進む" :action="confirmButtonAction" />
-    </div>
-    <div v-else>
-      <Headline headline="店舗登録入力確認" />
-      <SubHead subHead="以下の内容で登録してよろしいですか？" />
-      <table class="resultTable">
-        <tr v-for="(col, index) in confirmList" :key="index">
-          <td>{{ col.key }}</td>
-          <td>{{ col.value }}</td>
-        </tr>
-      </table>
-      <Button message="入力画面に戻る" :action="confirmButtonAction" />
-      <Button message="登録" :action="submitButtonAction" />
-    </div>
-  </div>
+      <b-row>
+        <b-col>
+          <Headline headline="店舗登録" />
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col>
+          <SubHead subHead="店舗情報" />
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col>
+          <RegistrationForm
+            :textFormList="textFormList"
+            :selectFormList="selectFormList"
+            :tagFormList="tagFormList"
+            :genreOptions="genreOptions"
+            :textFormGetter="getValueForTextFormList"
+            :textFormSetter="setValueForTextFormList"
+            :textFormValidationStateSetter="setValidationStateForTextFormList"
+            :selectFormGetter="getValueForSelectFormList"
+            :selectFormSetter="setValueForSelectFormList"
+            :selectFormValidationStateSetter="
+              setValidationStateForSelectFormList
+            "
+            :tagStateSwitcher="tagStateSwitcher"
+          />
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col>
+          <Button message="確認画面に進む" :action="confirmButtonAction" />
+        </b-col>
+      </b-row>
+    </b-container>
+    <b-container v-else>
+      <b-row>
+        <b-col>
+          <Headline headline="店舗登録入力確認" />
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col>
+          <SubHead subHead="以下の内容で登録してよろしいですか？" />
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col>
+          <table class="resultTable">
+            <tr v-for="(col, index) in confirmList" :key="index">
+              <td>{{ col.key }}</td>
+              <td>{{ col.value }}</td>
+            </tr>
+          </table>
+        </b-col>
+      </b-row>
+      <b-row align-h="center">
+        <b-col lg="3">
+          <Button message="入力画面に戻る" :action="confirmButtonAction" />
+        </b-col>
+        <b-col lg="3">
+          <Button message="登録" :action="submitButtonAction" />
+        </b-col>
+      </b-row>
+    </b-container>
+  </section>
 </template>
 
 <script>
