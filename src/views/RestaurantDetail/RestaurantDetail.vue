@@ -27,15 +27,15 @@
 
 <script>
 import Loading from "@/components/Atoms/loading.vue";
-import Carousel from "@/components/RestaurantDetail/Carousel.vue";
-import RestaurantName from "@/components/RestaurantDetail/RestaurantName.vue";
-import MenuList from "@/components/RestaurantDetail/MenuList.vue";
-import Infomation from "@/components/RestaurantDetail/Infomation.vue";
-import Link from "@/components/RestaurantDetail/Link.vue";
-import Access from "@/components/RestaurantDetail/Access.vue";
-import Payment from "@/components/RestaurantDetail/Payment.vue";
-import Tag from "@/components/RestaurantDetail/Tag.vue";
-import Map from "@/components/RestaurantDetail/Map.vue";
+import Carousel from "@/components/Molecules/RestaurantDetail/Carousel.vue";
+import RestaurantName from "@/components/Molecules/RestaurantDetail/RestaurantName.vue";
+import MenuList from "@/components/Molecules/RestaurantDetail/MenuList.vue";
+import Infomation from "@/components/Molecules/RestaurantDetail/Infomation.vue";
+import Link from "@/components/Molecules/RestaurantDetail/Link.vue";
+import Access from "@/components/Molecules/RestaurantDetail/Access.vue";
+import Payment from "@/components/Molecules/RestaurantDetail/Payment.vue";
+import Tag from "@/components/Molecules/RestaurantDetail/Tag.vue";
+import Map from "@/components/Molecules/RestaurantDetail/Map.vue";
 import { getDetail } from "@/plugins/getDetail.js";
 
 export default {

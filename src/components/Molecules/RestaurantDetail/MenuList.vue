@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import Category from "@/components/RestaurantDetail/Molecules/CategoryName.vue";
+import Category from "@/components/Molecules/RestaurantDetail/CategoryName.vue";
 import { getMenu } from "@/plugins/getMenu.js";
 
 export default {

@@ -33,17 +33,15 @@
     <div v-else>
       <Headline headline="メニュー登録入力確認" />
       <SubHead subHead="以下の内容で登録してよろしいですか？" />
-      <table class="resultTable" v-for="(menu, index) in menus" :key="index">
+      <table class="resultTable">
         <tr>
-          <td>メニュー名</td>
+          <th>メニュー名</th>
+          <th>メニュー名(カナ)</th>
+          <th>値段</th>
+        </tr>
+        <tr v-for="(menu, index) in menus" :key="index">
           <td>{{ menu.name }}</td>
-        </tr>
-        <tr>
-          <td>メニュー名(カナ)</td>
           <td>{{ menu.nameKana }}</td>
-        </tr>
-        <tr>
-          <td>値段</td>
           <td>{{ menu.price }}</td>
         </tr>
       </table>
@@ -56,6 +54,8 @@
 <script>
 import Enumerable from "linq";
 import { getMenu } from "@/plugins/getMenu.js";
+import { addMenu } from "@/plugins/addMenu.js";
+import { deleteMenu } from "@/plugins/deleteMenu.js";
 import { leaveGuard } from "@/plugins/leaveGuard.js";
 import Button from "@/components/Atoms/Button.vue";
 import Headline from "@/components/Molecules/Headline.vue";
@@ -139,6 +139,7 @@ export default {
       }
       this.menu = {
         id: "0000",
+        restaurantId: this.restaurantId,
         name: this.textFormList.name.value,
         nameKana: this.textFormList.nameKana.value,
         price: this.textFormList.price.value,
@@ -163,34 +164,15 @@ export default {
     confirmButtonAction() {
       // 表示コンポーネントの切り替え
       if (this.restaurantId == null) {
+        alert("店名を選択してください。");
         return;
       }
       this.isConfirm = !this.isConfirm;
     },
     submitButtonAction() {
       // 登録処理
-      var ids = this.menus.map((m) => {
-        return m.id;
-      });
-      var names = this.menus.map((m) => {
-        return m.name;
-      });
-      var nameKanas = this.menus.map((m) => {
-        return m.nameKana;
-      });
-      var prices = this.menus.map((m) => {
-        return m.price;
-      });
-      this.$axios
-        .post("https://func-rizuguru.azurewebsites.net/api/AddMenu?", {
-          Id: ids,
-          RestaurantId: this.restaurantId,
-          Name: names,
-          NameKana: nameKanas,
-          Price: prices,
-          DeleteId: this.deleteIds,
-        })
-        .catch((err) => console.log(err));
+      addMenu(this.menus);
+      deleteMenu(this.deleteIds);
       this.$router.push(`/MenuRegistration/Complete/`);
     },
     makeToast(variant = null) {
@@ -217,11 +199,9 @@ export default {
   margin: 0 auto 20px auto;
   width: 80%;
 }
+.resultTable th,
 .resultTable td {
   padding: 5px 10px;
-}
-.resultTable td:nth-child(odd) {
-  width: 30%;
 }
 .resultTable tr:nth-child(2n) {
   background-color: #f6f6f6;

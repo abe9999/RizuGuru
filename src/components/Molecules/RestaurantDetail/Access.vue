@@ -1,14 +1,14 @@
 <template>
-  <div class="payment">
-    <Category category="支払方法" />
+  <div class="access">
+    <Category category="交通手段" />
     <hr />
-    <p>{{ detail.paymentMethod }}</p>
+    <p>{{ detail.access }}</p>
     <hr />
   </div>
 </template>
 
 <script>
-import Category from "@/components/RestaurantDetail/Molecules/CategoryName.vue";
+import Category from "@/components/Molecules/RestaurantDetail/CategoryName.vue";
 
 export default {
   props: {
@@ -21,7 +21,7 @@ export default {
 </script>
 
 <style scoped>
-.payment {
+.access {
   margin-bottom: 30px;
 }
 </style>

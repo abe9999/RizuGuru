@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import Category from "@/components/RestaurantDetail/Molecules/CategoryName.vue";
+import Category from "@/components/Molecules/RestaurantDetail/CategoryName.vue";
 
 export default {
   /* eslint-disable */
