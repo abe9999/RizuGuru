@@ -2,24 +2,10 @@
   <div class="info">
     <Category category="店舗情報" />
     <hr />
-    <table class="info-tbl">
-      <tr>
-        <th>住所</th>
-        <td>{{ detail.address }}</td>
-      </tr>
-      <tr>
-        <th>営業時間</th>
-        <td>
-          <div>{{ detail.openingHours }}</div>
-        </td>
-      </tr>
-      <tr>
-        <th>定休日</th>
-        <td>{{ detail.regularHoliday }}</td>
-      </tr>
-      <tr>
-        <th>電話番号</th>
-        <td>{{ detail.phoneNumber }}</td>
+    <table class="info-tbl" v-if="detail">
+      <tr v-for="(info, index) in infoList" :key="index">
+        <th>{{ info.title }}</th>
+        <td>{{ info.value }}</td>
       </tr>
     </table>
     <hr />
@@ -27,14 +13,29 @@
 </template>
 
 <script>
-import Category from "@/components/RestaurantDetail/CategoryName.vue";
+import Category from "@/components/RestaurantDetail/Molecules/CategoryName.vue";
 
 export default {
   props: {
     detail: Object,
   },
+  data() {
+    return {
+      infoList: [],
+    };
+  },
   components: {
     Category,
+  },
+  watch: {
+    detail(newDetail) {
+      this.infoList = [
+        { title: "住所", value: newDetail.address },
+        { title: "営業時間", value: newDetail.openingHours },
+        { title: "定休日", value: newDetail.regularHoliday },
+        { title: "電話番号", value: newDetail.phoneNumber },
+      ];
+    },
   },
 };
 </script>

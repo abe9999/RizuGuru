@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import Category from "@/components/RestaurantDetail/CategoryName.vue";
+import Category from "@/components/RestaurantDetail/Molecules/CategoryName.vue";
 
 export default {
   components: {
