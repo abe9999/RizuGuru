@@ -40,6 +40,8 @@ import Enumerable from "linq";
 import { getGenresList } from "@/plugins/getGenresList.js";
 import { getTagsList } from "@/plugins/getTagsList.js";
 import { getStation } from "@/plugins/getStation.js";
+import { getCoord } from "@/plugins/getCoord.js";
+import { addRestaurant } from "@/plugins/addRestaurant.js";
 import { leaveGuard } from "@/plugins/leaveGuard.js";
 import Button from "@/components/Atoms/Button.vue";
 import Headline from "@/components/Molecules/Headline.vue";
@@ -92,7 +94,7 @@ export default {
           title: "住所(都道府県・市区町村・番地)",
           required: true,
           propertyName: "address",
-          placeholder: "新宿区四谷2-4-1",
+          placeholder: "東京都新宿区四谷2-4-1",
           value: "",
           validationState: false,
         },
@@ -362,84 +364,76 @@ export default {
         urls.push(this.textFormList.instagram.value);
       }
 
-      this.$axios
-        .get(
-          `https://maps.googleapis.com/maps/api/geocode/json?address=${this.textFormList.address.value}&components=country:JP&key=AIzaSyBoh8D4HaNFoW-IzGEm-Lsx5zqPEhdJ398`
-        )
-        .then((res) => {
-          this.coord = res.data.results[0].geometry.location;
-          getStation("").then((res) => {
-            this.stations = res;
-            for (var i = 0; i < this.stations.length; i++) {
-              var distance = this.geoDistance(
-                this.coord.lat,
-                this.coord.lng,
-                this.stations[i].latitude,
-                this.stations[i].longitude,
-                0
-              );
-              this.stations[i].distance = distance;
-            }
+      getCoord(this.textFormList.address.value).then((res) => {
+        this.coord = res.results[0].geometry.location;
+        getStation("").then((res) => {
+          this.stations = res;
+          for (var i = 0; i < this.stations.length; i++) {
+            var distance = this.geoDistance(
+              this.coord.lat,
+              this.coord.lng,
+              this.stations[i].latitude,
+              this.stations[i].longitude,
+              0
+            );
+            this.stations[i].distance = distance;
+          }
 
+          this.stations = Enumerable.from(this.stations)
+            .select((x) => x)
+            .orderBy((x) => x.distance)
+            .toArray();
+
+          if (this.stations[0].distance > 800) {
+            this.stations = this.stations.slice(0, 1);
+          } else {
             this.stations = Enumerable.from(this.stations)
-              .select((x) => x)
-              .orderBy((x) => x.distance)
+              .where((x) => x.distance <= 800)
+              .take(5)
               .toArray();
+          }
 
-            if (this.stations[0].distance > 800) {
-              this.stations = this.stations.slice(0, 1);
-            } else {
-              this.stations = Enumerable.from(this.stations)
-                .where((x) => x.distance <= 800)
-                .take(5)
-                .toArray();
-            }
+          for (var j = 0; j < this.stations.length; j++) {
+            this.stationCoords.push(
+              `${this.stations[j].latitude},${this.stations[j].longitude}`
+            );
+          }
 
-            for (var j = 0; j < this.stations.length; j++) {
-              this.stationCoords.push(
-                `${this.stations[j].latitude},${this.stations[j].longitude}`
+          this.fetchDistance(
+            this.stationCoords,
+            this.textFormList.address.value
+          ).then((res) => {
+            for (var i = 0; i < res.rows.length; i++) {
+              this.accesses.push(
+                this.stations[i].name +
+                  "駅から徒歩" +
+                  res.rows[i].elements[0].duration.text
               );
             }
 
-            this.fetchDistance(
-              this.stationCoords,
-              this.textFormList.address.value
-            ).then((res) => {
-              for (var i = 0; i < res.rows.length; i++) {
-                this.accesses.push(
-                  this.stations[i].name +
-                    "駅から徒歩" +
-                    res.rows[i].elements[0].duration.text
-                );
-              }
+            var postData = {
+              Name: this.textFormList.name.value,
+              NameKana: this.textFormList.nameKana.value,
+              Address: `${this.textFormList.address.value} ${this.textFormList.buildingName.value}`,
+              Latitude: this.coord.lat,
+              Longitude: this.coord.lng,
+              Access: this.accesses.join(" "),
+              PhoneNumber: this.textFormList.phoneNumber.value,
+              OpeningHours: this.textFormList.openingHours.value,
+              RegularHoliday: this.textFormList.regularHoliday.value,
+              PaymentMethod: this.textFormList.paymentMethod.value,
+              GenreId: genreIds,
+              Url: urls,
+              LinkGenreId: linkGenreIds,
+              TagId: tagIds,
+            };
 
-              this.$axios
-                .post(
-                  "https://func-rizuguru.azurewebsites.net/api/AddRestaurant?",
-                  {
-                    Name: this.textFormList.name.value,
-                    NameKana: this.textFormList.nameKana.value,
-                    Address:
-                      this.textFormList.address.value +
-                      " " +
-                      this.textFormList.buildingName.value,
-                    Latitude: this.coord.lat,
-                    Longitude: this.coord.lng,
-                    Access: this.accesses.join(" "),
-                    PhoneNumber: this.textFormList.phoneNumber.value,
-                    OpeningHours: this.textFormList.openingHours.value,
-                    RegularHoliday: this.textFormList.regularHoliday.value,
-                    PaymentMethod: this.textFormList.paymentMethod.value,
-                    GenreId: genreIds,
-                    Url: urls,
-                    LinkGenreId: linkGenreIds,
-                    TagId: tagIds,
-                  }
-                )
-                .then(this.$router.push("/RestaurantRegistration/Complete"));
-            });
+            addRestaurant(postData).then(
+              this.$router.push("/RestaurantRegistration/Complete")
+            );
           });
         });
+      });
     },
     makeToast(variant = null) {
       this.$bvToast.toast("未入力の項目があります", {
