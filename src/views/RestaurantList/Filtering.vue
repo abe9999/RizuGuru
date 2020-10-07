@@ -8,20 +8,18 @@
       :tagSwitcher="tagStateSwitcher"
       v-if="!loading"
     />
-    <img
-      class="loading"
-      src="@/assets/images/loading.gif"
-      v-else-if="loading"
-    />
+    <Loading v-else-if="loading" />
   </div>
 </template>
 
 <script>
 import Filtering from "@/components/Templates/RestaurantList/Filtering.vue";
+import Loading from "@/components/Atoms/loading.vue";
 import { getTagsList } from "@/plugins/getTagsList.js";
 export default {
   components: {
     Filtering,
+    Loading,
   },
   data() {
     return {

@@ -1,5 +1,6 @@
 <template>
-  <div id="detail">
+  <Loading v-if="loading" />
+  <div id="detail" v-else-if="!loading">
     <Carousel />
     <RestaurantName :detail="detail" />
     <b-tabs
@@ -25,6 +26,7 @@
 </template>
 
 <script>
+import Loading from "@/components/Atoms/loading.vue";
 import Carousel from "@/components/RestaurantDetail/Carousel.vue";
 import RestaurantName from "@/components/RestaurantDetail/RestaurantName.vue";
 import MenuList from "@/components/RestaurantDetail/MenuList.vue";
@@ -39,10 +41,12 @@ import { getDetail } from "@/plugins/getDetail.js";
 export default {
   data() {
     return {
+      loading: true,
       detail: {},
     };
   },
   components: {
+    Loading,
     Carousel,
     RestaurantName,
     MenuList,
@@ -55,7 +59,10 @@ export default {
   },
   mounted() {
     getDetail(this.$route.params.id)
-      .then((res) => (this.detail = res))
+      .then((res) => {
+        this.detail = res;
+        this.loading = false;
+      })
       .catch((err) => {
         console.log(err);
       });
