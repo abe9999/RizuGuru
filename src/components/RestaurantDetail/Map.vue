@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import Category from "@/components/RestaurantDetail/CategoryName.vue";
+import Category from "@/components/RestaurantDetail/Molecules/CategoryName.vue";
 
 export default {
   /* eslint-disable */
@@ -39,7 +39,7 @@ export default {
         ),
         map: map,
       });
-    }, 1000);
+    }, 3000);
   },
 };
 </script>
