@@ -9,7 +9,7 @@
       justified
     >
       <b-tab title="店舗情報">
-        <Infomation :detail="detail" />
+        <Infomation :detail="detail" :infoList="infoList" />
         <Link :detail="detail" />
         <Access :detail="detail" />
         <Payment :detail="detail" />
@@ -43,6 +43,7 @@ export default {
     return {
       loading: true,
       detail: {},
+      infoList: [],
     };
   },
   components: {
@@ -61,6 +62,12 @@ export default {
     getDetail(this.$route.params.id)
       .then((res) => {
         this.detail = res;
+        this.infoList = [
+          { title: "住所", value: this.detail.address },
+          { title: "営業時間", value: this.detail.openingHours },
+          { title: "定休日", value: this.detail.regularHoliday },
+          { title: "電話番号", value: this.detail.phoneNumber },
+        ];
         this.loading = false;
       })
       .catch((err) => {
