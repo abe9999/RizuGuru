@@ -74,6 +74,8 @@
 import Enumerable from "linq";
 import { getGenresList } from "@/plugins/getGenresList.js";
 import { getTagsList } from "@/plugins/getTagsList.js";
+import { getCoord } from "@/plugins/getCoord.js";
+import { addRestaurant } from "@/plugins/addRestaurant.js";
 import { leaveGuard } from "@/plugins/leaveGuard.js";
 import Button from "@/components/Atoms/Button.vue";
 import Headline from "@/components/Molecules/Headline.vue";
@@ -126,7 +128,7 @@ export default {
           title: "住所(都道府県・市区町村・番地)",
           required: true,
           propertyName: "address",
-          placeholder: "新宿区四谷2-4-1",
+          placeholder: "東京都新宿区四谷2-4-1",
           value: "",
           validationState: false,
         },
@@ -344,38 +346,28 @@ export default {
         linkGenreIds.push(5);
         urls.push(this.textFormList.instagram.value);
       }
-      this.$axios
-        .get(
-          `https://maps.googleapis.com/maps/api/geocode/json?address=${this.textFormList.address.value}&components=country:JP&key=AIzaSyBoh8D4HaNFoW-IzGEm-Lsx5zqPEhdJ398`
-        )
+      getCoord(this.textFormList.address.value)
         .then((res) => {
-          var coord = res.data.results[0].geometry.location;
-          this.$axios
-            .post(
-              "https://func-rizuguru.azurewebsites.net/api/AddRestaurant?",
-              {
-                Name: this.textFormList.name.value,
-                NameKana: this.textFormList.nameKana.value,
-                Address:
-                  this.textFormList.address.value +
-                  " " +
-                  this.textFormList.buildingName.value,
-                Latitude: coord.lat,
-                Longitude: coord.lng,
-                Access: this.textFormList.access.value,
-                PhoneNumber: this.textFormList.phoneNumber.value,
-                OpeningHours: this.textFormList.openingHours.value,
-                RegularHoliday: this.textFormList.regularHoliday.value,
-                PaymentMethod: this.textFormList.paymentMethod.value,
-                GenreId: genreIds,
-                Url: urls,
-                LinkGenreId: linkGenreIds,
-                TagId: tagIds,
-              }
-            )
-            .then(() => {
-              this.$router.push("/RestaurantRegistration/Complete");
-            });
+          var coord = res.results[0].geometry.location;
+          var postData = {
+            Name: this.textFormList.name.value,
+            NameKana: this.textFormList.nameKana.value,
+            Address: `${this.textFormList.address.value} ${this.textFormList.buildingName.value}`,
+            Latitude: coord.lat,
+            Longitude: coord.lng,
+            Access: this.textFormList.access.value,
+            PhoneNumber: this.textFormList.phoneNumber.value,
+            OpeningHours: this.textFormList.openingHours.value,
+            RegularHoliday: this.textFormList.regularHoliday.value,
+            PaymentMethod: this.textFormList.paymentMethod.value,
+            GenreId: genreIds,
+            Url: urls,
+            LinkGenreId: linkGenreIds,
+            TagId: tagIds,
+          };
+          addRestaurant(postData).then(() => {
+            this.$router.push("/RestaurantRegistration/Complete");
+          });
         })
         .catch((err) => alert(err));
     },
