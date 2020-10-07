@@ -9,27 +9,13 @@
           <td>{{ menu.price }}円</td>
         </tr>
       </table>
-      <!-- <b-button
-        block
-        variant="secondary"
-        size="sm"
-        v-if="count === 5 && menus.length > 5"
-        @click="isMore"
-      >もっとみる</b-button>
-      <b-button
-        block
-        variant="secondary"
-        size="sm"
-        v-else-if="count === menus.length && menus.length > 5"
-        @click="isClose"
-      >閉じる</b-button> -->
       <hr />
     </div>
   </div>
 </template>
 
 <script>
-import Category from "@/components/RestaurantDetail/CategoryName.vue";
+import Category from "@/components/RestaurantDetail/Molecules/CategoryName.vue";
 import { getMenu } from "@/plugins/getMenu.js";
 
 export default {
@@ -46,12 +32,6 @@ export default {
     Category,
   },
   mounted() {
-    // this.$axios
-    //   .get(`https://func-rizuguru.azurewebsites.net/api/GetMenu?id=${this.$route.params.id}`)
-    //   .then((res) => (this.menus = res.data))
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
     getMenu(this.$route.params.id).then((res) => (this.menus = res));
   },
   computed: {
