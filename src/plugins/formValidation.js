@@ -32,8 +32,13 @@ export function formValidation(propertyName, value) {
             case "paymentMethod":
                 return true;
             case "price":
-                if (value <= 1000 && value.match(/\d/)) {
-                    return true;
+                if (value <= 1000 && value.match(/^[0-9]+(\.[0-9]+)?$/)) {
+                    value = Number.parseFloat(value);
+                    if (Number.isInteger(value)) {
+                        return true
+                    } else {
+                        return false;
+                    }
                 } else {
                     return false;
                 }
