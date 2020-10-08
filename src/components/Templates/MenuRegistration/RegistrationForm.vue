@@ -11,6 +11,7 @@
       :placeholder="textForm.placeholder"
       :cautionMessage="textForm.cautionMessage"
       :validationSetter="textFormValidationStateSetter"
+      :style="styleObj"
     />
   </div>
 </template>
@@ -27,6 +28,11 @@ export default {
     textFormSetter: Function,
     textFormValidationStateSetter: Function,
     textFormList: Object,
+  },
+  data() {
+    return {
+      styleObj: { width: "91%", marginRight: "9%" },
+    };
   },
 };
 </script>

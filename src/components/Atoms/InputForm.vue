@@ -6,6 +6,7 @@
       debounce="250"
       :state="validation"
       :placeholder="placeholder"
+      :style="styleObj"
     />
     <b-form-input
       v-else
@@ -45,6 +46,10 @@ export default {
       type: Function,
       required: false,
       default: () => {},
+    },
+    styleObj: {
+      type: Object,
+      required: false,
     },
   },
   data() {
@@ -91,7 +96,6 @@ export default {
 
 <style scoped>
 input {
-  width: 100%;
   height: 30px;
   padding-left: 8px;
   margin-bottom: 15px;

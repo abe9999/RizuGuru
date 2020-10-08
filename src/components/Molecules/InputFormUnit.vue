@@ -13,6 +13,7 @@
       :required="required"
       :placeholder="placeholder"
       :validationSetter="validationSetter"
+      :style="styleObj"
     />
   </div>
 </template>
@@ -35,6 +36,7 @@ export default {
     placeholder: String,
     cautionMessage: String,
     validationSetter: Function,
+    styleObj: Object,
   },
 };
 </script>
