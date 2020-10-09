@@ -14,7 +14,7 @@
 
 <script>
 import Filtering from "@/components/Templates/RestaurantList/Filtering.vue";
-import Loading from "@/components/Atoms/loading.vue";
+import Loading from "@/components/Atoms/Loading.vue";
 import { getTagsList } from "@/plugins/getTagsList.js";
 export default {
   components: {

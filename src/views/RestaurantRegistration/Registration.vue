@@ -1,5 +1,8 @@
 <template>
-  <section class="wrapper">
+  <section v-if="loading">
+    <Loading />
+  </section>
+  <section class="wrapper" v-else-if="!loading">
     <b-container v-if="!isConfirm">
       <AlertToast :alertMessage="alertMessage" />
       <b-row>
@@ -77,6 +80,7 @@ import { getTagsList } from "@/plugins/getTagsList.js";
 import { getCoord } from "@/plugins/getCoord.js";
 import { addRestaurant } from "@/plugins/addRestaurant.js";
 import { leaveGuard } from "@/plugins/leaveGuard.js";
+import Loading from "@/components/Atoms/Loading.vue";
 import Button from "@/components/Atoms/Button.vue";
 import Headline from "@/components/Molecules/Headline.vue";
 import SubHead from "@/components/Molecules/SubHead.vue";
@@ -85,6 +89,7 @@ import RegistrationForm from "@/components/Templates/RestaurantRegistration/Regi
 
 export default {
   components: {
+    Loading,
     Headline,
     SubHead,
     RegistrationForm,
@@ -94,6 +99,7 @@ export default {
   mixins: [leaveGuard],
   data() {
     return {
+      loading: true,
       isConfirm: false,
       alertMessage: "",
       textFormList: {
@@ -235,14 +241,15 @@ export default {
     getGenresList().then((res) => {
       this.genreOptions = res;
       this.genreOptions.unshift({ id: null, name: "未選択" });
-    });
-    getTagsList().then((res) => {
-      this.tagFormList.data = res
-        .filter((e) => e.id > 10)
-        .map((e) => {
-          e.state = false;
-          return e;
-        });
+      getTagsList().then((res) => {
+        this.tagFormList.data = res
+          .filter((e) => e.id > 10)
+          .map((e) => {
+            e.state = false;
+            return e;
+          });
+      });
+      this.loading = false;
     });
   },
   methods: {

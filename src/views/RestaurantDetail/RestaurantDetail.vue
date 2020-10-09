@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import Loading from "@/components/Atoms/loading.vue";
+import Loading from "@/components/Atoms/Loading.vue";
 import Carousel from "@/components/Molecules/RestaurantDetail/Carousel.vue";
 import RestaurantName from "@/components/Molecules/RestaurantDetail/RestaurantName.vue";
 import MenuList from "@/components/Molecules/RestaurantDetail/MenuList.vue";

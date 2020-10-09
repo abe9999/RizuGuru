@@ -19,7 +19,7 @@
 
 <script>
 import List from "@/components/Templates/RestaurantList/List.vue";
-import Loading from "@/components/Atoms/loading.vue";
+import Loading from "@/components/Atoms/Loading.vue";
 import { searchRestaurantList } from "@/plugins/searchRestaurantList.js";
 
 export default {

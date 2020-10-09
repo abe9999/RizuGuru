@@ -1,5 +1,8 @@
 <template>
-  <div class="wrapper">
+  <section v-if="loading">
+    <Loading />
+  </section>
+  <section class="wrapper" v-else-if="!loading">
     <div v-if="!isConfirm">
       <AlertToast :alertMessage="alertMessage" />
       <Headline headline="店舗登録" />
@@ -31,7 +34,7 @@
       <Button message="入力画面に戻る" :action="confirmButtonAction" />
       <Button message="登録" :action="submitButtonAction" />
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -43,6 +46,7 @@ import { getStation } from "@/plugins/getStation.js";
 import { getCoord } from "@/plugins/getCoord.js";
 import { addRestaurant } from "@/plugins/addRestaurant.js";
 import { leaveGuard } from "@/plugins/leaveGuard.js";
+import Loading from "@/components/Atoms/Loading.vue";
 import Button from "@/components/Atoms/Button.vue";
 import Headline from "@/components/Molecules/Headline.vue";
 import SubHead from "@/components/Molecules/SubHead.vue";
@@ -51,6 +55,7 @@ import RegistrationForm from "@/components/Templates/RestaurantRegistration/Regi
 
 export default {
   components: {
+    Loading,
     Headline,
     SubHead,
     RegistrationForm,
@@ -60,6 +65,7 @@ export default {
   mixins: [leaveGuard],
   data() {
     return {
+      loading: true,
       isConfirm: false,
       alertMessage: "",
       textFormList: {
@@ -196,14 +202,15 @@ export default {
     getGenresList().then((res) => {
       this.genreOptions = res;
       this.genreOptions.unshift({ id: null, name: "未選択" });
-    });
-    getTagsList().then((res) => {
-      this.tagFormList.data = res
-        .filter((e) => e.id > 10)
-        .map((e) => {
-          e.state = false;
-          return e;
-        });
+      getTagsList().then((res) => {
+        this.tagFormList.data = res
+          .filter((e) => e.id > 10)
+          .map((e) => {
+            e.state = false;
+            return e;
+          });
+      });
+      this.loading = false;
     });
   },
   methods: {
