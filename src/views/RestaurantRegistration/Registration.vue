@@ -4,7 +4,7 @@
   </section>
   <section class="wrapper" v-else-if="!loading">
     <b-container v-if="!isConfirm">
-      <AlertToast :alertMessage="alertMessage" />
+      <AlertToast />
       <b-row>
         <b-col>
           <Headline headline="店舗登録" />
@@ -101,7 +101,6 @@ export default {
     return {
       loading: true,
       isConfirm: false,
-      alertMessage: "",
       textFormList: {
         name: {
           title: "店名",
@@ -276,53 +275,67 @@ export default {
     },
     confirmButtonAction() {
       // 未入力の必須項目の有無を確認
-      var textFormStateArr = Enumerable.from(this.textFormList)
+      var textFormValueArr = Enumerable.from(this.textFormList)
         .where((x) => x.value.required == true)
-        .select((x) => x.value.validationState)
+        .select((x) => x.value.value)
         .toArray();
-      var selectFormStateArr = Enumerable.from(this.selectFormList)
+      var selectFormValueArr = Enumerable.from(this.selectFormList)
         .where((x) => x.value.required == true)
-        .select((x) => x.value.validationState)
+        .select((x) => x.value.value)
         .toArray();
-      if (
-        !textFormStateArr.includes(false) &&
-        !selectFormStateArr.includes(false)
-      ) {
-        if (!this.isConfirm) {
-          // 入力画面から確認画面への遷移の場合
-          // 入力フォームの結果を配列化
-          var textFormResult = Enumerable.from(this.textFormList).toArray();
-          var selectFormResult = Enumerable.from(this.selectFormList).toArray();
-          var tagFormResult = Enumerable.from(this.tagFormList.data)
-            .where((x) => x.state == true)
-            .select((x) => x.tagContent)
-            .toArray()
-            .join("・");
-          textFormResult = textFormResult.map((e) => ({
-            key: e.value.title,
-            value: e.value.value,
-          }));
-          selectFormResult = selectFormResult.map((e) => ({
-            key: e.value.title,
-            value: Enumerable.from(this.genreOptions)
-              .where((x) => x.id == e.value.value)
-              .select((x) => x.name)
-              .single(),
-          }));
-          textFormResult.forEach((e) => this.confirmList.push(e));
-          selectFormResult.forEach((e) => this.confirmList.push(e));
-          this.confirmList.push({ key: "タグ", value: tagFormResult });
+      if (!textFormValueArr.includes("") && !selectFormValueArr.includes("")) {
+        // 不正な入力の有無を確認
+        var textFormValidateArr = Enumerable.from(this.textFormList)
+          .where((x) => x.value.required == true)
+          .select((x) => x.value.validationState)
+          .toArray();
+        var selectFormValidateArr = Enumerable.from(this.selectFormList)
+          .where((x) => x.value.required == true)
+          .select((x) => x.value.validationState)
+          .toArray();
+        if (
+          !textFormValidateArr.includes(false) &&
+          !selectFormValidateArr.includes(false)
+        ) {
+          if (!this.isConfirm) {
+            // 入力画面から確認画面への遷移の場合
+            // 入力フォームの結果を配列化
+            var textFormResult = Enumerable.from(this.textFormList).toArray();
+            var selectFormResult = Enumerable.from(
+              this.selectFormList
+            ).toArray();
+            var tagFormResult = Enumerable.from(this.tagFormList.data)
+              .where((x) => x.state == true)
+              .select((x) => x.tagContent)
+              .toArray()
+              .join("・");
+            textFormResult = textFormResult.map((e) => ({
+              key: e.value.title,
+              value: e.value.value,
+            }));
+            selectFormResult = selectFormResult.map((e) => ({
+              key: e.value.title,
+              value: Enumerable.from(this.genreOptions)
+                .where((x) => x.id == e.value.value)
+                .select((x) => x.name)
+                .single(),
+            }));
+            textFormResult.forEach((e) => this.confirmList.push(e));
+            selectFormResult.forEach((e) => this.confirmList.push(e));
+            this.confirmList.push({ key: "タグ", value: tagFormResult });
+          } else {
+            // 確認画面から入力画面への遷移の場合
+            // 結果表示テーブル用の変数を空に
+            this.confirmList = [];
+          }
+          // 表示コンポーネントの切り替え
+          this.isConfirm = !this.isConfirm;
         } else {
-          // 確認画面から入力画面への遷移の場合
-          // 結果表示テーブル用の変数を空に
-          this.confirmList = [];
+          // 未入力の項目がある場合のトースト表示
+          this.makeToast("danger", "不正な入力があります");
         }
-        // 表示コンポーネントの切り替え
-        this.isConfirm = !this.isConfirm;
       } else {
-        // 未入力の項目がある場合のトースト表示
-        this.makeToast("danger");
-        this.alertMessage = "未入力の項目があります";
+        this.makeToast("danger", "必須項目が未入力です");
       }
     },
     submitButtonAction() {
@@ -378,8 +391,8 @@ export default {
         })
         .catch((err) => alert(err));
     },
-    makeToast(variant = null) {
-      this.$bvToast.toast("未入力の項目があります", {
+    makeToast(variant, message) {
+      this.$bvToast.toast(message, {
         title: "注意！",
         variant: variant,
         solid: true,

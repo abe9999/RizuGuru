@@ -5,15 +5,7 @@
 </template>
 
 <script>
-export default {
-  props: {
-    alertMessage: {
-      type: String,
-      required: true,
-      default: "AlertMessage",
-    },
-  },
-};
+export default {};
 </script>
 
 <style scoped>
