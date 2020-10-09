@@ -39,11 +39,22 @@
               >メニュー追加</router-link
             >
           </b-nav-item>
-           <b-nav-item>
-            <router-link to="/RestaurantRegistration/RegistrationTest" class="nav-link text-light">テスト</router-link>
+          <b-nav-item>
+            <router-link
+              to="/RestaurantRegistration/RegistrationTest"
+              class="nav-link text-light"
+              >テスト</router-link
+            >
           </b-nav-item>
-           <b-nav-item>
-            <router-link to="/ImageRegistration/" class="nav-link text-light">写真追加</router-link>
+          <b-nav-item>
+            <router-link to="/ImageRegistration/" class="nav-link text-light"
+              >写真追加</router-link
+            >
+          </b-nav-item>
+          <b-nav-item>
+            <router-link to="/AddressSubmit" class="nav-link text-light"
+              >住所登録テスト</router-link
+            >
           </b-nav-item>
           <!-- <b-nav-item>
             <router-link to="/RestaurantList" class="nav-link text-light">現在地から探す</router-link>

@@ -15,6 +15,7 @@ import MenuRegistrationComplete from "../views/MenuRegistration/Complete.vue";
 import ImageRegistration from "../views/ImageRegistration/ImageRegistration.vue";
 import ImageRegistrationComplete from "../views/ImageRegistration/Complete.vue";
 import HomeTest from "../views/Home/HomeTest.vue";
+import AddressSubmit from "../views/Home/AddressSubmit.vue"
 
 Vue.use(VueRouter);
 
@@ -81,6 +82,10 @@ const routes = [
   {
     path: "/HomeTest",
     component: HomeTest,
+  },
+  {
+    path: "/AddressSubmit",
+    component: AddressSubmit,
   },
 ];
 

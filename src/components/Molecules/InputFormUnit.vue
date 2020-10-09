@@ -14,6 +14,7 @@
       :placeholder="placeholder"
       :validationSetter="validationSetter"
       :style="styleObj"
+      :disabled="disabled"
     />
   </div>
 </template>
@@ -37,6 +38,7 @@ export default {
     cautionMessage: String,
     validationSetter: Function,
     styleObj: Object,
+    disabled: Boolean,
   },
 };
 </script>

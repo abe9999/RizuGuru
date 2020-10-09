@@ -7,12 +7,14 @@
       :state="validation"
       :placeholder="placeholder"
       :style="styleObj"
+      :disabled="disabled"
     />
     <b-form-input
       v-else
       v-model="value"
       debounce="250"
       :placeholder="placeholder"
+      :disabled="disabled"
     />
   </b-col>
 </template>
@@ -49,6 +51,10 @@ export default {
     },
     styleObj: {
       type: Object,
+      required: false,
+    },
+    disabled: {
+      type: Boolean,
       required: false,
     },
   },
