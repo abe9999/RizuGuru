@@ -6,7 +6,7 @@
       <SubHead subHead="メニュー情報" />
       <b-row>
         <b-col cols="12" md="4">
-          <SelectUnit @select="selectAction" />
+          <SelectNameUnit @select="selectAction" />
           <RegistrationForm
             :textFormGetter="getValueForTextFormList"
             :textFormSetter="setValueForTextFormList"
@@ -61,7 +61,7 @@ import Button from "@/components/Atoms/Button.vue";
 import Headline from "@/components/Molecules/Headline.vue";
 import SubHead from "@/components/Molecules/SubHead.vue";
 import AlertToast from "@/components/Molecules/AlertToast.vue";
-import SelectUnit from "@/components/Molecules/MenuRegistration/SelectUnit.vue";
+import SelectNameUnit from "@/components/Molecules/SelectNameUnit.vue";
 import RegistrationForm from "@/components/Templates/MenuRegistration/RegistrationForm.vue";
 import MenuList from "@/components/Templates/MenuRegistration/MenuList.vue";
 
@@ -69,7 +69,7 @@ export default {
   components: {
     Headline,
     SubHead,
-    SelectUnit,
+    SelectNameUnit,
     RegistrationForm,
     Button,
     AlertToast,
