@@ -80,7 +80,6 @@ export default {
           file
         );
         this.images[index].id = index + 1;
-        this.images[index].restaurantId = this.restaurantId;
         this.images[index].image = await this.getBase64(file);
       }
     },
@@ -111,14 +110,16 @@ export default {
     },
     submitButtonAction() {
       // 確認ダイアログの表示
-      console.log(this.images);
       if (this.restaurantId == null) {
         alert("店名を選択してください。");
         return;
       }
       var confirm = window.confirm("この内容で登録しますか？");
       if (confirm) {
-        this.images.forEach((x) => (x.image = x.image.split(",")[1]));
+        this.images.forEach((x) => {
+          x.restaurantId = this.restaurantId;
+          x.image = x.image.split(",")[1];
+        });
         uploadImages(this.images);
       } else {
         return;

@@ -4,7 +4,7 @@ export async function uploadImages(postData) {
   return new Promise((resolve) => {
     axios
       .post(
-        "https://func-rizuguru.azurewebsites.net/api/UploadImages?",
+        "https://func-rizuguruimage.azurewebsites.net/api/UploadImages?",
         postData
       )
       .then((res) => {
