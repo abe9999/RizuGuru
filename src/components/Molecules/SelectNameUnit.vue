@@ -2,7 +2,9 @@
   <div class="basic">
     <b-col>
       <Label title="店名" :required="true"></Label>
+      <Loading v-if="loading" />
       <b-form-select
+        v-else-if="!loading"
         v-model="selected"
         :options="options"
         :required="true"
@@ -16,14 +18,17 @@
 
 <script>
 import Label from "@/components/Atoms/Label.vue";
+import Loading from "@/components/Atoms/Loading.vue";
 import { getAllDetail } from "@/plugins/getAllDetail.js";
 
 export default {
   components: {
     Label,
+    Loading,
   },
   data() {
     return {
+      loading: true,
       options: [],
       selected: "",
     };
@@ -34,12 +39,12 @@ export default {
     },
   },
   mounted() {
-    getAllDetail().then(
-      (res) =>
-        (this.options = res.map((e) => {
-          return { value: e.id, text: e.name };
-        }))
-    );
+    getAllDetail().then((res) => {
+      this.options = res.map((e) => {
+        return { value: e.id, text: e.name };
+      });
+      this.loading = false;
+    });
   },
 };
 </script>
@@ -50,7 +55,6 @@ label {
   margin-bottom: -0.5rem;
 }
 .mt-3 {
-  width: 98%;
   margin-bottom: 10px;
 }
 </style>

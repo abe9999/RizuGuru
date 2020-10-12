@@ -11,7 +11,6 @@
       :placeholder="textForm.placeholder"
       :cautionMessage="textForm.cautionMessage"
       :validationSetter="textFormValidationStateSetter"
-      :style="styleObj"
     />
   </div>
 </template>

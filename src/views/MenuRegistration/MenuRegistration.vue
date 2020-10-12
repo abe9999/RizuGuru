@@ -1,9 +1,17 @@
 <template>
   <div class="menu-wrapper">
-    <div v-if="!isConfirm">
-      <AlertToast :alertMessage="alertMessage" />
-      <Headline headline="メニュー登録" />
-      <SubHead subHead="メニュー情報" />
+    <b-container v-if="!isConfirm">
+      <AlertToast />
+      <b-row>
+        <b-col>
+          <Headline headline="メニュー登録" />
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col>
+          <SubHead subHead="メニュー情報" />
+        </b-col>
+      </b-row>
       <b-row>
         <b-col cols="12" md="4">
           <SelectNameUnit @select="selectAction" />
@@ -29,7 +37,7 @@
         </b-col>
       </b-row>
       <Button message="確認画面に進む" :action="confirmButtonAction" />
-    </div>
+    </b-container>
     <div v-else>
       <Headline headline="メニュー登録入力確認" />
       <SubHead subHead="以下の内容で登録してよろしいですか？" />
@@ -191,9 +199,6 @@ export default {
   width: 95%;
   margin: 20px auto 0 auto;
   font-size: 0.9em;
-}
-.basic {
-  margin-left: 7%;
 }
 .resultTable {
   margin: 0 auto 20px auto;

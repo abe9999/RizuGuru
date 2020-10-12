@@ -1,32 +1,42 @@
 <template>
   <div class="wrapper">
-    <Headline headline="写真登録" />
-    <SubHead subHead="写真情報" />
-    <SelectNameUnit @select="selectAction" />
-    <form id="image-form">
-      <table id="image-table" border="1">
-        <tr v-for="(item, index) in items" :key="index">
-          <th>{{ item.title }}</th>
-          <td>
-            <img class="image-view" />
-          </td>
-          <td>
-            <input
-              ref="file"
-              :id="item.buttonId"
-              class="file-button"
-              type="file"
-              @change="getIndex(index)"
-            />
-            <b-button variant="success" tag="label" :for="item.buttonId">
-              画像を選択
-            </b-button>
-          </td>
-        </tr>
-      </table>
-    </form>
-    <Button message="登録" :action="submitButtonAction" />
-    <hr />
+    <b-container>
+      <b-row>
+        <b-col>
+          <Headline headline="写真登録" />
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col>
+          <SubHead subHead="写真情報" />
+        </b-col>
+      </b-row>
+      <SelectNameUnit @select="selectAction" />
+      <form id="image-form" v-if="restaurantId">
+        <table id="image-table" border="1">
+          <tr v-for="(item, index) in items" :key="index">
+            <th>{{ item.title }}</th>
+            <td>
+              <img class="image-view" />
+            </td>
+            <td>
+              <input
+                ref="file"
+                :id="item.buttonId"
+                class="file-button"
+                type="file"
+                @change="getIndex(index)"
+              />
+              <b-button variant="success" tag="label" :for="item.buttonId">
+                画像選択
+              </b-button>
+            </td>
+          </tr>
+        </table>
+      </form>
+      <Button message="登録" :action="submitButtonAction" />
+      <hr />
+    </b-container>
   </div>
 </template>
 
@@ -36,6 +46,7 @@ import SubHead from "@/components/Molecules/SubHead.vue";
 import SelectNameUnit from "@/components/Molecules/SelectNameUnit.vue";
 import Button from "@/components/Atoms/Button.vue";
 import { uploadImages } from "@/plugins/uploadImages.js";
+import { leaveGuard } from "@/plugins/leaveGuard.js";
 
 export default {
   components: {
@@ -44,6 +55,7 @@ export default {
     SelectNameUnit,
     Button,
   },
+  mixins: [leaveGuard],
   data() {
     return {
       restaurantId: null,
