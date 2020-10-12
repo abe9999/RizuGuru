@@ -1,7 +1,12 @@
 <template>
   <div class="wrapper">
     <b-form-group>
-      <Label class="label" :title="title" :required="required" />
+      <Label
+        class="label"
+        :title="title"
+        :required="required"
+        :cautionMessage="cautionMessage"
+      />
       <DatalistForm
         :getter="getter"
         :setter="setter"
@@ -32,6 +37,7 @@ export default {
     options: Array,
     propertyName: String,
     required: Boolean,
+    cautionMessage: String,
     validationSetter: Function,
     placeholder: String,
     disabled: Boolean,

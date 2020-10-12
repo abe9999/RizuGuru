@@ -6,6 +6,7 @@
       :title="prefecture.title"
       :getter="getSelectFormValue"
       :setter="setSelectFormValue"
+      :validationSetter="setValidationState"
       :options="prefecture.options"
       :propertyName="prefecture.propertyName"
       :required="prefecture.required"
@@ -14,31 +15,36 @@
       :title="city.title"
       :getter="getSelectFormValue"
       :setter="setSelectFormValue"
+      :validationSetter="setValidationState"
       :options="city.options"
       :propertyName="city.propertyName"
       :required="city.required"
-      placeholder="都道府県を選択してください"
+      :placeholder="city.placeholder"
       :disabled="city.disabled"
+      :cautionMessage="city.cautionMessage"
     />
     <DatalistFormUnit
       :title="town.title"
       :getter="getSelectFormValue"
       :setter="setSelectFormValue"
+      :validationSetter="setValidationState"
       :options="town.options"
       :propertyName="town.propertyName"
       :required="town.required"
-      placeholder="市区町村を選択してください"
+      :placeholder="town.placeholder"
       :disabled="town.disabled"
+      :cautionMessage="town.cautionMessage"
     />
     <InputFormUnit
-      :title="blockNumber.title"
+      :title="buildingName.title"
       :getter="getSelectFormValue"
       :setter="setSelectFormValue"
-      :options="blockNumber.options"
-      :propertyName="blockNumber.propertyName"
-      :required="blockNumber.required"
-      placeholder="町域を選択してください"
-      :disabled="blockNumber.disabled"
+      :options="buildingName.options"
+      :propertyName="buildingName.propertyName"
+      :required="buildingName.required"
+      :placeholder="buildingName.placeholder"
+      :disabled="buildingName.disabled"
+      :cautionMessage="buildingName.cautionMessage"
     />
     <b-row>
       <b-col>
@@ -66,7 +72,7 @@ export default {
     return {
       prefecture: {
         title: "都道府県",
-        required: false,
+        required: true,
         propertyName: "prefecture",
         value: null,
         validationState: false,
@@ -74,30 +80,36 @@ export default {
       },
       city: {
         title: "市区町村",
-        required: false,
+        required: true,
         propertyName: "city",
         value: null,
         validationState: false,
         options: [],
+        placeholder: "都道府県を選択してください",
         disabled: true,
+        cautionMessage: "（例）新宿区",
       },
       town: {
-        title: "町域",
-        required: false,
+        title: "町名・番地",
+        required: true,
         propertyName: "town",
         value: null,
         validationState: false,
         options: [],
+        placeholder: "市区町村を入力してください",
         disabled: true,
+        cautionMessage: "（例）四谷2-4-1",
       },
-      blockNumber: {
-        title: "番地",
+      buildingName: {
+        title: "建物名・階数",
         required: false,
-        propertyName: "blockNumber",
+        propertyName: "buildingName",
         value: null,
         validationState: false,
         options: [],
+        placeholder: "町名・番地を入力してください",
         disabled: true,
+        cautionMessage: "（例）ACN四谷ビル6F",
       },
     };
   },
@@ -108,48 +120,50 @@ export default {
     setSelectFormValue(obj) {
       this[`${obj.propertyName}`].value = obj.value;
     },
+    setValidationState(obj) {
+      this[`${obj.propertyName}`].validationState = obj.state;
+    },
     fetchPrefecture() {
       this.$axios
-        .get("http://geoapi.heartrails.com/api/json?method=getPrefectures")
+        .get(
+          "https://func-rizugurugeoapi.azurewebsites.net/api/getPrefectureList?"
+        )
         .then((res) => {
-          var prefectureArr = res.data.response.prefecture;
-          prefectureArr.forEach((pref, index) => {
-            this.prefecture.options.push({ id: index, name: pref });
-          });
-          this.prefecture.options.unshift({ id: null, name: "未選択" });
+          var prefectureArr = res.data
+            .filter((x) => x.activeKey == 1)
+            .map((x) => ({ id: x.id, name: x.name }));
+          prefectureArr.unshift({ id: null, name: "未選択" });
+          this.prefecture.options = prefectureArr;
         });
     },
-    fetchCity(prefecture) {
+    fetchCity(prefId) {
       this.city.options = [];
       this.town.options = [];
       this.$axios
         .get(
-          `http://geoapi.heartrails.com/api/json?method=getCities&prefecture=${prefecture}`
+          `https://func-rizugurugeoapi.azurewebsites.net/api/getCityList?prefId=${prefId}`
         )
         .then((res) => {
-          var cityArr = res.data.response.location;
-          cityArr.forEach((city) => {
-            this.city.options.push({ text: city.city_kana, value: city.city });
-          });
+          var cityArr = res.data.map((x) => ({
+            text: x.nameKana,
+            value: x.name,
+          }));
+          this.city.options = cityArr;
         });
     },
-    fetchTown(city) {
+    fetchTown(cityName) {
       this.town.options = [];
       this.$axios
         .get(
-          `http://geoapi.heartrails.com/api/json?method=getTowns&city=${city}`
+          `https://func-rizugurugeoapi.azurewebsites.net/api/getTownList?cityName=${cityName}`
         )
         .then((res) => {
-          if (!res.data.response.error) {
-            var townArr = res.data.response.location;
-            townArr.forEach((town) => {
-              if (town.city == this.city.value)
-                this.town.options.push({
-                  text: town.town_kana,
-                  value: town.town,
-                });
-            });
-          }
+          var townArr = res.data.map((x) => x.town);
+          townArr.map((x) =>
+            x.map((y) =>
+              this.town.options.push({ text: y.nameKana, value: y.name })
+            )
+          );
         });
     },
     reset() {
@@ -163,11 +177,12 @@ export default {
     "prefecture.value"(value) {
       if (value != null) {
         this.city.disabled = false;
-        var pref = this.prefecture.options[value + 1].name;
-        this.fetchCity(pref);
+        this.fetchCity(value);
+        this.city.placeholder = "市区町村を入力してください";
       } else {
         this.city.disabled = true;
         this.city.options = [];
+        this.city.placeholder = "都道府県を選択してください";
       }
       this.city.value = "";
     },
@@ -175,19 +190,23 @@ export default {
       if (value != "") {
         this.town.disabled = false;
         this.fetchTown(value);
+        this.town.placeholder = "町名を入力してください";
       } else {
         this.town.disabled = true;
         this.town.options = [];
+        this.town.placeholder = "市区町村を入力してください";
       }
       this.town.value = "";
     },
     "town.value"(value) {
       if (value != "") {
-        this.blockNumber.disabled = false;
+        this.buildingName.disabled = false;
+        this.buildingName.placeholder = "建物名・階数を入力してください";
       } else {
-        this.blockNumber.disabled = true;
+        this.buildingName.disabled = true;
+        this.buildingName.placeholder = "町名を入力してください";
       }
-      this.blockNumber.value = "";
+      this.buildingName.value = "";
     },
   },
 };

@@ -1,6 +1,11 @@
 <template>
   <div class="wrapper">
-    <Label class="label" :title="title" :required="required" />
+    <Label
+      class="label"
+      :title="title"
+      :required="required"
+      :cautionMessage="cautionMessage"
+    />
     <SelectForm
       :getter="getter"
       :setter="setter"
@@ -28,6 +33,7 @@ export default {
     options: Array,
     propertyName: String,
     required: Boolean,
+    cautionMessage: String,
     validationSetter: Function,
   },
 };

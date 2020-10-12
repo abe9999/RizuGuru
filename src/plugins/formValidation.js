@@ -42,6 +42,10 @@ export function formValidation(propertyName, value) {
                 } else {
                     return false;
                 }
+            case "city":
+                return true
+            case "town":
+                return true
             default:
                 console.error("バリデーションにプロパティが登録されていません");
                 return false;

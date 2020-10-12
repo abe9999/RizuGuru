@@ -4,6 +4,8 @@
       :list="propertyName"
       v-if="required"
       v-model="value"
+      debounce="500"
+      :state="validation"
       :placeholder="placeholder"
       :disabled="disabled"
     />
@@ -11,6 +13,7 @@
       :list="propertyName"
       v-else
       v-model="value"
+      debounce="500"
       :placeholder="placeholder"
       :disabled="disabled"
     />
@@ -19,6 +22,7 @@
 </template>
 
 <script>
+import { formValidation } from "@/plugins/formValidation.js";
 export default {
   props: {
     getter: {
@@ -55,27 +59,44 @@ export default {
       required: false,
     },
   },
+  data() {
+    return {
+      validation: false,
+    };
+  },
   computed: {
     value: {
       get() {
+        // 親コンポーネントから入力値を取得
         return this.getter(this.propertyName);
       },
       set(value) {
+        if (this.required) {
+          // 入力フォームが必須の場合
+          // バリデーション
+          this.validation = formValidation(this.propertyName, value);
+          // 親コンポーネントにバリデーションの結果を渡す
+          this.validationSetter({
+            propertyName: this.propertyName,
+            state: this.validation,
+          });
+        }
+        // 親コンポーネントに入力値を渡す
         this.setter({ propertyName: this.propertyName, value: value });
       },
     },
-    validation() {
-      if (this.getter(this.propertyName)) {
-        this.validationSetter({ propertyName: this.propertyName, state: true });
-        return true;
-      } else {
-        this.validationSetter({
-          propertyName: this.propertyName,
-          state: false,
-        });
-        return false;
-      }
-    },
+  },
+  mounted() {
+    if (this.required) {
+      // 入力フォームが必須の場合
+      // 画面表示時にバリデーション実行
+      this.validation = formValidation(this.propertyName, this.value);
+      // 親コンポーネントにバリデーションの結果を渡す
+      this.validationSetter({
+        propertyName: this.propertyName,
+        state: this.validation,
+      });
+    }
   },
 };
 </script>
