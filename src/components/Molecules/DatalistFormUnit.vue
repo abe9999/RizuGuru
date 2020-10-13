@@ -8,7 +8,7 @@
         :cautionMessage="cautionMessage"
       />
       <DatalistForm
-        :getter="getter"
+        :parentValue="value"
         :setter="setter"
         :options="options"
         :required="required"
@@ -32,12 +32,12 @@ export default {
   },
   props: {
     title: String,
-    getter: Function,
+    cautionMessage: String,
+    value: String,
     setter: Function,
     options: Array,
     propertyName: String,
     required: Boolean,
-    cautionMessage: String,
     validationSetter: Function,
     placeholder: String,
     disabled: Boolean,

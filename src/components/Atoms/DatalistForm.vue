@@ -1,19 +1,21 @@
 <template>
   <b-col>
     <b-form-input
-      :list="propertyName"
       v-if="required"
       v-model="value"
       debounce="500"
+      autocomplete="off"
+      :list="propertyName"
       :state="validation"
       :placeholder="placeholder"
       :disabled="disabled"
     />
     <b-form-input
-      :list="propertyName"
       v-else
       v-model="value"
       debounce="500"
+      autocomplete="off"
+      :list="propertyName"
       :placeholder="placeholder"
       :disabled="disabled"
     />
@@ -25,8 +27,8 @@
 import { formValidation } from "@/plugins/formValidation.js";
 export default {
   props: {
-    getter: {
-      type: Function,
+    parentValue: {
+      type: String,
       required: true,
     },
     setter: {
@@ -68,7 +70,7 @@ export default {
     value: {
       get() {
         // 親コンポーネントから入力値を取得
-        return this.getter(this.propertyName);
+        return this.parentValue;
       },
       set(value) {
         if (this.required) {
@@ -84,6 +86,15 @@ export default {
         // 親コンポーネントに入力値を渡す
         this.setter({ propertyName: this.propertyName, value: value });
       },
+    },
+  },
+  watch: {
+    parentValue(value) {
+      this.validation = formValidation(this.propertyName, value);
+      this.validationSetter({
+        propertyName: this.propertyName,
+        state: this.validation,
+      });
     },
   },
   mounted() {

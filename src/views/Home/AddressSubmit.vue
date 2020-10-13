@@ -13,7 +13,7 @@
     />
     <DatalistFormUnit
       :title="city.title"
-      :getter="getSelectFormValue"
+      :value="city.value"
       :setter="setSelectFormValue"
       :validationSetter="setValidationState"
       :options="city.options"
@@ -25,7 +25,7 @@
     />
     <DatalistFormUnit
       :title="town.title"
-      :getter="getSelectFormValue"
+      :value="town.value"
       :setter="setSelectFormValue"
       :validationSetter="setValidationState"
       :options="town.options"
@@ -149,6 +149,8 @@ export default {
             value: x.name,
           }));
           this.city.options = cityArr;
+          this.city.disabled = false;
+          this.city.placeholder = "市区町村を入力してください";
         });
     },
     fetchTown(cityName) {
@@ -164,6 +166,8 @@ export default {
               this.town.options.push({ text: y.nameKana, value: y.name })
             )
           );
+          this.town.disabled = false;
+          this.town.placeholder = "町名を入力してください";
         });
     },
     reset() {
@@ -176,24 +180,20 @@ export default {
   watch: {
     "prefecture.value"(value) {
       if (value != null) {
-        this.city.disabled = false;
         this.fetchCity(value);
-        this.city.placeholder = "市区町村を入力してください";
       } else {
-        this.city.disabled = true;
         this.city.options = [];
+        this.city.disabled = true;
         this.city.placeholder = "都道府県を選択してください";
       }
       this.city.value = "";
     },
     "city.value"(value) {
       if (value != "") {
-        this.town.disabled = false;
         this.fetchTown(value);
-        this.town.placeholder = "町名を入力してください";
       } else {
-        this.town.disabled = true;
         this.town.options = [];
+        this.town.disabled = true;
         this.town.placeholder = "市区町村を入力してください";
       }
       this.town.value = "";
