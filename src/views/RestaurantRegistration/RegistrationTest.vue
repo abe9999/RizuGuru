@@ -3,10 +3,33 @@
     <Loading />
   </section>
   <section class="wrapper" v-else-if="!loading">
-    <div v-if="!isConfirm">
-      <AlertToast :alertMessage="alertMessage" />
-      <Headline headline="店舗登録" />
-      <SubHead subHead="店舗情報" />
+    <b-container v-if="!isConfirm">
+      <AlertToast />
+      <b-row>
+        <b-col>
+          <Headline headline="店舗登録" />
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col>
+          <SubHead subHead="店舗情報" />
+        </b-col>
+      </b-row>
+      <div>
+        <div id="map"></div>
+        <div class="search-button" @click="searchButtonAction">
+          店名から住所を検索
+        </div>
+        <b-list-group v-if="showSuggest">
+          <b-list-group-item
+            v-for="(suggest, index) in suggestList"
+            :key="index"
+            @click="setAddress(index)"
+          >
+            {{ suggest.name }}<br />{{ suggest.address.join(" ") }}
+          </b-list-group-item>
+        </b-list-group>
+      </div>
       <RegistrationForm
         :textFormGetter="getValueForTextFormList"
         :textFormSetter="setValueForTextFormList"
@@ -21,7 +44,7 @@
         :genreOptions="genreOptions"
       />
       <Button message="確認画面に進む" :action="confirmButtonAction" />
-    </div>
+    </b-container>
     <div v-else>
       <Headline headline="店舗登録入力確認" />
       <SubHead subHead="以下の内容で登録してよろしいですか？" />
@@ -44,6 +67,7 @@ import { getGenresList } from "@/plugins/getGenresList.js";
 import { getTagsList } from "@/plugins/getTagsList.js";
 import { getStation } from "@/plugins/getStation.js";
 import { getCoord } from "@/plugins/getCoord.js";
+import { getGeoDistance } from "@/plugins/getGeoDistance.js";
 import { addRestaurant } from "@/plugins/addRestaurant.js";
 import { leaveGuard } from "@/plugins/leaveGuard.js";
 import Loading from "@/components/Atoms/Loading.vue";
@@ -196,6 +220,8 @@ export default {
       stations: [],
       coord: {},
       stationCoords: [],
+      suggestList: [],
+      showSuggest: false,
     };
   },
   mounted() {
@@ -235,41 +261,6 @@ export default {
     tagStateSwitcher(index) {
       this.tagFormList.data[index].state = !this.tagFormList.data[index].state;
     },
-    geoDistance(lat1, lng1, lat2, lng2, precision) {
-      // 引数precision は小数点以下の桁数（距離の精度）
-      var distance = 0;
-      if (Math.abs(lat1 - lat2) < 0.00001 && Math.abs(lng1 - lng2) < 0.00001) {
-        distance = 0;
-      } else {
-        lat1 = (lat1 * Math.PI) / 180;
-        lng1 = (lng1 * Math.PI) / 180;
-        lat2 = (lat2 * Math.PI) / 180;
-        lng2 = (lng2 * Math.PI) / 180;
-
-        var A = 6378140;
-        var B = 6356755;
-        var F = (A - B) / A;
-
-        var P1 = Math.atan((B / A) * Math.tan(lat1));
-        var P2 = Math.atan((B / A) * Math.tan(lat2));
-
-        var X = Math.acos(
-          Math.sin(P1) * Math.sin(P2) +
-            Math.cos(P1) * Math.cos(P2) * Math.cos(lng1 - lng2)
-        );
-        var L =
-          (F / 8) *
-          (((Math.sin(X) - X) * Math.pow(Math.sin(P1) + Math.sin(P2), 2)) /
-            Math.pow(Math.cos(X / 2), 2) -
-            ((Math.sin(X) - X) * Math.pow(Math.sin(P1) - Math.sin(P2), 2)) /
-              Math.pow(Math.sin(X), 2));
-
-        distance = A * (X + L);
-        var decimal_no = Math.pow(10, precision);
-        distance = Math.round((decimal_no * distance) / 1) / decimal_no; // kmに変換するときは(1000で割る)
-      }
-      return distance;
-    },
     async fetchDistance(origin, dest) {
       return new Promise((resolve, reject) => {
         let response;
@@ -290,6 +281,47 @@ export default {
         );
         return response;
       });
+    },
+    async getAddress(address) {
+      return new Promise((resolve, reject) => {
+        let response;
+        var map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: 0, lng: 0 },
+        });
+        var request = {
+          query: address,
+        };
+        var service = new google.maps.places.PlacesService(map);
+        service.textSearch(request, callback);
+        function callback(results, status) {
+          if (status !== google.maps.places.PlacesServiceStatus.OK) {
+            response = reject(status);
+          } else {
+            response = resolve(results);
+          }
+        }
+        return response;
+      });
+    },
+    searchButtonAction() {
+      this.getAddress(this.textFormList.name.value).then((res) => {
+        this.suggestList = res.map((e) => {
+          var address = e.formatted_address.split(" ");
+          address = address.splice(1, address.length - 1);
+          return {
+            name: e.name,
+            address: address,
+          };
+        });
+        this.showSuggest = true;
+      });
+    },
+    setAddress(index) {
+      this.textFormList.address.value = this.suggestList[index].address[0];
+      this.textFormList.buildingName.value = this.suggestList[index].address
+        .splice(1, this.suggestList[index].address.length - 1)
+        .join(" ");
+      this.showSuggest = false;
     },
     confirmButtonAction() {
       // 未入力の必須項目の有無を確認
@@ -376,14 +408,13 @@ export default {
         getStation("").then((res) => {
           this.stations = res;
           for (var i = 0; i < this.stations.length; i++) {
-            var distance = this.geoDistance(
+            this.stations[i].distance = getGeoDistance(
               this.coord.lat,
               this.coord.lng,
               this.stations[i].latitude,
               this.stations[i].longitude,
               0
             );
-            this.stations[i].distance = distance;
           }
 
           this.stations = Enumerable.from(this.stations)
@@ -460,16 +491,27 @@ export default {
   margin-top: 20px;
   font-size: 0.9em;
 }
-
+#map {
+  display: none;
+}
+.search-button {
+  padding: 5px 40px;
+  cursor: pointer;
+  color: white;
+  font-size: large;
+  background-color: red;
+  border-radius: 5px;
+  display: inline-block;
+  text-align: center;
+  margin-bottom: 10px;
+}
 .resultTable {
   width: 90%;
   margin: 0 auto;
 }
-
 .resultTable td {
   padding: 5px 10px;
 }
-
 .resultTable tr:nth-child(2n) {
   background-color: #f6f6f6;
 }

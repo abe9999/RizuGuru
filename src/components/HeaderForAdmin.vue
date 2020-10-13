@@ -43,7 +43,7 @@
             <router-link
               to="/RestaurantRegistration/RegistrationTest"
               class="nav-link text-light"
-              >テスト</router-link
+              >店舗追加テスト</router-link
             >
           </b-nav-item>
           <b-nav-item>
