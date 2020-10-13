@@ -18,18 +18,10 @@
       <b-row>
         <b-col>
           <RegistrationForm
-            :textFormList="textFormList"
-            :selectFormList="selectFormList"
-            :tagFormList="tagFormList"
-            :genreOptions="genreOptions"
-            :textFormGetter="getValueForTextFormList"
-            :textFormSetter="setValueForTextFormList"
-            :textFormValidationStateSetter="setValidationStateForTextFormList"
-            :selectFormGetter="getValueForSelectFormList"
-            :selectFormSetter="setValueForSelectFormList"
-            :selectFormValidationStateSetter="
-              setValidationStateForSelectFormList
-            "
+            :formList="formList"
+            :formValueGetter="getFormListValue"
+            :formValueSetter="setFormListValue"
+            :formValidationStateSetter="setValidationState"
             :tagStateSwitcher="tagStateSwitcher"
           />
         </b-col>
@@ -101,8 +93,9 @@ export default {
     return {
       loading: true,
       isConfirm: false,
-      textFormList: {
+      formList: {
         name: {
+          type: "text",
           title: "店名",
           cautionMessage: "",
           required: true,
@@ -112,6 +105,7 @@ export default {
           validationState: false,
         },
         nameKana: {
+          type: "text",
           title: "店名(カナ)",
           required: true,
           propertyName: "nameKana",
@@ -121,30 +115,62 @@ export default {
           validationState: false,
         },
         phoneNumber: {
+          type: "text",
           title: "電話番号",
           required: true,
           propertyName: "phoneNumber",
-          cautionMessage: "半角数字＋ハイフン",
+          cautionMessage: "半角数字＋ハイフン（※不明の場合は「不明」と入力）",
           placeholder: "03-5919-1033",
           value: "",
           validationState: false,
         },
-        address: {
-          title: "住所(都道府県・市区町村・番地)",
+        prefecture: {
+          type: "select",
+          title: "都道府県",
           required: true,
-          propertyName: "address",
-          placeholder: "東京都新宿区四谷2-4-1",
+          propertyName: "prefecture",
+          value: null,
+          validationState: false,
+          options: [],
+        },
+        city: {
+          type: "datalist",
+          title: "市区町村",
+          required: true,
+          propertyName: "city",
           value: "",
           validationState: false,
+          options: [],
+          placeholder: "都道府県を選択してください",
+          disabled: true,
+          cautionMessage: "（例）新宿区",
+        },
+        town: {
+          type: "datalist",
+          title: "町名・番地",
+          required: true,
+          propertyName: "town",
+          value: "",
+          validationState: false,
+          options: [],
+          placeholder: "市区町村を入力してください",
+          disabled: true,
+          cautionMessage: "（例）四谷2-4-1",
         },
         buildingName: {
-          title: "住所(建物名・階数)",
+          type: "text",
+          title: "建物名・階数",
           required: false,
           propertyName: "buildingName",
-          placeholder: "ACN四谷ビル6F",
           value: "",
+          validationState: false,
+          options: [],
+          placeholder: "町名・番地を入力してください",
+          disabled: true,
+          cautionMessage: "（例）ACN四谷ビル6F",
         },
         openingHours: {
+          type: "text",
           title: "営業時間",
           required: true,
           propertyName: "openingHours",
@@ -153,6 +179,7 @@ export default {
           validationState: false,
         },
         regularHoliday: {
+          type: "text",
           title: "定休日",
           required: true,
           propertyName: "regularHoliday",
@@ -161,6 +188,7 @@ export default {
           validationState: false,
         },
         access: {
+          type: "text",
           title: "交通手段",
           required: true,
           propertyName: "access",
@@ -169,6 +197,7 @@ export default {
           validationState: false,
         },
         paymentMethod: {
+          type: "text",
           title: "支払方法",
           required: true,
           propertyName: "paymentMethod",
@@ -177,6 +206,7 @@ export default {
           validationState: false,
         },
         homePage: {
+          type: "text",
           title: "ホームページ",
           required: false,
           propertyName: "homePage",
@@ -184,6 +214,7 @@ export default {
           value: "",
         },
         twitter: {
+          type: "text",
           title: "Twitter",
           required: false,
           propertyName: "twitter",
@@ -191,6 +222,7 @@ export default {
           value: "",
         },
         facebook: {
+          type: "text",
           title: "Facebook",
           required: false,
           propertyName: "facebook",
@@ -198,50 +230,58 @@ export default {
           value: "",
         },
         instagram: {
+          type: "text",
           title: "Instagram",
           required: false,
           propertyName: "instagram",
           placeholder: "https://instagram.com/rizuguru",
           value: "",
         },
-      },
-      selectFormList: {
         genre1: {
+          type: "select",
           title: "ジャンル1",
           required: true,
           propertyName: "genre1",
           value: null,
           validationState: false,
+          options: [],
         },
         genre2: {
+          type: "select",
           title: "ジャンル2",
           required: false,
           propertyName: "genre2",
           value: null,
+          options: [],
         },
         genre3: {
+          type: "select",
           title: "ジャンル3",
           required: false,
           propertyName: "genre3",
           value: null,
+          options: [],
+        },
+        tagList: {
+          type: "tag",
+          title: "タグ",
+          propertyName: "tagList",
+          required: false,
+          value: [],
         },
       },
-      tagFormList: {
-        title: "タグ",
-        required: false,
-        data: [],
-      },
-      genreOptions: [],
       confirmList: [],
-      fields: [],
     };
   },
   mounted() {
+    this.fetchPrefecture();
     getGenresList().then((res) => {
-      this.genreOptions = res;
-      this.genreOptions.unshift({ id: null, name: "未選択" });
+      res.unshift({ id: null, name: "未選択" });
+      this.formList.genre1.options = res;
+      this.formList.genre2.options = res;
+      this.formList.genre3.options = res;
       getTagsList().then((res) => {
-        this.tagFormList.data = res
+        this.formList.tagList.value = res
           .filter((e) => e.id > 10)
           .map((e) => {
             e.state = false;
@@ -252,144 +292,153 @@ export default {
     });
   },
   methods: {
-    getValueForTextFormList(propertyName) {
-      return this.textFormList[`${propertyName}`].value;
+    getFormListValue(propertyName) {
+      return this.formList[`${propertyName}`].value;
     },
-    setValueForTextFormList(obj) {
-      this.textFormList[`${obj.propertyName}`].value = obj.value;
+    setFormListValue(obj) {
+      this.formList[`${obj.propertyName}`].value = obj.value;
     },
-    setValidationStateForTextFormList(obj) {
-      this.textFormList[`${obj.propertyName}`].validationState = obj.state;
-    },
-    getValueForSelectFormList(propertyName) {
-      return this.selectFormList[`${propertyName}`].value;
-    },
-    setValueForSelectFormList(obj) {
-      this.selectFormList[`${obj.propertyName}`].value = obj.value;
-    },
-    setValidationStateForSelectFormList(obj) {
-      this.selectFormList[`${obj.propertyName}`].validationState = obj.state;
+    setValidationState(obj) {
+      this.formList[`${obj.propertyName}`].validationState = obj.state;
     },
     tagStateSwitcher(index) {
-      this.tagFormList.data[index].state = !this.tagFormList.data[index].state;
+      this.formList.tagList.value[index].state = !this.formList.tagList.value[
+        index
+      ].state;
     },
-    validateTextFormValue() {
+    validateFormValue() {
       // 必須項目に未入力が含まれているか確認
-      var textFormValueArr = Enumerable.from(this.textFormList)
+      var formValueArr = Enumerable.from(this.formList)
         .where((x) => x.value.required == true)
         .select((x) => x.value.value)
         .toArray();
-      return !textFormValueArr.includes("") ? true : false;
-    },
-    validateSelectFormValue() {
-      // 必須項目に未選択が含まれているか確認
-      var selectFormValueArr = Enumerable.from(this.selectFormList)
-        .where((x) => x.value.required == true)
-        .select((x) => x.value.value)
-        .toArray();
-      return !selectFormValueArr.includes(null) ? true : false;
+      return !formValueArr.includes("") ? true : false;
     },
     validateFormState() {
       // 不正な入力の有無を確認
-      var textFormValidateArr = Enumerable.from(this.textFormList)
+      var formValidateArr = Enumerable.from(this.formList)
         .where((x) => x.value.required == true)
         .select((x) => x.value.validationState)
         .toArray();
-      return !textFormValidateArr.includes(false) ? true : false;
+      return !formValidateArr.includes(false) ? true : false;
     },
     confirmButtonAction() {
-      if (this.validateTextFormValue()) {
-        if (this.validateSelectFormValue()) {
-          if (this.validateFormState()) {
-            if (!this.isConfirm) {
-              // 入力画面から確認画面への遷移の場合
-              // 入力フォームの結果を配列化
-              var textFormResult = Enumerable.from(this.textFormList).toArray();
-              var selectFormResult = Enumerable.from(
-                this.selectFormList
-              ).toArray();
-              var tagFormResult = Enumerable.from(this.tagFormList.data)
-                .where((x) => x.state == true)
-                .select((x) => x.tagContent)
-                .toArray()
-                .join("・");
-              textFormResult = textFormResult.map((e) => ({
-                key: e.value.title,
-                value: e.value.value,
-              }));
-              selectFormResult = selectFormResult.map((e) => ({
-                key: e.value.title,
-                value: Enumerable.from(this.genreOptions)
-                  .where((x) => x.id == e.value.value)
-                  .select((x) => x.name)
-                  .single(),
-              }));
-              textFormResult.forEach((e) => this.confirmList.push(e));
-              selectFormResult.forEach((e) => this.confirmList.push(e));
-              this.confirmList.push({ key: "タグ", value: tagFormResult });
-            } else {
-              // 確認画面から入力画面への遷移の場合
-              // 結果表示テーブル用の変数を空に
-              this.confirmList = [];
-            }
-            // 表示コンポーネントの切り替え
-            this.isConfirm = !this.isConfirm;
+      if (this.validateFormValue()) {
+        if (this.validateFormState()) {
+          if (!this.isConfirm) {
+            var formResult = Object.entries(this.formList).map((x) => x[1]);
+            formResult.forEach((x) => {
+              switch (x.propertyName) {
+                case "prefecture":
+                case "genre1":
+                case "genre2":
+                case "genre3":
+                  this.confirmList.push({
+                    key: x.title,
+                    value: x.options.find((y) => y.id == x.value).name,
+                  });
+                  break;
+                case "tagList":
+                  this.confirmList.push({
+                    key: x.title,
+                    value: x.value
+                      .filter((y) => y.state == true)
+                      .map((z) => z.tagContent)
+                      .join("・"),
+                  });
+                  break;
+                default:
+                  this.confirmList.push({ key: x.title, value: x.value });
+                  break;
+              }
+            });
           } else {
-            this.makeToast("danger", "不正な入力があります");
+            // 確認画面から入力画面への遷移の場合、結果表示テーブル用の変数を空に
+            this.confirmList = [];
           }
+          // 表示コンポーネントの切り替え
+          this.isConfirm = !this.isConfirm;
         } else {
-          this.makeToast("danger", "必須項目が未選択です");
+          this.makeToast("danger", "不正な入力/未選択の項目があります");
         }
       } else {
-        this.makeToast("danger", "必須項目が未入力です");
+        this.makeToast("danger", "必須項目が未入力/未選択です");
       }
     },
     submitButtonAction() {
-      // 登録処理を入れる
-      var genreIds = Enumerable.from(this.selectFormList)
-        .where((x) => x.value.value != null)
-        .select((x) => x.value.value)
-        .toArray();
-      var tagIds = Enumerable.from(this.tagFormList.data)
-        .where((x) => x.state == true)
-        .select((x) => x.id)
-        .toArray();
-      var linkGenreIds = [];
+      this.loading = true;
+      // formListを配列化
+      var formResult = Object.entries(this.formList).map((x) => x[1]);
+
+      // ジャンルのIDを取得（未選択は除く）
+      var genreIdArr = formResult
+        .filter((x) => x.propertyName.includes("genre"))
+        .filter((x) => x.value != null)
+        .map((x) => x.value);
+
+      // 選択したタグのIDを取得
+      var tagIdArr = formResult
+        .find((x) => x.propertyName.includes("tagList"))
+        .value.filter((x) => x.state == true)
+        .map((x) => x.id);
+
+      // ホームページなどのリンクを取得
+      var linkGenreIdArr = [];
       var urls = [];
-      if (this.textFormList.homePage.value != "") {
-        linkGenreIds.push(1);
-        urls.push(this.textFormList.homePage.value);
-      }
-      if (this.textFormList.twitter.value != "") {
-        linkGenreIds.push(3);
-        urls.push(this.textFormList.twitter.value);
-      }
-      if (this.textFormList.facebook.value != "") {
-        linkGenreIds.push(4);
-        urls.push(this.textFormList.facebook.value);
-      }
-      if (this.textFormList.instagram.value != "") {
-        linkGenreIds.push(5);
-        urls.push(this.textFormList.instagram.value);
-      }
-      getCoord(this.textFormList.address.value)
+      formResult.forEach((x) => {
+        if (x.value) {
+          switch (x.propertyName) {
+            case "homePage":
+              linkGenreIdArr.push(1);
+              urls.push(x.value);
+              break;
+            case "twitter":
+              linkGenreIdArr.push(3);
+              urls.push(x.value);
+              break;
+            case "facebook":
+              linkGenreIdArr.push(4);
+              urls.push(x.value);
+              break;
+            case "instagram":
+              linkGenreIdArr.push(5);
+              urls.push(x.value);
+              break;
+          }
+        }
+      });
+
+      // 都道府県・市区町村・町名・建物名から住所を取得
+      var prefecture = this.formList.prefecture.options.find(
+        (y) => y.id == this.formList.prefecture.value
+      ).name;
+      var address =
+        prefecture +
+        this.formList.city.value +
+        this.formList.town.value +
+        this.formList.buildingName.value;
+
+      // 住所に基づいて緯度経度を取得
+      getCoord(address)
         .then((res) => {
           var coord = res.results[0].geometry.location;
+
+          // 登録用のデータを作成
           var postData = {
-            Name: this.textFormList.name.value,
-            NameKana: this.textFormList.nameKana.value,
-            Address: `${this.textFormList.address.value} ${this.textFormList.buildingName.value}`,
+            Name: this.formList.name.value,
+            NameKana: this.formList.nameKana.value,
+            Address: address,
             Latitude: coord.lat,
             Longitude: coord.lng,
-            Access: this.textFormList.access.value,
-            PhoneNumber: this.textFormList.phoneNumber.value,
-            OpeningHours: this.textFormList.openingHours.value,
-            RegularHoliday: this.textFormList.regularHoliday.value,
-            PaymentMethod: this.textFormList.paymentMethod.value,
-            GenreId: genreIds,
+            Access: this.formList.access.value,
+            PhoneNumber: this.formList.phoneNumber.value,
+            OpeningHours: this.formList.openingHours.value,
+            RegularHoliday: this.formList.regularHoliday.value,
+            PaymentMethod: this.formList.paymentMethod.value,
+            GenreId: genreIdArr,
             Url: urls,
-            LinkGenreId: linkGenreIds,
-            TagId: tagIds,
+            LinkGenreId: linkGenreIdArr,
+            TagId: tagIdArr,
           };
           addRestaurant(postData).then(() => {
             this.$router.push("/RestaurantRegistration/Complete");
@@ -403,6 +452,89 @@ export default {
         variant: variant,
         solid: true,
       });
+    },
+    fetchPrefecture() {
+      this.$axios
+        .get(
+          "https://func-rizugurugeoapi.azurewebsites.net/api/getPrefectureList?"
+        )
+        .then((res) => {
+          var prefectureArr = res.data
+            .filter((x) => x.activeKey == 1)
+            .map((x) => ({ id: x.id, name: x.name }));
+          prefectureArr.unshift({ id: null, name: "未選択" });
+          this.formList.prefecture.options = prefectureArr;
+        });
+    },
+    fetchCity(prefId) {
+      this.formList.city.options = [];
+      this.formList.town.options = [];
+      this.$axios
+        .get(
+          `https://func-rizugurugeoapi.azurewebsites.net/api/getCityList?prefId=${prefId}`
+        )
+        .then((res) => {
+          var cityArr = res.data.map((x) => ({
+            text: x.nameKana,
+            value: x.name,
+          }));
+          this.formList.city.options = cityArr;
+          this.formList.city.disabled = false;
+          this.formList.city.placeholder = "市区町村を入力してください";
+        });
+    },
+    fetchTown(cityName) {
+      this.formList.town.options = [];
+      this.$axios
+        .get(
+          `https://func-rizugurugeoapi.azurewebsites.net/api/getTownList?cityName=${cityName}`
+        )
+        .then((res) => {
+          var townArr = res.data.map((x) => x.town);
+          townArr.map((x) =>
+            x.map((y) =>
+              this.formList.town.options.push({
+                text: y.nameKana,
+                value: y.name,
+              })
+            )
+          );
+          this.formList.town.disabled = false;
+          this.formList.town.placeholder = "町名を入力してください";
+        });
+    },
+  },
+  watch: {
+    "formList.prefecture.value"(value) {
+      if (value != null) {
+        this.fetchCity(value);
+      } else {
+        this.formList.city.options = [];
+        this.formList.city.disabled = true;
+        this.formList.city.placeholder = "都道府県を選択してください";
+      }
+      this.formList.city.value = "";
+    },
+    "formList.city.value"(value) {
+      if (value != "") {
+        this.fetchTown(value);
+      } else {
+        this.formList.town.options = [];
+        this.formList.town.disabled = true;
+        this.formList.town.placeholder = "市区町村を入力してください";
+      }
+      this.formList.town.value = "";
+    },
+    "formList.town.value"(value) {
+      if (value != "") {
+        this.formList.buildingName.disabled = false;
+        this.formList.buildingName.placeholder =
+          "建物名・階数を入力してください";
+      } else {
+        this.formList.buildingName.disabled = true;
+        this.formList.buildingName.placeholder = "町名を入力してください";
+      }
+      this.formList.buildingName.value = "";
     },
   },
 };

@@ -15,7 +15,8 @@ export function formValidation(propertyName, value) {
                     value.match(/^0\d{2,3}-\d{1,4}-\d{4}$/) ||
                     value.match(/^0\d{1}-\d{4}-\d{4}$/) ||
                     value.match(/^0\d{2}-\d{4}-\d{4}$/) ||
-                    value.match(/^0\d{3}-\d{6}$/)
+                    value.match(/^0\d{3}-\d{6}$/) ||
+                    value.match(/不明/)
                 ) {
                     return true;
                 } else {
