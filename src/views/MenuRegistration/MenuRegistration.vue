@@ -153,6 +153,9 @@ export default {
         price: this.textFormList.price.value,
       };
       this.menus.push(this.menu);
+      this.textFormList.name.value = null;
+      this.textFormList.nameKana.value = null;
+      this.textFormList.price.value = null;
     },
     selectAction(selected) {
       if (selected) {

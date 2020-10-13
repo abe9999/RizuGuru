@@ -15,12 +15,12 @@
           <SubHead subHead="店舗情報" />
         </b-col>
       </b-row>
-      <div>
-        <div id="map"></div>
+      <div class="suggest">
+        <div id="hidden-map"></div>
         <div class="search-button" @click="searchButtonAction">
           店名から住所を検索
         </div>
-        <b-list-group v-if="showSuggest">
+        <b-list-group v-if="showSuggest" class="suggest-list">
           <b-list-group-item
             v-for="(suggest, index) in suggestList"
             :key="index"
@@ -285,7 +285,7 @@ export default {
     async getAddress(address) {
       return new Promise((resolve, reject) => {
         let response;
-        var map = new google.maps.Map(document.getElementById("map"), {
+        var map = new google.maps.Map(document.getElementById("hidden-map"), {
           center: { lat: 0, lng: 0 },
         });
         var request = {
@@ -304,6 +304,10 @@ export default {
       });
     },
     searchButtonAction() {
+      if (this.textFormList.name.value == "") {
+        alert("店名を入力してください。");
+        return;
+      }
       this.getAddress(this.textFormList.name.value).then((res) => {
         this.suggestList = res.map((e) => {
           var address = e.formatted_address.split(" ");
@@ -490,6 +494,12 @@ export default {
   margin: 0 auto;
   margin-top: 20px;
   font-size: 0.9em;
+}
+.suggest {
+  margin-bottom: 10px;
+}
+.suggest-list {
+  cursor: pointer;
 }
 #map {
   display: none;
