@@ -29,6 +29,7 @@
       <b-row>
         <b-col>
           <Button message="確認画面に進む" :action="confirmButtonAction" />
+          <Button message="テスト" :action="submitButtonAction" />
         </b-col>
       </b-row>
     </b-container>
@@ -66,10 +67,13 @@
 </template>
 
 <script>
+/* eslint-disable no-undef */
 import Enumerable from "linq";
 import { getGenresList } from "@/plugins/getGenresList.js";
 import { getTagsList } from "@/plugins/getTagsList.js";
 import { getCoord } from "@/plugins/getCoord.js";
+import { getStation } from "@/plugins/getStation.js";
+import { getGeoDistance } from "@/plugins/getGeoDistance.js";
 import { addRestaurant } from "@/plugins/addRestaurant.js";
 import { leaveGuard } from "@/plugins/leaveGuard.js";
 import { fetchPrefecture } from "@/plugins/fetchPrefecture.js";
@@ -190,15 +194,15 @@ export default {
           value: "",
           validationState: false,
         },
-        access: {
-          type: "text",
-          title: "交通手段",
-          required: true,
-          propertyName: "access",
-          placeholder: "四ツ谷駅から徒歩5分",
-          value: "",
-          validationState: false,
-        },
+        // access: {
+        //   type: "text",
+        //   title: "交通手段",
+        //   required: true,
+        //   propertyName: "access",
+        //   placeholder: "四ツ谷駅から徒歩5分",
+        //   value: "",
+        //   validationState: false,
+        // },
         paymentMethod: {
           type: "text",
           title: "支払方法",
@@ -360,6 +364,25 @@ export default {
         this.formList.town.placeholder = "町名を入力してください";
       });
     },
+    async getRangeFromNearestStation(origin, dest) {
+      return new Promise((resolve, reject) => {
+        var service = new google.maps.DistanceMatrixService();
+        service.getDistanceMatrix(
+          {
+            origins: origin,
+            destinations: [dest],
+            travelMode: "WALKING",
+          },
+          function (resp, status) {
+            if (status !== google.maps.DistanceMatrixStatus.OK) {
+              reject(status);
+            } else {
+              resolve(resp);
+            }
+          }
+        );
+      });
+    },
     getFormListValue(propertyName) {
       return this.formList[`${propertyName}`].value;
     },
@@ -447,89 +470,145 @@ export default {
       }
     },
     submitButtonAction() {
+      // ローディングアイコンを表示
       this.loading = true;
+
+      // 登録用のデータを定義
+      var postData = {
+        Name: this.formList.name.value,
+        NameKana: this.formList.nameKana.value,
+        Address: null,
+        Latitude: null,
+        Longitude: null,
+        Access: null,
+        StationId: null,
+        PhoneNumber: this.formList.phoneNumber.value,
+        OpeningHours: this.formList.openingHours.value,
+        RegularHoliday: this.formList.regularHoliday.value,
+        PaymentMethod: this.formList.paymentMethod.value,
+        GenreId: [],
+        Url: [],
+        LinkGenreId: [],
+        TagId: [],
+      };
+
       // formListを配列化
       var formResult = Object.entries(this.formList).map((x) => x[1]);
 
       // ジャンルのIDを取得（未選択は除く）
-      var genreIdArr = formResult
+      postData.GenreId = formResult
         .filter((x) => x.propertyName.includes("genre"))
         .filter((x) => x.value != null)
         .map((x) => x.value);
 
       // 選択したタグのIDを取得
-      var tagIdArr = formResult
+      postData.TagId = formResult
         .find((x) => x.propertyName.includes("tagList"))
         .value.filter((x) => x.state == true)
         .map((x) => x.id);
 
       // ホームページなどのリンクを取得
-      var linkGenreIdArr = [];
-      var urls = [];
       formResult.forEach((x) => {
         if (x.value) {
           switch (x.propertyName) {
             case "homePage":
-              linkGenreIdArr.push(1);
-              urls.push(x.value);
+              postData.LinkGenreId.push(1);
+              postData.Url.push(x.value);
               break;
             case "blog":
-              linkGenreIdArr.push(2);
-              urls.push(x.value);
+              postData.LinkGenreId.push(2);
+              postData.Url.push(x.value);
               break;
             case "twitter":
-              linkGenreIdArr.push(3);
-              urls.push(x.value);
+              postData.LinkGenreId.push(3);
+              postData.Url.push(x.value);
               break;
             case "facebook":
-              linkGenreIdArr.push(4);
-              urls.push(x.value);
+              postData.LinkGenreId.push(4);
+              postData.Url.push(x.value);
               break;
             case "instagram":
-              linkGenreIdArr.push(5);
-              urls.push(x.value);
+              postData.LinkGenreId.push(5);
+              postData.Url.push(x.value);
               break;
           }
         }
       });
 
-      // 都道府県・市区町村・町名・建物名から住所を取得
+      // 都道府県・市区町村・町名・建物名から住所を生成
       var prefecture = this.formList.prefecture.options.find(
         (y) => y.id == this.formList.prefecture.value
       ).name;
-      var address =
+      postData.Address =
         prefecture +
         this.formList.city.value +
         this.formList.town.value +
         this.formList.buildingName.value;
 
       // 住所に基づいて緯度経度を取得
-      getCoord(address)
-        .then((res) => {
-          var coord = res.results[0].geometry.location;
-
-          // 登録用のデータを作成
-          var postData = {
-            Name: this.formList.name.value,
-            NameKana: this.formList.nameKana.value,
-            Address: address,
-            Latitude: coord.lat,
-            Longitude: coord.lng,
-            Access: this.formList.access.value,
-            PhoneNumber: this.formList.phoneNumber.value,
-            OpeningHours: this.formList.openingHours.value,
-            RegularHoliday: this.formList.regularHoliday.value,
-            PaymentMethod: this.formList.paymentMethod.value,
-            GenreId: genreIdArr,
-            Url: urls,
-            LinkGenreId: linkGenreIdArr,
-            TagId: tagIdArr,
-          };
-          addRestaurant(postData).then(() => {
-            this.$router.push("/RestaurantRegistration/Complete");
+      getCoord(postData.Address).then((res) => {
+        var coord = res.results[0].geometry.location;
+        postData.Latitude = coord.lat;
+        postData.Longitude = coord.lng;
+        var stations = [];
+        // 全駅リストを取得
+        getStation("").then((res) => {
+          // 各駅について店舗からの距離を計算
+          res.forEach((station) => {
+            station.distance = getGeoDistance(
+              coord.lat,
+              coord.lng,
+              station.latitude,
+              station.longitude,
+              0
+            );
+            stations.push(station);
           });
-        })
-        .catch((err) => alert(err));
+
+          // 全駅リストを店舗からの距離順に並び替え
+          stations = Enumerable.from(stations)
+            .select((x) => x)
+            .orderBy((x) => x.distance)
+            .toArray();
+
+          // 最も店舗から近い駅が800m以上離れている場合、上位1件のみを取得
+          if (stations[0].distance > 800) {
+            stations = stations.slice(0, 1);
+          } else {
+            // 800m以内に複数駅存在する場合、上位5件を取得
+            stations = Enumerable.from(stations)
+              .where((x) => x.distance <= 800)
+              .take(5)
+              .toArray();
+          }
+          var stationCoordArr = stations.map((x) => {
+            return `${x.latitude},${x.longitude}`;
+          });
+
+          // 店舗から最も近い駅を最寄り駅IDとする
+          postData.StationId = stations[0].id;
+
+          // 最寄駅からの徒歩移動時間を計算
+          var accesses = [];
+          this.getRangeFromNearestStation(
+            stationCoordArr,
+            postData.Address
+          ).then((res) => {
+            res.rows.forEach((x, index) => {
+              accesses.push(
+                stations[index].name +
+                  "駅から徒歩" +
+                  x.elements[0].duration.text
+              );
+            });
+            postData.Access = accesses.join(" ");
+
+            addRestaurant(postData).then(() => {
+              this.$router.push("/RestaurantRegistration/Complete");
+            });
+          });
+        });
+      });
     },
     makeToast(variant, message) {
       this.$bvToast.toast(message, {
