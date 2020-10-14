@@ -16,10 +16,10 @@
         <b-col cols="12" md="4">
           <SelectNameUnit @select="selectAction" />
           <RegistrationForm
-            :textFormGetter="getValueForTextFormList"
-            :textFormSetter="setValueForTextFormList"
-            :textFormValidationStateSetter="setValidationStateForTextFormList"
-            :textFormList="textFormList"
+            :formList="formList"
+            :formValueGetter="getFormListValue"
+            :formValueSetter="setFormListValue"
+            :formValidationStateSetter="setValidationState"
             v-if="restaurantId"
           />
           <Button
@@ -87,9 +87,9 @@ export default {
   data() {
     return {
       isConfirm: false,
-      alertMessage: "",
-      textFormList: {
+      formList: {
         name: {
+          type: "text",
           title: "メニュー名",
           cautionMessage: "",
           required: true,
@@ -99,6 +99,7 @@ export default {
           validationState: false,
         },
         nameKana: {
+          type: "text",
           title: "メニュー(カナ)",
           required: false,
           propertyName: "nameKana",
@@ -108,6 +109,7 @@ export default {
           validationState: false,
         },
         price: {
+          type: "text",
           title: "値段",
           required: true,
           propertyName: "price",
@@ -124,18 +126,34 @@ export default {
     };
   },
   methods: {
-    getValueForTextFormList(propertyName) {
-      return this.textFormList[`${propertyName}`].value;
+    getFormListValue(propertyName) {
+      return this.formList[`${propertyName}`].value;
     },
-    setValueForTextFormList(obj) {
-      this.textFormList[`${obj.propertyName}`].value = obj.value;
+    setFormListValue(obj) {
+      this.formList[`${obj.propertyName}`].value = obj.value;
     },
-    setValidationStateForTextFormList(obj) {
-      this.textFormList[`${obj.propertyName}`].validationState = obj.state;
+    setValidationState(obj) {
+      this.formList[`${obj.propertyName}`].validationState = obj.state;
+    },
+    validateFormValue() {
+      // 必須項目に未入力が含まれているか確認
+      var formValueArr = Enumerable.from(this.formList)
+        .where((x) => x.value.required == true)
+        .select((x) => x.value.value)
+        .toArray();
+      return !formValueArr.includes("") ? true : false;
+    },
+    validateFormState() {
+      // 不正な入力の有無を確認
+      var formValidateArr = Enumerable.from(this.formList)
+        .where((x) => x.value.required == true)
+        .select((x) => x.value.validationState)
+        .toArray();
+      return !formValidateArr.includes(false) ? true : false;
     },
     addButtonAction() {
       // 未入力の必須項目の有無を確認
-      var textFormStateArr = Enumerable.from(this.textFormList)
+      var textFormStateArr = Enumerable.from(this.formList)
         .where((x) => x.value.required == true)
         .select((x) => x.value.validationState)
         .toArray();
@@ -148,14 +166,14 @@ export default {
       this.menu = {
         id: "0000",
         restaurantId: this.restaurantId,
-        name: this.textFormList.name.value,
-        nameKana: this.textFormList.nameKana.value,
-        price: this.textFormList.price.value,
+        name: this.formList.name.value,
+        nameKana: this.formList.nameKana.value,
+        price: this.formList.price.value,
       };
       this.menus.push(this.menu);
-      this.textFormList.name.value = null;
-      this.textFormList.nameKana.value = null;
-      this.textFormList.price.value = null;
+      this.formList.name.value = null;
+      this.formList.nameKana.value = null;
+      this.formList.price.value = null;
     },
     selectAction(selected) {
       if (selected) {

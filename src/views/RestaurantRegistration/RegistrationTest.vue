@@ -540,7 +540,7 @@ export default {
   display: none;
 }
 .search-button {
-  padding: 5px 40px;
+  padding: 5px 20px;
   cursor: pointer;
   color: white;
   font-size: large;
