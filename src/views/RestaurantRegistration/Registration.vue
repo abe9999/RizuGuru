@@ -72,6 +72,9 @@ import { getTagsList } from "@/plugins/getTagsList.js";
 import { getCoord } from "@/plugins/getCoord.js";
 import { addRestaurant } from "@/plugins/addRestaurant.js";
 import { leaveGuard } from "@/plugins/leaveGuard.js";
+import { fetchPrefecture } from "@/plugins/fetchPrefecture.js";
+import { fetchCity } from "@/plugins/fetchCity.js";
+import { fetchTown } from "@/plugins/fetchTown.js";
 import Loading from "@/components/Atoms/Loading.vue";
 import Button from "@/components/Atoms/Button.vue";
 import Headline from "@/components/Molecules/Headline.vue";
@@ -282,24 +285,81 @@ export default {
     };
   },
   mounted() {
-    this.fetchPrefecture();
-    getGenresList().then((res) => {
-      res.unshift({ id: null, name: "未選択" });
-      this.formList.genre1.options = res;
-      this.formList.genre2.options = res;
-      this.formList.genre3.options = res;
-      getTagsList().then((res) => {
-        this.formList.tagList.value = res
-          .filter((e) => e.id > 10)
-          .map((e) => {
-            e.state = false;
-            return e;
-          });
-      });
+    // 都道府県・ジャンル・タグのデータが取得できるまでローディングアイコンを表示
+    Promise.all([
+      this.fetchPrefecture(),
+      this.getGenresList(),
+      this.getTagsList(),
+    ]).then(() => {
       this.loading = false;
     });
   },
   methods: {
+    async getTagsList() {
+      return new Promise((resolve) => {
+        getTagsList().then((res) => {
+          this.formList.tagList.value = res
+            .filter((e) => e.id > 10)
+            .map((e) => {
+              e.state = false;
+              return e;
+            });
+          resolve();
+        });
+      });
+    },
+    async getGenresList() {
+      return new Promise((resolve) => {
+        getGenresList().then((res) => {
+          res.unshift({ id: null, name: "未選択" });
+          this.formList.genre1.options = res;
+          this.formList.genre2.options = res;
+          this.formList.genre3.options = res;
+          resolve();
+        });
+      });
+    },
+    async fetchPrefecture() {
+      return new Promise((resolve) => {
+        fetchPrefecture().then((res) => {
+          var prefectureArr = res
+            .filter((x) => x.activeKey == 1)
+            .map((x) => ({ id: x.id, name: x.name }));
+          prefectureArr.unshift({ id: null, name: "未選択" });
+          this.formList.prefecture.options = prefectureArr;
+          resolve();
+        });
+      });
+    },
+    fetchCity(prefId) {
+      this.formList.city.options = [];
+      this.formList.town.options = [];
+      fetchCity(prefId).then((res) => {
+        var cityArr = res.map((x) => ({
+          text: x.nameKana,
+          value: x.name,
+        }));
+        this.formList.city.options = cityArr;
+        this.formList.city.disabled = false;
+        this.formList.city.placeholder = "市区町村を入力してください";
+      });
+    },
+    fetchTown(cityName) {
+      this.formList.town.options = [];
+      fetchTown(cityName).then((res) => {
+        var townArr = res.map((x) => x.town);
+        townArr.map((x) =>
+          x.map((y) =>
+            this.formList.town.options.push({
+              text: y.nameKana,
+              value: y.name,
+            })
+          )
+        );
+        this.formList.town.disabled = false;
+        this.formList.town.placeholder = "町名を入力してください";
+      });
+    },
     getFormListValue(propertyName) {
       return this.formList[`${propertyName}`].value;
     },
@@ -335,9 +395,22 @@ export default {
         if (this.validateFormState()) {
           if (!this.isConfirm) {
             var formResult = Object.entries(this.formList).map((x) => x[1]);
+            var address = { key: "住所", value: [] };
             formResult.forEach((x) => {
               switch (x.propertyName) {
                 case "prefecture":
+                  address.value.push(
+                    x.options.find((y) => y.id == x.value).name
+                  );
+                  break;
+                case "city":
+                  address.value.push(x.value);
+                  break;
+                case "town":
+                  address.value.push(x.value);
+                  address.value = address.value.join("");
+                  this.confirmList.push(address);
+                  break;
                 case "genre1":
                 case "genre2":
                 case "genre3":
@@ -464,56 +537,6 @@ export default {
         variant: variant,
         solid: true,
       });
-    },
-    fetchPrefecture() {
-      this.$axios
-        .get(
-          "https://func-rizugurugeoapi.azurewebsites.net/api/getPrefectureList?"
-        )
-        .then((res) => {
-          var prefectureArr = res.data
-            .filter((x) => x.activeKey == 1)
-            .map((x) => ({ id: x.id, name: x.name }));
-          prefectureArr.unshift({ id: null, name: "未選択" });
-          this.formList.prefecture.options = prefectureArr;
-        });
-    },
-    fetchCity(prefId) {
-      this.formList.city.options = [];
-      this.formList.town.options = [];
-      this.$axios
-        .get(
-          `https://func-rizugurugeoapi.azurewebsites.net/api/getCityList?prefId=${prefId}`
-        )
-        .then((res) => {
-          var cityArr = res.data.map((x) => ({
-            text: x.nameKana,
-            value: x.name,
-          }));
-          this.formList.city.options = cityArr;
-          this.formList.city.disabled = false;
-          this.formList.city.placeholder = "市区町村を入力してください";
-        });
-    },
-    fetchTown(cityName) {
-      this.formList.town.options = [];
-      this.$axios
-        .get(
-          `https://func-rizugurugeoapi.azurewebsites.net/api/getTownList?cityName=${cityName}`
-        )
-        .then((res) => {
-          var townArr = res.data.map((x) => x.town);
-          townArr.map((x) =>
-            x.map((y) =>
-              this.formList.town.options.push({
-                text: y.nameKana,
-                value: y.name,
-              })
-            )
-          );
-          this.formList.town.disabled = false;
-          this.formList.town.placeholder = "町名を入力してください";
-        });
     },
   },
   watch: {
