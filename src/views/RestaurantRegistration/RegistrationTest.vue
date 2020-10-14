@@ -21,6 +21,9 @@
           店名から住所を検索
         </div>
         <b-list-group v-if="showSuggest" class="suggest-list">
+          <b-list-group-item @click="closeSuggest"
+            >× リストを閉じる</b-list-group-item
+          >
           <b-list-group-item
             v-for="(suggest, index) in suggestList"
             :key="index"
@@ -31,17 +34,11 @@
         </b-list-group>
       </div>
       <RegistrationForm
-        :textFormGetter="getValueForTextFormList"
-        :textFormSetter="setValueForTextFormList"
-        :textFormValidationStateSetter="setValidationStateForTextFormList"
-        :selectFormGetter="getValueForSelectFormList"
-        :selectFormSetter="setValueForSelectFormList"
-        :selectFormValidationStateSetter="setValidationStateForSelectFormList"
-        :textFormList="textFormList"
-        :selectFormList="selectFormList"
-        :tagFormList="tagFormList"
+        :formList="formList"
+        :formValueGetter="getFormListValue"
+        :formValueSetter="setFormListValue"
+        :formValidationStateSetter="setValidationState"
         :tagStateSwitcher="tagStateSwitcher"
-        :genreOptions="genreOptions"
       />
       <Button message="確認画面に進む" :action="confirmButtonAction" />
     </b-container>
@@ -91,9 +88,9 @@ export default {
     return {
       loading: true,
       isConfirm: false,
-      alertMessage: "",
-      textFormList: {
+      formList: {
         name: {
+          type: "text",
           title: "店名",
           cautionMessage: "",
           required: true,
@@ -103,6 +100,7 @@ export default {
           validationState: false,
         },
         nameKana: {
+          type: "text",
           title: "店名(カナ)",
           required: true,
           propertyName: "nameKana",
@@ -112,6 +110,7 @@ export default {
           validationState: false,
         },
         phoneNumber: {
+          type: "text",
           title: "電話番号",
           required: true,
           propertyName: "phoneNumber",
@@ -121,6 +120,7 @@ export default {
           validationState: false,
         },
         address: {
+          type: "text",
           title: "住所(都道府県・市区町村・番地)",
           required: true,
           propertyName: "address",
@@ -129,6 +129,7 @@ export default {
           validationState: false,
         },
         buildingName: {
+          type: "text",
           title: "住所(建物名・階数)",
           required: false,
           propertyName: "buildingName",
@@ -136,6 +137,7 @@ export default {
           value: "",
         },
         openingHours: {
+          type: "text",
           title: "営業時間",
           required: true,
           propertyName: "openingHours",
@@ -144,6 +146,7 @@ export default {
           validationState: false,
         },
         regularHoliday: {
+          type: "text",
           title: "定休日",
           required: true,
           propertyName: "regularHoliday",
@@ -152,6 +155,7 @@ export default {
           validationState: false,
         },
         paymentMethod: {
+          type: "text",
           title: "支払方法",
           required: true,
           propertyName: "paymentMethod",
@@ -159,6 +163,7 @@ export default {
           value: "",
         },
         homePage: {
+          type: "text",
           title: "ホームページ",
           required: false,
           propertyName: "homePage",
@@ -166,6 +171,7 @@ export default {
           value: "",
         },
         twitter: {
+          type: "text",
           title: "Twitter",
           required: false,
           propertyName: "twitter",
@@ -173,6 +179,7 @@ export default {
           value: "",
         },
         facebook: {
+          type: "text",
           title: "Facebook",
           required: false,
           propertyName: "facebook",
@@ -180,38 +187,45 @@ export default {
           value: "",
         },
         instagram: {
+          type: "text",
           title: "Instagram",
           required: false,
           propertyName: "instagram",
           placeholder: "https://instagram.com/rizuguru",
           value: "",
         },
-      },
-      selectFormList: {
         genre1: {
+          type: "select",
           title: "ジャンル1",
           required: true,
           propertyName: "genre1",
           value: null,
           validationState: false,
+          options: [],
         },
         genre2: {
+          type: "select",
           title: "ジャンル2",
           required: false,
           propertyName: "genre2",
           value: null,
+          options: [],
         },
         genre3: {
+          type: "select",
           title: "ジャンル3",
           required: false,
           propertyName: "genre3",
           value: null,
+          options: [],
         },
-      },
-      tagFormList: {
-        title: "タグ",
-        required: false,
-        data: [],
+        tagList: {
+          type: "tag",
+          title: "タグ",
+          propertyName: "tagList",
+          required: false,
+          value: [],
+        },
       },
       genreOptions: [],
       confirmList: [],
@@ -226,10 +240,12 @@ export default {
   },
   mounted() {
     getGenresList().then((res) => {
-      this.genreOptions = res;
-      this.genreOptions.unshift({ id: null, name: "未選択" });
+      res.unshift({ id: null, name: "未選択" });
+      this.formList.genre1.options = res;
+      this.formList.genre2.options = res;
+      this.formList.genre3.options = res;
       getTagsList().then((res) => {
-        this.tagFormList.data = res
+        this.formList.tagList.value = res
           .filter((e) => e.id > 10)
           .map((e) => {
             e.state = false;
@@ -240,26 +256,35 @@ export default {
     });
   },
   methods: {
-    getValueForTextFormList(propertyName) {
-      return this.textFormList[`${propertyName}`].value;
+    getFormListValue(propertyName) {
+      return this.formList[`${propertyName}`].value;
     },
-    setValueForTextFormList(obj) {
-      this.textFormList[`${obj.propertyName}`].value = obj.value;
+    setFormListValue(obj) {
+      this.formList[`${obj.propertyName}`].value = obj.value;
     },
-    setValidationStateForTextFormList(obj) {
-      this.textFormList[`${obj.propertyName}`].validationState = obj.state;
-    },
-    getValueForSelectFormList(propertyName) {
-      return this.selectFormList[`${propertyName}`].value;
-    },
-    setValueForSelectFormList(obj) {
-      this.selectFormList[`${obj.propertyName}`].value = obj.value;
-    },
-    setValidationStateForSelectFormList(obj) {
-      this.selectFormList[`${obj.propertyName}`].validationState = obj.state;
+    setValidationState(obj) {
+      this.formList[`${obj.propertyName}`].validationState = obj.state;
     },
     tagStateSwitcher(index) {
-      this.tagFormList.data[index].state = !this.tagFormList.data[index].state;
+      this.formList.tagList.value[index].state = !this.formList.tagList.value[
+        index
+      ].state;
+    },
+    validateFormValue() {
+      // 必須項目に未入力が含まれているか確認
+      var formValueArr = Enumerable.from(this.formList)
+        .where((x) => x.value.required == true)
+        .select((x) => x.value.value)
+        .toArray();
+      return !formValueArr.includes("") ? true : false;
+    },
+    validateFormState() {
+      // 不正な入力の有無を確認
+      var formValidateArr = Enumerable.from(this.formList)
+        .where((x) => x.value.required == true)
+        .select((x) => x.value.validationState)
+        .toArray();
+      return !formValidateArr.includes(false) ? true : false;
     },
     async fetchDistance(origin, dest) {
       return new Promise((resolve, reject) => {
@@ -304,11 +329,11 @@ export default {
       });
     },
     searchButtonAction() {
-      if (this.textFormList.name.value == "") {
+      if (this.formList.name.value == "") {
         alert("店名を入力してください。");
         return;
       }
-      this.getAddress(this.textFormList.name.value).then((res) => {
+      this.getAddress(this.formList.name.value).then((res) => {
         this.suggestList = res.map((e) => {
           var address = e.formatted_address.split(" ");
           address = address.splice(1, address.length - 1);
@@ -320,94 +345,104 @@ export default {
         this.showSuggest = true;
       });
     },
+    closeSuggest() {
+      this.showSuggest = false;
+    },
     setAddress(index) {
-      this.textFormList.address.value = this.suggestList[index].address[0];
-      this.textFormList.buildingName.value = this.suggestList[index].address
+      this.formList.address.value = this.suggestList[index].address[0];
+      this.formList.buildingName.value = this.suggestList[index].address
         .splice(1, this.suggestList[index].address.length - 1)
         .join(" ");
       this.showSuggest = false;
     },
     confirmButtonAction() {
-      // 未入力の必須項目の有無を確認
-      var textFormStateArr = Enumerable.from(this.textFormList)
-        .where((x) => x.value.required == true)
-        .select((x) => x.value.validationState)
-        .toArray();
-      var selectFormStateArr = Enumerable.from(this.selectFormList)
-        .where((x) => x.value.required == true)
-        .select((x) => x.value.validationState)
-        .toArray();
-      if (
-        !textFormStateArr.includes(false) &&
-        !selectFormStateArr.includes(false)
-      ) {
-        if (!this.isConfirm) {
-          // 入力画面から確認画面への遷移の場合
-          // 入力フォームの結果を配列化
-          var textFormResult = Enumerable.from(this.textFormList).toArray();
-          var selectFormResult = Enumerable.from(this.selectFormList).toArray();
-          var tagFormResult = Enumerable.from(this.tagFormList.data)
-            .where((x) => x.state == true)
-            .select((x) => x.tagContent)
-            .toArray()
-            .join("・");
-          textFormResult = textFormResult.map((e) => ({
-            key: e.value.title,
-            value: e.value.value,
-          }));
-          selectFormResult = selectFormResult.map((e) => ({
-            key: e.value.title,
-            value: Enumerable.from(this.genreOptions)
-              .where((x) => x.id == e.value.value)
-              .select((x) => x.name)
-              .single(),
-          }));
-          textFormResult.forEach((e) => this.confirmList.push(e));
-          selectFormResult.forEach((e) => this.confirmList.push(e));
-          this.confirmList.push({ key: "タグ", value: tagFormResult });
+      if (this.validateFormValue()) {
+        if (this.validateFormState()) {
+          if (!this.isConfirm) {
+            var formResult = Object.entries(this.formList).map((x) => x[1]);
+            formResult.forEach((x) => {
+              switch (x.propertyName) {
+                case "prefecture":
+                case "genre1":
+                case "genre2":
+                case "genre3":
+                  this.confirmList.push({
+                    key: x.title,
+                    value: x.options.find((y) => y.id == x.value).name,
+                  });
+                  break;
+                case "tagList":
+                  this.confirmList.push({
+                    key: x.title,
+                    value: x.value
+                      .filter((y) => y.state == true)
+                      .map((z) => z.tagContent)
+                      .join("・"),
+                  });
+                  break;
+                default:
+                  this.confirmList.push({ key: x.title, value: x.value });
+                  break;
+              }
+            });
+          } else {
+            // 確認画面から入力画面への遷移の場合、結果表示テーブル用の変数を空に
+            this.confirmList = [];
+          }
+          // 表示コンポーネントの切り替え
+          this.isConfirm = !this.isConfirm;
         } else {
-          // 確認画面から入力画面への遷移の場合
-          // 結果表示テーブル用の変数を空に
-          this.confirmList = [];
+          this.makeToast("danger", "不正な入力/未選択の項目があります");
         }
-        // 表示コンポーネントの切り替え
-        this.isConfirm = !this.isConfirm;
       } else {
-        // 未入力の項目がある場合のトースト表示
-        this.makeToast("danger");
-        this.alertMessage = "未入力の項目があります";
+        this.makeToast("danger", "必須項目が未入力/未選択です");
       }
     },
     submitButtonAction() {
       // 登録処理を入れる
-      var genreIds = Enumerable.from(this.selectFormList)
-        .where((x) => x.value.value != null)
-        .select((x) => x.value.value)
-        .toArray();
-      var tagIds = Enumerable.from(this.tagFormList.data)
-        .where((x) => x.state == true)
-        .select((x) => x.id)
-        .toArray();
-      var linkGenreIds = [];
-      var urls = [];
-      if (this.textFormList.homePage.value != "") {
-        linkGenreIds.push(1);
-        urls.push(this.textFormList.homePage.value);
-      }
-      if (this.textFormList.twitter.value != "") {
-        linkGenreIds.push(3);
-        urls.push(this.textFormList.twitter.value);
-      }
-      if (this.textFormList.facebook.value != "") {
-        linkGenreIds.push(4);
-        urls.push(this.textFormList.facebook.value);
-      }
-      if (this.textFormList.instagram.value != "") {
-        linkGenreIds.push(5);
-        urls.push(this.textFormList.instagram.value);
-      }
+      this.loading = true;
+      // formListを配列化
+      var formResult = Object.entries(this.formList).map((x) => x[1]);
 
-      getCoord(this.textFormList.address.value).then((res) => {
+      // ジャンルのIDを取得（未選択は除く）
+      var genreIdArr = formResult
+        .filter((x) => x.propertyName.includes("genre"))
+        .filter((x) => x.value != null)
+        .map((x) => x.value);
+
+      // 選択したタグのIDを取得
+      var tagIdArr = formResult
+        .find((x) => x.propertyName.includes("tagList"))
+        .value.filter((x) => x.state == true)
+        .map((x) => x.id);
+
+      // ホームページなどのリンクを取得
+      var linkGenreIdArr = [];
+      var urls = [];
+      formResult.forEach((x) => {
+        if (x.value) {
+          switch (x.propertyName) {
+            case "homePage":
+              linkGenreIdArr.push(1);
+              urls.push(x.value);
+              break;
+            case "twitter":
+              linkGenreIdArr.push(3);
+              urls.push(x.value);
+              break;
+            case "facebook":
+              linkGenreIdArr.push(4);
+              urls.push(x.value);
+              break;
+            case "instagram":
+              linkGenreIdArr.push(5);
+              urls.push(x.value);
+              break;
+          }
+        }
+      });
+
+      getCoord(this.formList.address.value).then((res) => {
         this.coord = res.results[0].geometry.location;
         getStation("").then((res) => {
           this.stations = res;
@@ -443,7 +478,7 @@ export default {
 
           this.fetchDistance(
             this.stationCoords,
-            this.textFormList.address.value
+            this.formList.address.value
           ).then((res) => {
             for (var i = 0; i < res.rows.length; i++) {
               this.accesses.push(
@@ -454,31 +489,31 @@ export default {
             }
 
             var postData = {
-              Name: this.textFormList.name.value,
-              NameKana: this.textFormList.nameKana.value,
-              Address: `${this.textFormList.address.value} ${this.textFormList.buildingName.value}`,
+              Name: this.formList.name.value,
+              NameKana: this.formList.nameKana.value,
+              Address: `${this.formList.address.value} ${this.formList.buildingName.value}`,
               Latitude: this.coord.lat,
               Longitude: this.coord.lng,
               Access: this.accesses.join(" "),
-              PhoneNumber: this.textFormList.phoneNumber.value,
-              OpeningHours: this.textFormList.openingHours.value,
-              RegularHoliday: this.textFormList.regularHoliday.value,
-              PaymentMethod: this.textFormList.paymentMethod.value,
-              GenreId: genreIds,
+              PhoneNumber: this.formList.phoneNumber.value,
+              OpeningHours: this.formList.openingHours.value,
+              RegularHoliday: this.formList.regularHoliday.value,
+              PaymentMethod: this.formList.paymentMethod.value,
+              GenreId: genreIdArr,
               Url: urls,
-              LinkGenreId: linkGenreIds,
-              TagId: tagIds,
+              LinkGenreId: linkGenreIdArr,
+              TagId: tagIdArr,
             };
 
-            addRestaurant(postData).then(
-              this.$router.push("/RestaurantRegistration/Complete")
-            );
+            addRestaurant(postData)
+              .then(this.$router.push("/RestaurantRegistration/Complete"))
+              .catch((err) => alert(err));
           });
         });
       });
     },
-    makeToast(variant = null) {
-      this.$bvToast.toast("未入力の項目があります", {
+    makeToast(variant, message) {
+      this.$bvToast.toast(message, {
         title: "注意！",
         variant: variant,
         solid: true,
@@ -505,7 +540,7 @@ export default {
   display: none;
 }
 .search-button {
-  padding: 5px 40px;
+  padding: 5px 20px;
   cursor: pointer;
   color: white;
   font-size: large;
