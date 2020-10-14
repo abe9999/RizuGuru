@@ -170,6 +170,14 @@ export default {
           placeholder: "https://rizuguru.jp/",
           value: "",
         },
+        blog: {
+          type: "text",
+          title: "ブログ",
+          required: false,
+          propertyName: "blog",
+          placeholder: "https://rizuguru.blog/",
+          value: "",
+        },
         twitter: {
           type: "text",
           title: "Twitter",
@@ -424,6 +432,10 @@ export default {
           switch (x.propertyName) {
             case "homePage":
               linkGenreIdArr.push(1);
+              urls.push(x.value);
+              break;
+            case "blog":
+              linkGenreIdArr.push(2);
               urls.push(x.value);
               break;
             case "twitter":
