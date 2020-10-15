@@ -29,7 +29,6 @@
       <b-row>
         <b-col>
           <Button message="確認画面に進む" :action="confirmButtonAction" />
-          <Button message="テスト" :action="submitButtonAction" />
         </b-col>
       </b-row>
     </b-container>
@@ -194,15 +193,6 @@ export default {
           value: "",
           validationState: false,
         },
-        // access: {
-        //   type: "text",
-        //   title: "交通手段",
-        //   required: true,
-        //   propertyName: "access",
-        //   placeholder: "四ツ谷駅から徒歩5分",
-        //   value: "",
-        //   validationState: false,
-        // },
         paymentMethod: {
           type: "text",
           title: "支払方法",
@@ -303,7 +293,7 @@ export default {
       return new Promise((resolve) => {
         getTagsList().then((res) => {
           this.formList.tagList.value = res
-            .filter((e) => e.id > 10)
+            .filter((e) => e.id > 11)
             .map((e) => {
               e.state = false;
               return e;
@@ -581,15 +571,20 @@ export default {
               .take(5)
               .toArray();
           }
-          var stationCoordArr = stations.map((x) => {
-            return `${x.latitude},${x.longitude}`;
-          });
 
           // 店舗から最も近い駅を最寄り駅IDとする
           postData.StationId = stations[0].id;
 
+          // 最寄駅から店舗までの距離が500m以内の場合、「駅から近い」タグを付与
+          if (stations[0].distance <= 500) {
+            postData.TagId.unshift(11);
+          }
+
           // 最寄駅からの徒歩移動時間を計算
           var accesses = [];
+          var stationCoordArr = stations.map((x) => {
+            return `${x.latitude},${x.longitude}`;
+          });
           this.getRangeFromNearestStation(
             stationCoordArr,
             postData.Address
@@ -603,6 +598,7 @@ export default {
             });
             postData.Access = accesses.join(" ");
 
+            // 店舗追加処理
             addRestaurant(postData).then(() => {
               this.$router.push("/RestaurantRegistration/Complete");
             });

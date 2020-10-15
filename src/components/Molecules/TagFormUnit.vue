@@ -5,6 +5,7 @@
       <ToggleTag
         v-for="(tagData, index) in tagFormList"
         :key="index"
+        :dataLength="dataLength"
         :index="index"
         :name="tagData.tagContent"
         :state="tagData.state"
@@ -21,6 +22,11 @@ export default {
   components: {
     Label,
     ToggleTag,
+  },
+  data() {
+    return {
+      dataLength: 12 / this.tagFormList.length,
+    };
   },
   props: {
     title: String,

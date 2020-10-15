@@ -1,5 +1,5 @@
 <template>
-  <b-col class="tag-outer" sm="6">
+  <b-col class="tag-outer" :lg="dataLength">
     <span
       class="tag-inner deactive"
       :class="{ active: active }"
@@ -12,6 +12,10 @@
 <script>
 export default {
   props: {
+    dataLength: {
+      type: Number,
+      required: true,
+    },
     index: {
       type: Number,
       required: false,
