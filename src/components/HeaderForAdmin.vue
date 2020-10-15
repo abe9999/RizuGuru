@@ -52,11 +52,6 @@
             >
           </b-nav-item>
           <b-nav-item>
-            <router-link to="/AddressSubmit" class="nav-link text-light"
-              >住所登録テスト</router-link
-            >
-          </b-nav-item>
-          <b-nav-item>
             <router-link
               to="/RestaurantListTest?keyword=&lat=35.686595&lng=139.726436"
               class="nav-link text-light"
