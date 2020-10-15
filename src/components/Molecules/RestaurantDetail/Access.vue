@@ -2,7 +2,9 @@
   <div class="access">
     <Category category="交通手段" />
     <hr />
-    <p>{{ detail.access }}</p>
+    <ul>
+      <li v-for="(a, index) in accessArr" :key="index">{{ a }}</li>
+    </ul>
     <hr />
   </div>
 </template>
@@ -17,10 +19,22 @@ export default {
   components: {
     Category,
   },
+  data() {
+    return {
+      detailArr: [],
+    };
+  },
+  created() {
+    this.accessArr = this.detail.access.split(" ");
+  },
 };
 </script>
 
 <style scoped>
+li {
+  margin-bottom: 4px;
+}
+
 .access {
   margin-bottom: 30px;
 }
