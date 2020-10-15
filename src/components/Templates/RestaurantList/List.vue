@@ -11,6 +11,7 @@
     <Counter :value="restaurantCount" />
     <div
       class="list-item"
+      :id="index"
       v-for="(restaurantData, index) in restaurantList"
       :key="index"
     >

@@ -4,6 +4,7 @@ import Home from "../views/Home/Home.vue";
 import About from "../views/Home/About.vue";
 import Login from "../views/Home/Login.vue";
 import RestaurantList from "../views/RestaurantList/RestaurantList.vue";
+import RestaurantListTest from "../views/RestaurantList/RestaurantListTest.vue";
 import Filtering from "../views/RestaurantList/Filtering.vue";
 import RestaurantDetail from "../views/RestaurantDetail/RestaurantDetail.vue";
 import SearchMap from "../views/SearchMap/SearchMap.vue";
@@ -37,6 +38,11 @@ const routes = [
     name: "RestaurantList",
     path: "/RestaurantList",
     component: RestaurantList,
+  },
+  {
+    name: "RestaurantListTest",
+    path: "/RestaurantListTest",
+    component: RestaurantListTest,
   },
   {
     name: "Filtering",
