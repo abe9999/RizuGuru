@@ -33,7 +33,7 @@ export default {
   width: 100%;
 }
 
-@media (max-width: 560px) {
+@media (max-width: 767px) {
   .wrapper {
     margin: 0 auto;
   }

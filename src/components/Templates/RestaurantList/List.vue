@@ -42,9 +42,9 @@ export default {
 </script>
 
 <style scoped>
-@media (min-width: 560px) {
+@media (min-width: 767px) {
   .list-item {
-    width: 70%;
+    width: 90%;
     margin: 0 auto;
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <b-row @click="action" class="item">
-    <ListItemImage :imageId="restaurantData.id" />
-    <ListItemDescription :restaurantData="restaurantData" />
+    <ListItemImage class="image" :imageId="restaurantData.id" />
+    <ListItemDescription class="description" :restaurantData="restaurantData" />
   </b-row>
 </template>
 
@@ -39,10 +39,14 @@ export default {
   margin: 0 auto;
 }
 
-@media (max-width: 560px) {
+@media (max-width: 767px) {
   .item {
     width: 100%;
     margin: 0 auto;
+  }
+
+  .image {
+    margin-bottom: 10px;
   }
 }
 </style>

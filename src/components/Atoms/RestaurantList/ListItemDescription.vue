@@ -4,8 +4,15 @@
       <div class="container">
         <p class="title">{{ restaurantData.name }}</p>
         <div class="detail-container">
-          <p class="description">現在地から{{ distance }}</p>
-          <p class="description">{{ genre }}</p>
+          <p class="description">
+            <b-icon-cursor-fill class="icon" />現在地から{{ distance }}
+          </p>
+          <p class="description">
+            <b-icon-geo-alt class="icon" />{{ restaurantData.station.name }}駅
+          </p>
+          <p class="description">
+            <b-icon-caret-right-fill class="icon" />{{ genre }}
+          </p>
           <p class="description">休：{{ restaurantData.regularHoliday }}</p>
           <tags :tags="tags" />
         </div>
@@ -53,6 +60,10 @@ export default {
 </script>
 
 <style scoped>
+p {
+  margin-bottom: 7px;
+}
+
 .title {
   font-size: x-large;
 }
@@ -65,6 +76,20 @@ export default {
   font-size: 15px;
 }
 
+.icon {
+  margin-right: 5px;
+}
+
+@media (max-width: 767px) {
+  .title {
+    font-weight: bold;
+  }
+
+  .description {
+    margin-bottom: 2px;
+  }
+}
+
 @media (max-width: 560px) {
   .wrapper {
     width: 100%;
@@ -73,7 +98,6 @@ export default {
 
   .title {
     font-size: medium;
-    font-weight: bold;
     margin-bottom: 0px;
   }
 
@@ -83,7 +107,6 @@ export default {
 
   .description {
     font-size: small;
-    margin-bottom: 0px;
   }
 }
 </style>
