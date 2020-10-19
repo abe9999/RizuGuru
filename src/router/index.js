@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home/Home.vue";
 import About from "../views/Home/About.vue";
+import NotFound from "../views/Home/NotFound.vue";
 import Login from "../views/Home/Login.vue";
 import RestaurantList from "../views/RestaurantList/RestaurantList.vue";
 import RestaurantListTest from "../views/RestaurantList/RestaurantListTest.vue";
@@ -28,6 +29,10 @@ const routes = [
   {
     path: "/about",
     component: About,
+  },
+  {
+    path: "*",
+    component: NotFound,
   },
   {
     path: "/Login",
