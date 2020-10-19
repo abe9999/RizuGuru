@@ -42,7 +42,7 @@ export default {
       this.sliding = false;
     },
     notFoundImage(element) {
-      element.target.src = require("@/assets/images/no-results2.png");
+      element.target.src = require("@/assets/images/no_image_wide.jpg");
     },
   },
 };
