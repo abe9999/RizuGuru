@@ -1,7 +1,7 @@
 <template>
   <b-col cols="12" md="4">
     <div class="wrapper">
-      <img class="image" :src="this.url" />
+      <img class="image" :src="url" @error="notFoundImage" />
     </div>
   </b-col>
 </template>
@@ -18,6 +18,11 @@ export default {
     return {
       url: `https://strizuguru.blob.core.windows.net/images/RestaurantList/${this.imageId}-1.jpg`,
     };
+  },
+  methods: {
+    notFoundImage(element) {
+      element.target.src = require("@/assets/images/no-results.png");
+    },
   },
 };
 </script>
