@@ -8,7 +8,7 @@
       :searchButtonAction="searchButtonAction"
     />
     <hr />
-    <Counter :value="restaurantCount" />
+    <!-- <Counter :value="restaurantCount" /> -->
     <div
       class="list-item"
       :id="index"
@@ -38,12 +38,12 @@
 </template>
 
 <script>
-import Counter from "@/components/Atoms/RestaurantList/Counter.vue";
+// import Counter from "@/components/Atoms/RestaurantList/Counter.vue";
 import SearchBar from "@/components/Molecules/SearchBar.vue";
 import ListItemContainer from "@/components/Molecules/RestaurantList/ListItemContainer.vue";
 export default {
   components: {
-    Counter,
+    // Counter,
     SearchBar,
     ListItemContainer,
   },
