@@ -2,6 +2,7 @@
   <section class="wrapper">
     <img src="@/assets/images/no-results.png" />
     <p>指定されたページが見つかりませんでした</p>
+    <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
     <Button :message="buttonMessage" :action="buttonAction" />
   </section>
 </template>
@@ -11,6 +12,9 @@ import Button from "@/components/Atoms/Button";
 export default {
   components: {
     Button,
+  },
+  props: {
+    errorMessage: Error,
   },
   data() {
     return {

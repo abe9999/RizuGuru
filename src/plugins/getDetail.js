@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export async function getDetail(id) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     axios
       .get(`https://func-rizuguru.azurewebsites.net/api/GetDetail?id=${id}`)
       .then((res) => {
@@ -9,7 +9,7 @@ export async function getDetail(id) {
         resolve(result);
       })
       .catch((err) => {
-        console.log(err);
+        reject(err);
       });
   });
 }

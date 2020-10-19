@@ -31,7 +31,9 @@ const routes = [
   },
   {
     path: "*",
+    name: "NotFound",
     component: NotFound,
+    props: true
   },
   {
     path: "/Login",
