@@ -11,8 +11,8 @@
     <Counter :value="restaurantCount" />
     <div
       class="list-item"
-      :id="index"
       v-for="(restaurantData, index) in restaurantList"
+      :id="index"
       :key="index"
     >
       <ListItemContainer :restaurantData="restaurantData" />
@@ -61,6 +61,11 @@ export default {
 </script>
 
 <style scoped>
+.no-results p {
+  margin-top: 15px;
+  font-size: 20px;
+}
+
 @media (min-width: 767px) {
   .list-item {
     width: 90%;

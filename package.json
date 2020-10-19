@@ -17,6 +17,7 @@
     "linq": "^3.2.2",
     "request": "^2.88.2",
     "vue": "^2.6.11",
+    "vue-infinite-loading": "^2.4.5",
     "vue-router": "^3.2.0",
     "vue-slider-component": "^3.2.5",
     "vuedraggable": "^2.24.1",

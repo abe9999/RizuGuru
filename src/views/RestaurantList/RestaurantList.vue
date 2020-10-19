@@ -1,20 +1,19 @@
 <template>
-  <div class="wrapper">
-    <div>
-      <b-container class="d-flex justifiy-content-center" fluid>
-        <List
-          :filteringButtonAction="filteringButtonAction"
-          :restaurantList="restaurantList"
-          :restaurantCount="restaurantCount"
-          :getSearchKeyword="getSearchKeyword"
-          :setSearchKeyword="setSearchKeyword"
-          :searchButtonAction="searchButtonAction"
-          v-if="!loading"
-        />
-        <Loading v-else-if="loading" />
-      </b-container>
-    </div>
-  </div>
+  <b-container class="d-flex justifiy-content-center" fluid>
+    <section class="wrapper" v-if="!loading">
+      <List
+        :filteringButtonAction="filteringButtonAction"
+        :restaurantList="restaurantList"
+        :restaurantCount="restaurantCount"
+        :getSearchKeyword="getSearchKeyword"
+        :setSearchKeyword="setSearchKeyword"
+        :searchButtonAction="searchButtonAction"
+        :infiniteHandler="infiniteHandler"
+        :offset="offset"
+      />
+    </section>
+    <Loading v-else-if="loading" />
+  </b-container>
 </template>
 
 <script>
@@ -31,12 +30,28 @@ export default {
     return {
       query: {},
       restaurantData: [],
-      restaurantCount: null,
+      restaurantCount: 0,
       keyword: "",
       loading: true,
+      offset: 0,
     };
   },
   methods: {
+    // ページ最下部に達した時の処理
+    infiniteHandler($state) {
+      setTimeout(() => {
+        this.searchRestaurantList().then((res) => {
+          if (res.length) {
+            res.forEach((element) => {
+              this.restaurantData.push(element);
+            });
+            $state.loaded();
+          } else {
+            $state.complete();
+          }
+        });
+      }, 500);
+    },
     getSearchKeyword() {
       return this.keyword;
     },
@@ -52,17 +67,21 @@ export default {
     searchButtonAction() {
       // 入力フォームの検索ボタンをしたときの処理
       this.query.keyword = this.keyword;
-      this.searchRestaurantList();
+      this.searchRestaurantList(this.query);
     },
-    searchRestaurantList() {
+    async searchRestaurantList() {
       // 店舗検索処理
-      // ローディングのくるくるを表示
-      this.loading = true;
-      searchRestaurantList(this.query).then((res) => {
-        this.restaurantData = res;
-        this.restaurantCount = res.length;
-        // ローディングのくるくるを非表示に
-        this.loading = false;
+      return new Promise((resolve) => {
+        var query = this.query;
+        query.offset = this.offset;
+        var result = [];
+        searchRestaurantList(query).then((res) => {
+          res.forEach((element) => {
+            result.push(element);
+          });
+          this.offset += 5;
+          resolve(result);
+        });
       });
     },
   },
@@ -71,7 +90,13 @@ export default {
     // 検索フォームに前画面のキーワードを代入
     this.keyword = this.query.keyword;
     // 検索処理を実行
-    this.searchRestaurantList();
+    this.searchRestaurantList().then((res) => {
+      res.forEach((element) => {
+        this.restaurantData.push(element);
+      });
+      // ローディングアイコンを非表示にする
+      this.loading = false;
+    });
   },
   computed: {
     restaurantList() {

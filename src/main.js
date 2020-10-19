@@ -8,9 +8,11 @@ import router from "./router";
 import axios from "axios";
 import store from "./store";
 import linq from "linq";
+import InfiniteLoading from 'vue-infinite-loading'
 
 Vue.use(BootstrapVueIcons);
 Vue.use(linq);
+Vue.component('infinite-loading', InfiniteLoading)
 Vue.config.productionTip = false;
 Vue.prototype.$axios = axios;
 
