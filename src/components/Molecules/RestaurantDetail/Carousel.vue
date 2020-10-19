@@ -11,10 +11,14 @@
       @sliding-start="onSlideStart"
       @sliding-end="onSlideEnd"
     >
-      <b-carousel-slide
-        v-for="(imgPath, index) in imgPaths"
-        :key="index"
-        v-bind:img-src="`https://strizuguru.blob.core.windows.net/images/RestaurantDetail/${routeId}/${routeId}-${imgPath}.jpg`"
+      <b-carousel-slide v-for="(imgPath, index) in imgPaths" :key="index">
+        <template v-slot:img>
+          <img
+            class="d-block img-fluid w-100"
+            :src="`https://strizuguru.blob.core.windows.net/images/RestaurantDetail/${routeId}/${routeId}-${imgPath}.jpg`"
+            alt="image slot"
+            @error="notFoundImage"
+          /> </template
       ></b-carousel-slide>
     </b-carousel>
   </div>
@@ -36,6 +40,9 @@ export default {
     },
     onSlideEnd() {
       this.sliding = false;
+    },
+    notFoundImage(element) {
+      element.target.src = require("@/assets/images/no-results2.png");
     },
   },
 };
