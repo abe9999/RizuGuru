@@ -42,8 +42,7 @@
       <TagFormUnit
         v-else-if="form.type == 'tag'"
         class="form"
-        :title="form.title"
-        :required="form.required"
+        :itemData="form"
         :tagFormList="form.value"
         :action="tagStateSwitcher"
       />

@@ -45,7 +45,7 @@
           :setter="setter"
         />
         <!-- こだわりタグ選択欄 -->
-        <TagFormUnit
+        <TagFormUnitWithIcon
           class="form"
           :itemData="filteringItemData.tagsId"
           :tagFormList="filteringItemData.tagsId.value"
@@ -66,7 +66,7 @@
 import Headline from "@/components/Molecules/Headline.vue";
 import InputFormUnitWithIcon from "@/components/Molecules/InputFormUnitWithIcon.vue";
 import SliderFormUnit from "@/components/Molecules/SliderFormUnit.vue";
-import TagFormUnit from "@/components/Molecules/TagFormUnit.vue";
+import TagFormUnitWithIcon from "@/components/Molecules/TagFormUnitWithIcon.vue";
 import Button from "@/components/Atoms/Button.vue";
 
 export default {
@@ -74,7 +74,7 @@ export default {
     Headline,
     InputFormUnitWithIcon,
     SliderFormUnit,
-    TagFormUnit,
+    TagFormUnitWithIcon,
     Button,
   },
   props: {

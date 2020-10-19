@@ -1,9 +1,9 @@
 <template>
   <div class="wrapper">
-    <Label
+    <LabelWithIcon
       class="label"
-      :title="itemData.title"
-      :required="itemData.required"
+      :title="itemData.displayName"
+      :icon="itemData.icon"
     />
     <b-row class="form-wrapper">
       <ToggleTag
@@ -20,12 +20,12 @@
 </template>
 
 <script>
-import Label from "@/components/Atoms/Label.vue";
+import LabelWithIcon from "@/components/Atoms/LabelWithIcon.vue";
 import ToggleTag from "@/components//Atoms/ToggleTag.vue";
 export default {
   components: {
     ToggleTag,
-    Label,
+    LabelWithIcon,
   },
   data() {
     return {
