@@ -75,7 +75,7 @@ import { getStation } from "@/plugins/getStation.js";
 import { getGeoDistance } from "@/plugins/getGeoDistance.js";
 import { addRestaurant } from "@/plugins/addRestaurant.js";
 import { leaveGuard } from "@/plugins/leaveGuard.js";
-import { fetchPrefecture } from "@/plugins/fetchPrefecture.js";
+// import { fetchPrefecture } from "@/plugins/fetchPrefecture.js";
 import { fetchCity } from "@/plugins/fetchCity.js";
 import { fetchTown } from "@/plugins/fetchTown.js";
 import Loading from "@/components/Atoms/Loading.vue";
@@ -315,14 +315,25 @@ export default {
     },
     async fetchPrefecture() {
       return new Promise((resolve) => {
-        fetchPrefecture().then((res) => {
-          var prefectureArr = res
-            .filter((x) => x.activeKey == 1)
-            .map((x) => ({ id: x.id, name: x.name }));
-          prefectureArr.unshift({ id: null, name: "未選択" });
-          this.formList.prefecture.options = prefectureArr;
-          resolve();
-        });
+        // APIから取得する場合
+        // fetchPrefecture().then((res) => {
+        //   var prefectureArr = res
+        //     .filter((x) => x.activeKey == 1)
+        //     .map((x) => ({ id: x.id, name: x.name }));
+        //   prefectureArr.unshift({ id: null, name: "未選択" });
+        //   this.formList.prefecture.options = prefectureArr;
+        //   resolve();
+        // });
+
+        const prefectureArr = [
+          { id: null, name: "未選択" },
+          { id: 11, name: "埼玉県" },
+          { id: 12, name: "千葉県" },
+          { id: 13, name: "東京都" },
+          { id: 14, name: "神奈川県" },
+        ];
+        this.formList.prefecture.options = prefectureArr;
+        resolve();
       });
     },
     fetchCity(prefId) {
