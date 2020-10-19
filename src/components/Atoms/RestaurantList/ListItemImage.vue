@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     notFoundImage(element) {
-      element.target.src = require("@/assets/images/no-results.png");
+      element.target.src = require("@/assets/images/no_image_square.jpg");
     },
   },
 };
