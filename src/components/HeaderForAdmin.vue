@@ -51,13 +51,6 @@
               >写真追加</router-link
             >
           </b-nav-item>
-          <b-nav-item>
-            <router-link
-              to="/RestaurantListTest?keyword=&lat=35.686595&lng=139.726436"
-              class="nav-link text-light"
-              >ページネーションテスト</router-link
-            >
-          </b-nav-item>
           <!-- <b-nav-item>
             <router-link to="/RestaurantList" class="nav-link text-light">現在地から探す</router-link>
           </b-nav-item> -->
