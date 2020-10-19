@@ -47,8 +47,7 @@
         <!-- こだわりタグ選択欄 -->
         <TagFormUnit
           class="form"
-          :title="filteringItemData.tagsId.displayName"
-          :required="filteringItemData.tagsId.required"
+          :itemData="filteringItemData.tagsId"
           :tagFormList="filteringItemData.tagsId.value"
           :action="tagSwitcher"
         />

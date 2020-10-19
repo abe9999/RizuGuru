@@ -1,6 +1,10 @@
 <template>
   <div class="wrapper">
-    <Label class="label" :title="title" :required="required" />
+    <LabelWithIcon
+      class="label"
+      :title="itemData.displayName"
+      :icon="itemData.icon"
+    />
     <b-row class="form-wrapper">
       <ToggleTag
         v-for="(tagData, index) in tagFormList"
@@ -16,12 +20,12 @@
 </template>
 
 <script>
-import Label from "@/components/Atoms/Label.vue";
+import LabelWithIcon from "@/components/Atoms/LabelWithIcon.vue";
 import ToggleTag from "@/components//Atoms/ToggleTag.vue";
 export default {
   components: {
-    Label,
     ToggleTag,
+    LabelWithIcon,
   },
   data() {
     return {
@@ -29,8 +33,7 @@ export default {
     };
   },
   props: {
-    title: String,
-    required: Boolean,
+    itemData: Object,
     tagFormList: {
       type: Array,
       required: true,
