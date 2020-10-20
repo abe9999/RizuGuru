@@ -71,7 +71,8 @@ export default {
         this.loading = false;
       })
       .catch((err) => {
-        this.$router.push({ name: "NotFound", params: { errorMessage: err } });
+        console.error(err);
+        // this.$router.push({ name: "NotFound", params: { errorMessage: err } });
       });
   },
 };
