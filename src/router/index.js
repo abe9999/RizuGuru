@@ -2,7 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home/Home.vue";
 import About from "../views/Home/About.vue";
-// import NotFound from "../views/Home/NotFound.vue";
+import NotFound from "../views/Home/NotFound.vue";
 import Login from "../views/Home/Login.vue";
 import RestaurantList from "../views/RestaurantList/RestaurantList.vue";
 import Filtering from "../views/RestaurantList/Filtering.vue";
@@ -29,12 +29,12 @@ const routes = [
     path: "/about",
     component: About,
   },
-  // {
-  //   path: "*",
-  //   name: "NotFound",
-  //   component: NotFound,
-  //   props: true
-  // },
+  {
+    path: "*",
+    name: "NotFound",
+    component: NotFound,
+    props: true
+  },
   {
     path: "/Login",
     component: Login,
