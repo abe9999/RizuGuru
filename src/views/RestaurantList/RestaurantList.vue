@@ -1,9 +1,16 @@
 <template>
   <b-container class="d-flex justifiy-content-center" fluid>
     <section class="wrapper" v-if="!loading">
+      <SearchBar
+        buttonMessage="絞り込む"
+        :buttonAction="filteringButtonAction"
+        :getter="getSearchKeyword"
+        :setter="setSearchKeyword"
+        :searchButtonAction="searchButtonAction"
+      />
       <List
         :filteringButtonAction="filteringButtonAction"
-        :restaurantList="restaurantList"
+        :restaurantList="restaurantData"
         :restaurantCount="restaurantCount"
         :getSearchKeyword="getSearchKeyword"
         :setSearchKeyword="setSearchKeyword"
@@ -17,14 +24,16 @@
 </template>
 
 <script>
-import List from "@/components/Templates/RestaurantList/List.vue";
 import Loading from "@/components/Atoms/Loading.vue";
+import SearchBar from "@/components/Molecules/SearchBar.vue";
+import List from "@/components/Templates/RestaurantList/List.vue";
 import { searchRestaurantList } from "@/plugins/searchRestaurantList.js";
 
 export default {
   components: {
-    List,
     Loading,
+    SearchBar,
+    List,
   },
   data() {
     return {
@@ -66,8 +75,15 @@ export default {
     },
     searchButtonAction() {
       // 入力フォームの検索ボタンをしたときの処理
-      this.query.keyword = this.keyword;
-      this.searchRestaurantList(this.query);
+      this.$router.push({
+        name: "RestaurantList",
+        query: {
+          keyword: this.keyword,
+          lat: this.query.lat,
+          lng: this.query.lng,
+        },
+        force: true,
+      });
     },
     async searchRestaurantList() {
       // 店舗検索処理
@@ -98,9 +114,10 @@ export default {
       this.loading = false;
     });
   },
-  computed: {
-    restaurantList() {
-      return this.restaurantData;
+  watch: {
+    // 入力フォームの検索ボタンを押したときクエリを保持したまま画面リロードする
+    $route() {
+      this.$router.go({ path: this.$router.currentRoute.path, force: true });
     },
   },
 };
@@ -109,6 +126,6 @@ export default {
 <style scoped>
 .wrapper {
   width: 95%;
-  margin: 10px auto 0 auto;
+  margin: 0 auto;
 }
 </style>

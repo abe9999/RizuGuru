@@ -1,13 +1,5 @@
 <template>
   <div class="wrapper">
-    <SearchBar
-      buttonMessage="絞り込む"
-      :buttonAction="filteringButtonAction"
-      :getter="getSearchKeyword"
-      :setter="setSearchKeyword"
-      :searchButtonAction="searchButtonAction"
-    />
-    <hr />
     <!-- <Counter :value="restaurantCount" /> -->
     <div
       class="list-item"
@@ -39,12 +31,10 @@
 
 <script>
 // import Counter from "@/components/Atoms/RestaurantList/Counter.vue";
-import SearchBar from "@/components/Molecules/SearchBar.vue";
 import ListItemContainer from "@/components/Molecules/RestaurantList/ListItemContainer.vue";
 export default {
   components: {
     // Counter,
-    SearchBar,
     ListItemContainer,
   },
   props: {

@@ -1,13 +1,14 @@
 <template>
-  <div class="search-input">
+  <header class="wrapper">
     <InputFormForSearch
+      class="search-bar-item"
       :message="buttonMessage"
       :action="buttonAction"
       :getter="getter"
       :setter="setter"
       :searchButtonAction="searchButtonAction"
     />
-  </div>
+  </header>
 </template>
 
 <script>
@@ -27,10 +28,24 @@ export default {
 </script>
 
 <style scoped>
-@media (min-width: 560px) {
-  .search-input {
-    width: 70%;
-    margin: 0 auto;
+.wrapper {
+  position: -webkit-sticky;
+  position: sticky;
+  top: -1px;
+  z-index: 100;
+  background-color: white;
+}
+
+.search-bar-item {
+  margin: 0 auto;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  width: 80%;
+}
+
+@media (max-width: 560px) {
+  .search-bar-item {
+    width: 100%;
   }
 }
 </style>
