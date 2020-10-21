@@ -50,12 +50,8 @@ export default {
     // ページ最下部に達した時の処理
     infiniteHandler($state) {
       setTimeout(() => {
-        var searchQuery = {
-          offset: this.offset,
-          keyword: this.keyword,
-          lat: this.query.lat,
-          lng: this.query.lng,
-        };
+        var searchQuery = this.query;
+        searchQuery.offset = this.offset;
         this.searchRestaurantList(searchQuery).then((res) => {
           if (res.length) {
             res.forEach((element) => {
@@ -116,12 +112,8 @@ export default {
     // 検索フォームに前画面のキーワードを代入
     this.keyword = this.query.keyword;
     // 検索処理を実行
-    var searchQuery = {
-      offset: this.offset,
-      keyword: this.keyword,
-      lat: this.query.lat,
-      lng: this.query.lng,
-    };
+    var searchQuery = this.query;
+    searchQuery.offset = this.offset;
     this.searchRestaurantList(searchQuery).then((res) => {
       // 検索結果を代入
       this.restaurantData = res;
@@ -136,12 +128,10 @@ export default {
       // 表示した店舗数を0にする
       this.offset = 0;
       // 検索処理を実行
-      var searchQuery = {
-        offset: this.offset,
-        keyword: this.keyword,
-        lat: this.query.lat,
-        lng: this.query.lng,
-      };
+      var searchQuery = this.query;
+      searchQuery.offset = this.offset;
+      searchQuery.keyword = this.keyword;
+
       this.searchRestaurantList(searchQuery).then((res) => {
         // 新しい検索結果を代入
         this.restaurantData = res;
