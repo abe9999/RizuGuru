@@ -494,9 +494,7 @@ export default {
           ).then((res) => {
             for (var i = 0; i < res.rows.length; i++) {
               this.accesses.push(
-                this.stations[i].name +
-                  "駅から徒歩" +
-                  res.rows[i].elements[0].duration.text
+                `${this.stations[i].name}駅から徒歩${res.rows[i].elements[0].duration.text}`
               );
             }
 
