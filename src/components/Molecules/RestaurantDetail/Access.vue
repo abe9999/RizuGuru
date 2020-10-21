@@ -3,7 +3,7 @@
     <Category category="交通手段" />
     <hr />
     <ul>
-      <li v-for="(a, index) in accessArr" :key="index">{{ a }}</li>
+      <li v-for="(access, index) in accessArr" :key="index">{{ access }}</li>
     </ul>
     <hr />
   </div>
@@ -19,11 +19,6 @@ export default {
   components: {
     Category,
   },
-  data() {
-    return {
-      detailArr: [],
-    };
-  },
   created() {
     this.accessArr = this.detail.access.split(" ");
   },
@@ -31,8 +26,13 @@ export default {
 </script>
 
 <style scoped>
+ul {
+  padding-left: 0;
+}
+
 li {
   margin-bottom: 4px;
+  list-style: none;
 }
 
 .access {

@@ -18,8 +18,9 @@
             :src="`https://strizuguru.blob.core.windows.net/images/RestaurantDetail/${routeId}/${routeId}-${imgPath}.jpg`"
             alt="image slot"
             @error="notFoundImage"
-          /> </template
-      ></b-carousel-slide>
+          />
+        </template>
+      </b-carousel-slide>
     </b-carousel>
   </div>
 </template>
