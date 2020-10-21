@@ -1,24 +1,21 @@
 <template>
-  <form action="">
-    <b-input-group>
-      <b-form-input
-        type="search"
-        inputmode="search"
-        v-model="value"
-        @keydown.enter="searchButtonAction"
-      />
-      <b-input-group-prepend is-text class="icon" @click="searchButtonAction">
+  <b-input-group>
+    <b-form-input
+      type="search"
+      v-model="value"
+      @keydown.enter="searchButtonAction"
+    />
+    <b-input-group-append>
+      <b-button class="button" variant="success" @click="searchButtonAction">
         <b-icon icon="search" />
-        <span class="icon-message">検索</span>
-      </b-input-group-prepend>
-      <b-input-group-append>
-        <b-button variant="success" @click="action"
-          ><b-icon icon="filter-left" />
-          <span class="icon-message">{{ message }}</span>
-        </b-button>
-      </b-input-group-append>
-    </b-input-group>
-  </form>
+        <span class="button-message">検索</span>
+      </b-button>
+      <b-button class="button" @click="action"
+        ><b-icon icon="filter-left" />
+        <span class="button-message">{{ message }}</span>
+      </b-button>
+    </b-input-group-append>
+  </b-input-group>
 </template>
 
 <script>
@@ -76,16 +73,12 @@ input {
   /* --- */
 }
 
-.icon {
-  cursor: pointer;
-}
-
-.icon-message {
+.button-message {
   margin-left: 5px;
 }
 
 @media (max-width: 767px) {
-  .icon {
+  .button {
     display: none;
   }
 }

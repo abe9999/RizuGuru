@@ -2,6 +2,7 @@
   <b-container class="d-flex justifiy-content-center" fluid>
     <section class="wrapper" v-if="!loading">
       <SearchBar
+        class="search-bar"
         buttonMessage="絞り込む"
         :buttonAction="filteringButtonAction"
         :getter="getSearchKeyword"
@@ -127,5 +128,13 @@ export default {
 .wrapper {
   width: 95%;
   margin: 0 auto;
+}
+
+.search-bar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: -1px;
+  z-index: 100;
+  background-color: white;
 }
 </style>
