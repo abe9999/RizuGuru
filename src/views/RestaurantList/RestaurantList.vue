@@ -84,6 +84,7 @@ export default {
       // 入力フォームの検索ボタンを押したとき
       // 新たなURLクエリパラメータを作成しURLを置換
       // キーワードがURLクエリパラメータと一致していた場合、検索しない
+      this.loading = true;
       if (this.keyword != this.$route.query.keyword) {
         this.$router.push({
           path: "RestaurantList",
@@ -93,6 +94,10 @@ export default {
             lng: this.query.lng,
           },
         });
+      } else {
+        setTimeout(() => {
+          this.loading = false;
+        }, 500);
       }
     },
     async searchRestaurantList(searchQuery) {
