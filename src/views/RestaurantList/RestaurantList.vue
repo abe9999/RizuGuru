@@ -17,7 +17,6 @@
         :setSearchKeyword="setSearchKeyword"
         :searchButtonAction="searchButtonAction"
         :infiniteHandler="infiniteHandler"
-        :offset="offset"
       />
     </section>
     <Loading v-else-if="loading" />
@@ -54,15 +53,14 @@ export default {
         searchQuery.offset = this.offset;
         this.searchRestaurantList(searchQuery).then((res) => {
           if (res.length) {
-            res.forEach((element) => {
-              this.restaurantData.push(element);
-            });
+            this.restaurantData.push(...res);
             $state.loaded();
           } else {
+            console.log(res.length);
             $state.complete();
           }
         });
-      }, 500);
+      }, 300);
     },
     getSearchKeyword() {
       return this.keyword;
@@ -93,14 +91,14 @@ export default {
       } else {
         setTimeout(() => {
           this.loading = false;
-        }, 500);
+        }, 300);
       }
     },
     async searchRestaurantList(searchQuery) {
       // 店舗検索処理
       return new Promise((resolve) => {
         searchRestaurantList(searchQuery).then((res) => {
-          this.offset += 5;
+          this.offset += res.length;
           resolve(res);
         });
       });
