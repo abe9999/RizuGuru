@@ -8,7 +8,7 @@
     </b-row>
     <b-row>
       <b-col class="container">
-        <b-row v-if="filteringItemData.keyword.value">
+        <b-row class="keyword-item" v-if="filteringItemData.keyword.value">
           <p>現在の検索キーワード：</p>
           <ul class="keyword-list">
             <li v-for="(keyword, index) in keywordArr" :key="index">
@@ -104,6 +104,10 @@ export default {
   width: 100%;
   margin: 20px auto;
   font-size: 0.9em;
+}
+
+.keyword-item {
+  margin-left: 5px;
 }
 
 .form {
