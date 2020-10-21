@@ -37,6 +37,11 @@ export default {
     setter: Function,
     searchButtonAction: Function,
   },
+  methods: {
+    test() {
+      this.$router.push("/");
+    },
+  },
 };
 </script>
 
@@ -58,6 +63,8 @@ export default {
 
 .bottom-item-button {
   width: 49%;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .button-message {

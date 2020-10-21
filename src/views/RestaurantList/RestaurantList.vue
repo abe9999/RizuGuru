@@ -50,7 +50,13 @@ export default {
     // ページ最下部に達した時の処理
     infiniteHandler($state) {
       setTimeout(() => {
-        this.searchRestaurantList().then((res) => {
+        var searchQuery = {
+          offset: this.offset,
+          keyword: this.keyword,
+          lat: this.query.lat,
+          lng: this.query.lng,
+        };
+        this.searchRestaurantList(searchQuery).then((res) => {
           if (res.length) {
             res.forEach((element) => {
               this.restaurantData.push(element);
@@ -75,50 +81,67 @@ export default {
       });
     },
     searchButtonAction() {
-      // 入力フォームの検索ボタンをしたときの処理
-      this.$router.push({
-        name: "RestaurantList",
-        query: {
-          keyword: this.keyword,
-          lat: this.query.lat,
-          lng: this.query.lng,
-        },
-        force: true,
-      });
+      // 入力フォームの検索ボタンを押したとき
+      // 新たなURLクエリパラメータを作成しURLを置換
+      // キーワードがURLクエリパラメータと一致していた場合、検索しない
+      if (this.keyword != this.$route.query.keyword) {
+        this.$router.push({
+          path: "RestaurantList",
+          query: {
+            keyword: this.keyword,
+            lat: this.query.lat,
+            lng: this.query.lng,
+          },
+        });
+      }
     },
-    async searchRestaurantList() {
+    async searchRestaurantList(searchQuery) {
       // 店舗検索処理
       return new Promise((resolve) => {
-        var query = this.query;
-        query.offset = this.offset;
-        var result = [];
-        searchRestaurantList(query).then((res) => {
-          res.forEach((element) => {
-            result.push(element);
-          });
+        searchRestaurantList(searchQuery).then((res) => {
           this.offset += 5;
-          resolve(result);
+          resolve(res);
         });
       });
     },
   },
   mounted() {
+    // URLパラメータ取得
     this.query = this.$route.query;
     // 検索フォームに前画面のキーワードを代入
     this.keyword = this.query.keyword;
     // 検索処理を実行
-    this.searchRestaurantList().then((res) => {
-      res.forEach((element) => {
-        this.restaurantData.push(element);
-      });
-      // ローディングアイコンを非表示にする
+    var searchQuery = {
+      offset: this.offset,
+      keyword: this.keyword,
+      lat: this.query.lat,
+      lng: this.query.lng,
+    };
+    this.searchRestaurantList(searchQuery).then((res) => {
+      // 検索結果を代入
+      this.restaurantData = res;
       this.loading = false;
     });
   },
   watch: {
-    // 入力フォームの検索ボタンを押したときクエリを保持したまま画面リロードする
     $route() {
-      this.$router.go({ path: this.$router.currentRoute.path, force: true });
+      this.loading = true;
+      // 店舗リストを空にする
+      this.restaurantData = [];
+      // 表示した店舗数を0にする
+      this.offset = 0;
+      // 検索処理を実行
+      var searchQuery = {
+        offset: this.offset,
+        keyword: this.keyword,
+        lat: this.query.lat,
+        lng: this.query.lng,
+      };
+      this.searchRestaurantList(searchQuery).then((res) => {
+        // 新しい検索結果を代入
+        this.restaurantData = res;
+        this.loading = false;
+      });
     },
   },
 };
