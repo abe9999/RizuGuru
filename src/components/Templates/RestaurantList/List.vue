@@ -2,9 +2,9 @@
   <div class="wrapper">
     <!-- <Counter :value="restaurantCount" /> -->
     <div
+      v-for="(restaurantData, index) in restaurantList"
       class="list-item"
       :id="index"
-      v-for="(restaurantData, index) in restaurantList"
       :key="index"
     >
       <ListItemContainer :restaurantData="restaurantData" />
@@ -24,6 +24,10 @@
         <!-- 検索結果が無かった場合の表示欄 -->
         <img src="@/assets/images/no-results.png" />
         <p>検索条件に該当する店舗が見つかりませんでした。</p>
+      </div>
+      <div slot="error">
+        <!-- 検索結果の最後の要素に達した場合の表示欄 -->
+        <p>Error!</p>
       </div>
     </infinite-loading>
   </div>
@@ -45,7 +49,6 @@ export default {
     setSearchKeyword: Function,
     searchButtonAction: Function,
     infiniteHandler: Function,
-    offset: Number,
   },
 };
 </script>
