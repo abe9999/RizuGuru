@@ -35,7 +35,7 @@
             >
           </b-nav-item>
           <b-nav-item>
-            <router-link to="/MenuRegistration" class="nav-link text-light"
+            <router-link to="/MenuRegistration/Registration" class="nav-link text-light"
               >メニュー追加</router-link
             >
           </b-nav-item>
@@ -47,7 +47,7 @@
             >
           </b-nav-item>
           <b-nav-item>
-            <router-link to="/ImageRegistration/" class="nav-link text-light"
+            <router-link to="/ImageRegistration/Registration" class="nav-link text-light"
               >写真追加</router-link
             >
           </b-nav-item>

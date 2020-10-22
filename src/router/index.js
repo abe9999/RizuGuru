@@ -8,12 +8,12 @@ import RestaurantList from "../views/RestaurantList/RestaurantList.vue";
 import Filtering from "../views/RestaurantList/Filtering.vue";
 import RestaurantDetail from "../views/RestaurantDetail/RestaurantDetail.vue";
 import SearchMap from "../views/SearchMap/SearchMap.vue";
-import RegistrationRegistration from "../views/RestaurantRegistration/Registration.vue";
-import RegistrationRegistrationTest from "../views/RestaurantRegistration/RegistrationTest.vue";
-import RegistrationComplete from "../views/RestaurantRegistration/Complete.vue";
-import MenuRegistration from "../views/MenuRegistration/MenuRegistration.vue";
+import RestaurantRegistration from "../views/RestaurantRegistration/Registration.vue";
+import RestaurantRegistrationTest from "../views/RestaurantRegistration/RegistrationTest.vue";
+import RestaurantRegistrationComplete from "../views/RestaurantRegistration/Complete.vue";
+import MenuRegistration from "../views/MenuRegistration/Registration.vue";
 import MenuRegistrationComplete from "../views/MenuRegistration/Complete.vue";
-import ImageRegistration from "../views/ImageRegistration/ImageRegistration.vue";
+import ImageRegistration from "../views/ImageRegistration/Registration.vue";
 import ImageRegistrationComplete from "../views/ImageRegistration/Complete.vue";
 import HomeTest from "../views/Home/HomeTest.vue";
 
@@ -33,7 +33,7 @@ const routes = [
     path: "*",
     name: "NotFound",
     component: NotFound,
-    props: true
+    props: true,
   },
   {
     path: "/Login",
@@ -59,18 +59,18 @@ const routes = [
   },
   {
     path: "/RestaurantRegistration/Registration",
-    component: RegistrationRegistration,
+    component: RestaurantRegistration,
   },
   {
     path: "/RestaurantRegistration/RegistrationTest",
-    component: RegistrationRegistrationTest,
+    component: RestaurantRegistrationTest,
   },
   {
     path: "/RestaurantRegistration/Complete",
-    component: RegistrationComplete,
+    component: RestaurantRegistrationComplete,
   },
   {
-    path: "/MenuRegistration",
+    path: "/MenuRegistration/Registration",
     component: MenuRegistration,
   },
   {
@@ -78,7 +78,7 @@ const routes = [
     component: MenuRegistrationComplete,
   },
   {
-    path: "/ImageRegistration",
+    path: "/ImageRegistration/Registration",
     component: ImageRegistration,
   },
   {
