@@ -10,10 +10,7 @@
     </div>
     <div
       class="button"
-      v-if="
-        this.$store.getters['CurrentLocation/getCurrentLocation'].lat ||
-        this.$store.getters['CurrentLocation/getCurrentLocation'].lng
-      "
+      v-if="this.currentLocation.lat || this.currentLocation.lng"
     >
       <b-button variant="success" @click="searchByCurrentLocationBtn()"
         >現在地から探す</b-button
@@ -43,26 +40,27 @@ export default {
     return {
       imgPath: require("@/assets/images/ロゴ.jpg"),
       keyword: "",
+      currentLocation: {},
     };
   },
-  mounted() {
+  beforeCreate() {
     getCurrentLocation().then((res) => {
       this.$store.dispatch("CurrentLocation/setCurrentLocation", res);
+      this.currentLocation = this.$store.getters[
+        "CurrentLocation/getCurrentLocation"
+      ];
     });
   },
   methods: {
     searchByCurrentLocationBtn() {
-      var currentLocation = this.$store.getters[
-        "CurrentLocation/getCurrentLocation"
-      ];
-      if (!currentLocation.lat) {
+      if (!this.currentLocation.lat) {
         // alert("この端末では位置情報が取得できません");
         this.$router.push({
           name: "RestaurantList",
           query: new searchQuery({
             keyword: "",
-            lat: currentLocation.lat,
-            lng: currentLocation.lng,
+            lat: this.currentLocation.lat,
+            lng: this.currentLocation.lng,
           }),
         });
       } else {
@@ -70,22 +68,19 @@ export default {
           name: "RestaurantList",
           query: new searchQuery({
             keyword: "",
-            lat: currentLocation.lat,
-            lng: currentLocation.lng,
+            lat: this.currentLocation.lat,
+            lng: this.currentLocation.lng,
           }),
         });
       }
     },
     searchByTextForm() {
-      var currentLocation = this.$store.getters[
-        "CurrentLocation/getCurrentLocation"
-      ];
       this.$router.push({
         name: "RestaurantList",
         query: new searchQuery({
           keyword: this.keyword,
-          lat: currentLocation.lat,
-          lng: currentLocation.lng,
+          lat: this.currentLocation.lat,
+          lng: this.currentLocation.lng,
         }),
       });
     },
