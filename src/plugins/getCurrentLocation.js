@@ -16,7 +16,7 @@ async function getCurrentLocationAsync() {
                 resolve(currentLocation)
             }.bind(this),
             function () {
-                alert("位置情報取得に失敗しました");
+                // alert("位置情報取得に失敗しました");
             }
         );
     })
