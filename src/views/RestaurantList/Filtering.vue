@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import searchQuery from "@/plugins/class/searchQueryClass.js";
 import Filtering from "@/components/Templates/RestaurantList/Filtering.vue";
 import Loading from "@/components/Atoms/Loading.vue";
 import { getTagsList } from "@/plugins/getTagsList.js";
@@ -83,22 +84,28 @@ export default {
   },
   methods: {
     filteringSearchButtonAction() {
-      var fil = this.filtering;
       this.$router.push({
         name: "RestaurantList",
-        query: {
-          keyword: this.query.keyword,
-          lat: this.query.lat,
-          lng: this.query.lng,
-          station: fil.station.value,
-          genre: fil.genre.value,
-          distance: fil.distance.value,
-          minPrice: fil.budget.value[0],
-          maxPrice: fil.budget.value[1],
-          tagsId: [
-            fil.tagsId.value.filter((x) => x.state == true).map((x) => x.id),
-          ],
-        },
+        query: new searchQuery(
+          {
+            station: this.filtering.station.value,
+            genre: this.filtering.genre.value,
+            distance:
+              // 現在地からの距離を「制限なし」に設定していた場合は値を空にする
+              // スライダーの見た目を合わせるために「制限なし」は2500にする必要がある
+              this.filtering.distance.value == 2500
+                ? ""
+                : this.filtering.distance.value,
+            minPrice: this.filtering.budget.value[0],
+            maxPrice: this.filtering.budget.value[1],
+            tagsId: [
+              this.filtering.tagsId.value
+                .filter((x) => x.state == true)
+                .map((x) => x.id),
+            ],
+          },
+          this.$route.query
+        ),
       });
     },
     getFilterValue(propertyName) {

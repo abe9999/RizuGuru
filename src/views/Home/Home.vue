@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import searchQuery from "@/plugins/class/searchQueryClass.js";
 import { getCurrentLocation } from "@/plugins/getCurrentLocation.js";
 export default {
   data() {
@@ -40,7 +41,9 @@ export default {
     };
   },
   mounted() {
-    getCurrentLocation().then((res) => (this.currentLocation = res));
+    getCurrentLocation().then((res) => {
+      this.currentLocation = res;
+    });
   },
   methods: {
     searchByCurrentLocationBtn() {
@@ -49,22 +52,22 @@ export default {
       } else {
         this.$router.push({
           name: "RestaurantList",
-          query: {
+          query: new searchQuery({
             keyword: this.keyword,
             lat: this.currentLocation.lat,
             lng: this.currentLocation.lng,
-          },
+          }),
         });
       }
     },
     searchByTextForm() {
       this.$router.push({
         name: "RestaurantList",
-        query: {
+        query: new searchQuery({
           keyword: this.keyword,
           lat: this.currentLocation.lat,
           lng: this.currentLocation.lng,
-        },
+        }),
       });
     },
   },
