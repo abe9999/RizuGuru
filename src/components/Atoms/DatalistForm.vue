@@ -114,6 +114,9 @@ export default {
 
 <style scoped>
 input {
+  /* スマホ表示時に検索欄をズームさせない */
+  font-size: 16px;
+  /* --- */
   width: 100%;
   height: 30px;
   border: 1.5px solid gray;

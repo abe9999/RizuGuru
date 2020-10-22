@@ -2,18 +2,17 @@
   <b-input-group>
     <b-form-input
       type="search"
-      inputmode="search"
       v-model="value"
       @keydown.enter="searchButtonAction"
     />
-    <b-input-group-prepend is-text class="icon" @click="searchButtonAction">
-      <b-icon icon="search" />
-      <span class="icon-message">検索</span>
-    </b-input-group-prepend>
     <b-input-group-append>
-      <b-button variant="success" @click="action"
+      <b-button class="button" variant="success" @click="searchButtonAction">
+        <b-icon icon="search" />
+        <span class="button-message">検索</span>
+      </b-button>
+      <b-button class="button" @click="action"
         ><b-icon icon="filter-left" />
-        <span class="icon-message">{{ message }}</span>
+        <span class="button-message">{{ message }}</span>
       </b-button>
     </b-input-group-append>
   </b-input-group>
@@ -68,16 +67,18 @@ export default {
 </script>
 
 <style scoped>
-.icon {
-  cursor: pointer;
+input {
+  /* スマホ表示時に検索欄をズームさせない */
+  font-size: 16px;
+  /* --- */
 }
 
-.icon-message {
+.button-message {
   margin-left: 5px;
 }
 
 @media (max-width: 767px) {
-  .icon {
+  .button {
     display: none;
   }
 }
