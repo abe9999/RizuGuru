@@ -56,7 +56,6 @@ export default {
             this.restaurantData.push(...res);
             $state.loaded();
           } else {
-            console.log(res.length);
             $state.complete();
           }
         });
