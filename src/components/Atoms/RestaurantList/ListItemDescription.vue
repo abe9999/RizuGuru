@@ -4,7 +4,7 @@
       <div class="container">
         <p class="title">{{ restaurantData.name }}</p>
         <div class="detail-container">
-          <p class="description">
+          <p v-if="this.restaurantData.distance" class="description">
             <b-icon-cursor-fill class="icon" />現在地から{{ distance }}
           </p>
           <p class="description">

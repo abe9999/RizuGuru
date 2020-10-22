@@ -33,6 +33,10 @@
         <!-- 現在地からの距離選択欄 -->
         <SliderFormUnit
           class="form"
+          v-if="
+            this.$store.getters['CurrentLocation/getCurrentLocation'].lat ||
+            this.$store.getters['CurrentLocation/getCurrentLocation'].lng
+          "
           :itemData="filteringItemData.distance"
           :getter="getter"
           :setter="setter"

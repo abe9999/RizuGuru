@@ -36,37 +36,50 @@ export default {
   data() {
     return {
       imgPath: require("@/assets/images/ロゴ.jpg"),
-      currentLocation: {},
       keyword: "",
     };
   },
   mounted() {
     getCurrentLocation().then((res) => {
-      this.currentLocation = res;
+      this.$store.dispatch("CurrentLocation/setCurrentLocation", res);
     });
   },
   methods: {
     searchByCurrentLocationBtn() {
-      if (!this.currentLocation.lat) {
-        alert("この端末では位置情報が取得できません");
+      var currentLocation = this.$store.getters[
+        "CurrentLocation/getCurrentLocation"
+      ];
+      if (!currentLocation.lat) {
+        // alert("この端末では位置情報が取得できません");
+        this.$router.push({
+          name: "RestaurantList",
+          query: new searchQuery({
+            keyword: "",
+            lat: currentLocation.lat,
+            lng: currentLocation.lng,
+          }),
+        });
       } else {
         this.$router.push({
           name: "RestaurantList",
           query: new searchQuery({
-            keyword: this.keyword,
-            lat: this.currentLocation.lat,
-            lng: this.currentLocation.lng,
+            keyword: "",
+            lat: currentLocation.lat,
+            lng: currentLocation.lng,
           }),
         });
       }
     },
     searchByTextForm() {
+      var currentLocation = this.$store.getters[
+        "CurrentLocation/getCurrentLocation"
+      ];
       this.$router.push({
         name: "RestaurantList",
         query: new searchQuery({
           keyword: this.keyword,
-          lat: this.currentLocation.lat,
-          lng: this.currentLocation.lng,
+          lat: currentLocation.lat,
+          lng: currentLocation.lng,
         }),
       });
     },
