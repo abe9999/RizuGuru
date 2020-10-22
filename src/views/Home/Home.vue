@@ -8,7 +8,13 @@
     <div id="app">
       <p>リーズナブルなグルメアプリ</p>
     </div>
-    <div class="button">
+    <div
+      class="button"
+      v-if="
+        this.$store.getters['CurrentLocation/getCurrentLocation'].lat ||
+        this.$store.getters['CurrentLocation/getCurrentLocation'].lng
+      "
+    >
       <b-button variant="success" @click="searchByCurrentLocationBtn()"
         >現在地から探す</b-button
       >
@@ -88,6 +94,10 @@ export default {
 </script>
 
 <style scoped>
+input {
+  font-size: 16px;
+}
+
 .home {
   width: 90%;
   margin-top: 5%;
