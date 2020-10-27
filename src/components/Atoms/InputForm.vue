@@ -79,16 +79,6 @@ export default {
         return value;
       },
       set(value) {
-        // if (this.required) {
-        //   // 入力フォームが必須の場合
-        //   // バリデーション
-        //   this.validation = formValidation(this.propertyName, value);
-        //   // 親コンポーネントにバリデーションの結果を渡す
-        //   this.validationSetter({
-        //     propertyName: this.propertyName,
-        //     state: this.validation,
-        //   });
-        // }
         // 親コンポーネントに入力値を渡す
         this.setter({ propertyName: this.propertyName, value: value });
       },
