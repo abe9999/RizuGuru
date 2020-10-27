@@ -55,10 +55,4 @@ export default {
   max-width: 500px;
   margin: 0 auto 30px auto;
 }
-
-@media (max-width: 767px) {
-  #carousel-1 {
-    width: 100%;
-  }
-}
 </style>

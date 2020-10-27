@@ -2,7 +2,7 @@
   <div class="menu">
     <div class="category-wrapper">
       <Category id="category" category="メニュー" />
-      <b-dropdown id="sort-menu" right variant="success" size="sm">
+      <b-dropdown id="sort-menu" right variant="success">
         <template #button-content>{{ selected }}</template>
         <b-dropdown-item
           v-for="(item, index) in selectItems"
