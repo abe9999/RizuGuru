@@ -476,24 +476,6 @@ export default {
       this.loading = true;
 
       // 登録用のデータを定義
-      // var postData = {
-      //   Name: this.formList.name.value,
-      //   NameKana: this.formList.nameKana.value,
-      //   Address: null,
-      //   Latitude: null,
-      //   Longitude: null,
-      //   Access: null,
-      //   StationId: null,
-      //   PhoneNumber: this.formList.phoneNumber.value,
-      //   OpeningHours: this.formList.openingHours.value,
-      //   RegularHoliday: this.formList.regularHoliday.value,
-      //   PaymentMethod: this.formList.paymentMethod.value,
-      //   GenreId: [],
-      //   Url: [],
-      //   LinkGenreId: [],
-      //   TagId: [],
-      // };
-
       var postData = new restaurantRegistrationPostDataClass({
         name: this.formList.name.value,
         nameKana: this.formList.nameKana.value,
