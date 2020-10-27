@@ -68,6 +68,7 @@
 <script>
 /* eslint-disable no-undef */
 import Enumerable from "linq";
+import restaurantRegistrationPostDataClass from "@/utils/class/restaurantRegistrationPostDataClass.js";
 import { getGenresList } from "@/plugins/getGenresList.js";
 import { getTagsList } from "@/plugins/getTagsList.js";
 import { getCoord } from "@/plugins/getCoord.js";
@@ -125,7 +126,7 @@ export default {
           title: "電話番号",
           required: true,
           propertyName: "phoneNumber",
-          cautionMessage: "「半角数字＋ハイフン」または「不明」",
+          cautionMessage: "半角数字＋ハイフン",
           placeholder: "03-5919-1033",
           value: "",
           validationState: false,
@@ -475,23 +476,14 @@ export default {
       this.loading = true;
 
       // 登録用のデータを定義
-      var postData = {
-        Name: this.formList.name.value,
-        NameKana: this.formList.nameKana.value,
-        Address: null,
-        Latitude: null,
-        Longitude: null,
-        Access: null,
-        StationId: null,
-        PhoneNumber: this.formList.phoneNumber.value,
-        OpeningHours: this.formList.openingHours.value,
-        RegularHoliday: this.formList.regularHoliday.value,
-        PaymentMethod: this.formList.paymentMethod.value,
-        GenreId: [],
-        Url: [],
-        LinkGenreId: [],
-        TagId: [],
-      };
+      var postData = new restaurantRegistrationPostDataClass({
+        name: this.formList.name.value,
+        nameKana: this.formList.nameKana.value,
+        phoneNumber: this.formList.phoneNumber.value,
+        openingHours: this.formList.openingHours.value,
+        regularHoliday: this.formList.regularHoliday.value,
+        paymentMethod: this.formList.paymentMethod.value,
+      });
 
       // formListを配列化
       var formResult = Object.entries(this.formList).map((x) => x[1]);
@@ -592,7 +584,7 @@ export default {
           }
 
           // 最寄駅からの徒歩移動時間を計算
-          var accesses = [];
+          var accessArr = [];
           var stationCoordArr = stations.map((x) => {
             return `${x.latitude},${x.longitude}`;
           });
@@ -601,18 +593,25 @@ export default {
             postData.Address
           ).then((res) => {
             res.rows.forEach((x, index) => {
-              accesses.push(
+              accessArr.push(
                 stations[index].name +
                   "駅から徒歩" +
                   x.elements[0].duration.text
               );
             });
-            postData.Access = accesses.join(" ");
+            postData.Access = accessArr.join(" ");
 
             // 店舗追加処理
-            addRestaurant(postData).then(() => {
-              this.$router.push("/RestaurantRegistration/Complete");
-            });
+            addRestaurant(postData)
+              .then(() => {
+                this.$router.push("/RestaurantRegistration/Complete");
+              })
+              .catch((err) => {
+                this.$router.push({
+                  name: "NotFound",
+                  params: { errorMessage: err },
+                });
+              });
           });
         });
       });

@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import searchQuery from "@/plugins/class/searchQueryClass.js";
+import searchQuery from "@/utils/class/searchQueryClass.js";
 import { getCurrentLocation } from "@/plugins/getCurrentLocation.js";
 export default {
   data() {

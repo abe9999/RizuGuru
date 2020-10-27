@@ -3,14 +3,12 @@ export function getCurrentLocation() {
 }
 
 async function getCurrentLocationAsync() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         var currentLocation = {}
         navigator.geolocation.getCurrentPosition((position) => {
             // 緯度経度の取得
             currentLocation = { lat: position.coords.latitude, lng: position.coords.longitude };
             resolve(currentLocation)
-        }, (err) => {
-            reject(err);
         });
     })
 }
