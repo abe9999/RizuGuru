@@ -617,7 +617,7 @@ export default {
                   x.elements[0].duration.text
               );
             });
-            // postData.Access = accessArr.join(" ");
+            postData.Access = accessArr.join(" ");
 
             // 店舗追加処理
             addRestaurant(postData)
