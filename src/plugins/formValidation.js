@@ -5,7 +5,7 @@ export function formValidation(propertyName, value) {
                 return true;
             case "nameKana":
                 // eslint-disable-next-line no-irregular-whitespace
-                if (value.match(/^[ァ-ヶー　 \w]+$/)) {
+                if (value.match(/^[\dA-zァ-ヶ　 ]+$/)) {
                     return true;
                 } else {
                     return false;

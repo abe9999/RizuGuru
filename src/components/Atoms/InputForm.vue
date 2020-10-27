@@ -3,7 +3,6 @@
     <b-form-input
       v-if="required"
       v-model="value"
-      debounce="250"
       :state="validation"
       :placeholder="placeholder"
       :style="styleObj"
@@ -12,7 +11,6 @@
     <b-form-input
       v-else
       v-model="value"
-      debounce="250"
       :placeholder="placeholder"
       :disabled="disabled"
     />
@@ -67,12 +65,10 @@ export default {
     value: {
       get() {
         // 親コンポーネントから入力値を取得
-        return this.getter(this.propertyName);
-      },
-      set(value) {
+        var value = this.getter(this.propertyName);
         if (this.required) {
-          // 入力フォームが必須の場合
           // バリデーション
+          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
           this.validation = formValidation(this.propertyName, value);
           // 親コンポーネントにバリデーションの結果を渡す
           this.validationSetter({
@@ -80,6 +76,19 @@ export default {
             state: this.validation,
           });
         }
+        return value;
+      },
+      set(value) {
+        // if (this.required) {
+        //   // 入力フォームが必須の場合
+        //   // バリデーション
+        //   this.validation = formValidation(this.propertyName, value);
+        //   // 親コンポーネントにバリデーションの結果を渡す
+        //   this.validationSetter({
+        //     propertyName: this.propertyName,
+        //     state: this.validation,
+        //   });
+        // }
         // 親コンポーネントに入力値を渡す
         this.setter({ propertyName: this.propertyName, value: value });
       },
