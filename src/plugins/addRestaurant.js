@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export async function addRestaurant(postData) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     axios
       .post(
         "https://func-rizuguru.azurewebsites.net/api/AddRestaurant?",
@@ -11,7 +11,7 @@ export async function addRestaurant(postData) {
         resolve(res);
       })
       .catch((err) => {
-        console.log(err);
+        reject(err);
       });
   });
 }
