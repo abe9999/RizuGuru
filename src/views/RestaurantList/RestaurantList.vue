@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import searchQuery from "@/plugins/class/searchQueryClass.js";
+import searchQuery from "@/utils/class/searchQueryClass.js";
 import Loading from "@/components/Atoms/Loading.vue";
 import SearchBar from "@/components/Molecules/SearchBar.vue";
 import List from "@/components/Templates/RestaurantList/List.vue";

@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import searchQuery from "@/plugins/class/searchQueryClass.js";
+import searchQuery from "@/utils/class/searchQueryClass.js";
 import Filtering from "@/components/Templates/RestaurantList/Filtering.vue";
 import Loading from "@/components/Atoms/Loading.vue";
 import { getTagsList } from "@/plugins/getTagsList.js";
