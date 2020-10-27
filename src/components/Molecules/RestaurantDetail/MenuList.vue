@@ -1,10 +1,21 @@
 <template>
   <div class="menu">
-    <Category category="メニュー" />
+    <div class="category-wrapper">
+      <Category id="category" category="メニュー" />
+      <b-dropdown id="sort-menu" right variant="success" size="sm">
+        <template #button-content>{{ selected }}</template>
+        <b-dropdown-item
+          v-for="(item, index) in selectItems"
+          :key="index"
+          @click="doSelect(index)"
+          >{{ item }}</b-dropdown-item
+        >
+      </b-dropdown>
+    </div>
     <hr />
     <div class="menu-list">
       <table class="menu-list-tbl">
-        <tr v-for="(menu, index) in menus" :key="index">
+        <tr v-for="(menu, index) in sortMenus" :key="index">
           <td>{{ menu.name }}</td>
           <td>{{ menu.price }}円</td>
         </tr>
@@ -15,14 +26,17 @@
 </template>
 
 <script>
+/* eslint-disable */
 import Category from "@/components/Molecules/RestaurantDetail/CategoryName.vue";
+import Enumerable from "linq";
 import { getMenu } from "@/plugins/getMenu.js";
 
 export default {
   data() {
     return {
       menus: [],
-      count: 5,
+      selected: "おすすめ順",
+      selectItems: ["おすすめ順", "安い順", "高い順"],
     };
   },
   props: {
@@ -34,18 +48,23 @@ export default {
   mounted() {
     getMenu(this.$route.params.id).then((res) => (this.menus = res));
   },
-  computed: {
-    MenuItems() {
-      const list = this.menus;
-      return list.slice(0, this.count);
+  methods: {
+    doSelect(index) {
+      this.selected = this.selectItems[index];
     },
   },
-  methods: {
-    isMore() {
-      this.count = this.menus.length;
-    },
-    isClose() {
-      this.count = 5;
+  computed: {
+    sortMenus() {
+      if (this.selected == "おすすめ順") {
+        this.menus = Enumerable.from(this.menus).orderBy((x) => x.sortId);
+      } else if (this.selected == "安い順") {
+        this.menus = Enumerable.from(this.menus).orderBy((x) => x.price);
+      } else if (this.selected == "高い順") {
+        this.menus = Enumerable.from(this.menus).orderByDescending(
+          (x) => x.price
+        );
+      }
+      return this.menus;
     },
   },
 };
@@ -55,20 +74,27 @@ export default {
 .menu {
   margin-bottom: 30px;
 }
-
+#category {
+  vertical-align: middle;
+  margin-bottom: 0px;
+}
+.category-wrapper {
+  display: flex;
+  align-items: center;
+}
+#sort-menu {
+  margin: 0 0 0 auto;
+}
 .menu-list-tbl {
   width: 100%;
 }
-
 .btn {
   margin-top: 10px;
 }
-
 .menu-list-tbl td:nth-of-type(odd) {
   float: left;
   width: 80%;
 }
-
 .menu-list-tbl td:nth-of-type(even) {
   float: right;
   text-align: right;
