@@ -21,7 +21,7 @@
         <span class="button-message">絞り込む</span>
       </b-button>
     </section>
-    <section>
+    <section class="keyword-list-wrapper">
       <ul class="keyword-list">
         <li v-if="keyword" @click="searchKeywordTagAction('keyword')">
           {{ keyword }}
@@ -85,9 +85,7 @@ export default {
       tags: [],
     };
   },
-  methods:{
-    
-  },
+  methods: {},
   mounted() {
     Object.entries(this.searchQuery)
       .map(([key, value]) => ({
@@ -162,12 +160,51 @@ export default {
 }
 
 .keyword-list {
+  overflow-x: scroll;
+  white-space: nowrap;
   list-style: none;
   display: flex;
-  padding: 0;
+  padding: 5px 0;
+}
+
+.keyword-list::-webkit-scrollbar {
+  overflow: hidden;
+  width: 5px;
+  background: #eee;
+
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+}
+.keyword-list::-webkit-scrollbar:horizontal {
+  height: 10px;
+}
+.keyword-list::-webkit-scrollbar-button {
+  display: none;
+}
+.keyword-list::-webkit-scrollbar-piece {
+  background: #eee;
+}
+.keyword-list::-webkit-scrollbar-piece:start {
+  background: #eee;
+}
+.keyword-list::-webkit-scrollbar-thumb {
+  overflow: hidden;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  background: #777777e5;
+}
+.keyword-list::-webkit-scrollbar-corner {
+  overflow: hidden;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+
+  background: #333;
 }
 
 .keyword-list li {
+  display: flex;
+  align-items: center;
+  height: 35px;
   margin-left: 15px;
   padding-left: 5px;
   padding-right: 5px;
@@ -189,6 +226,10 @@ export default {
   .bottom-item {
     display: flex;
     justify-content: space-around;
+  }
+
+  .keyword-list::-webkit-scrollbar {
+    display: none;
   }
 }
 </style>
