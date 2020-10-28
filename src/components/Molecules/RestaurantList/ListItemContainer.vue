@@ -39,6 +39,11 @@ export default {
   margin: 0 auto;
 }
 
+.image {
+  display: flex;
+  align-items: center;
+}
+
 @media (max-width: 767px) {
   .item {
     width: 100%;

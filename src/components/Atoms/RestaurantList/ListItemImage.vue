@@ -16,7 +16,7 @@ export default {
   },
   data() {
     return {
-      url: `https://strizuguru.blob.core.windows.net/images/RestaurantList/${this.imageId}-1.jpg`,
+      url: `https://strizuguru.blob.core.windows.net/images/RestaurantDetail/${this.imageId}/${this.imageId}-1.jpg`,
     };
   },
   methods: {
