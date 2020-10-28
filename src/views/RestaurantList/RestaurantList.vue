@@ -8,6 +8,8 @@
         :getter="getSearchKeyword"
         :setter="setSearchKeyword"
         :searchButtonAction="searchButtonAction"
+        :searchQuery="this.$route.query"
+        :searchKeywordTagAction="searchKeywordTagAction"
       />
       <List
         :filteringButtonAction="filteringButtonAction"
@@ -91,6 +93,29 @@ export default {
         }, 300);
       }
     },
+    searchKeywordTagAction(...args) {
+      var query = Object.assign({}, this.$route.query);
+      switch (args.length) {
+        case 1:
+          if (args[0] == "price") {
+            delete query["minPrice"];
+            delete query["maxPrice"];
+          } else {
+            delete query[args[0]];
+          }
+          break;
+        case 2:
+          query.tagsId = query.tagsId
+            .split(",")
+            .filter((x) => x != args[1])
+            .join(",");
+          break;
+      }
+      this.$router.push({
+        path: "RestaurantList",
+        query: new searchQuery(query),
+      });
+    },
     async searchRestaurantList(searchQuery, offset) {
       // 店舗検索処理
       return new Promise((resolve) => {
@@ -107,7 +132,7 @@ export default {
   mounted() {
     // URLパラメータ取得
     // 検索フォームに前画面のキーワードを代入
-    this.keyword = this.query.keyword;
+    this.keyword = this.$route.query.keyword;
     // 検索処理を実行
     this.searchRestaurantList(
       new searchQuery(this.$route.query),
@@ -134,6 +159,7 @@ export default {
         this.restaurantData.push(...res);
         this.loading = false;
       });
+      this.keyword = this.$route.query.keyword;
     },
   },
 };

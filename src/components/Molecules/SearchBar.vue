@@ -21,10 +21,43 @@
         <span class="button-message">絞り込む</span>
       </b-button>
     </section>
+    <section>
+      <ul class="keyword-list">
+        <li v-if="keyword" @click="searchKeywordTagAction('keyword')">
+          {{ keyword }}
+          <b-icon icon="x" />
+        </li>
+        <li v-if="station" @click="searchKeywordTagAction('station')">
+          {{ station }}駅
+          <b-icon icon="x" />
+        </li>
+        <li v-if="genre" @click="searchKeywordTagAction('genre')">
+          {{ genre }}
+          <b-icon icon="x" />
+        </li>
+        <li v-if="distance" @click="searchKeywordTagAction('distance')">
+          現在地から{{ distance }}以内
+          <b-icon icon="x" />
+        </li>
+        <li v-if="price.minPrice" @click="searchKeywordTagAction('price')">
+          {{ `￥${price.minPrice}～￥${price.maxPrice}` }}
+          <b-icon icon="x" />
+        </li>
+        <li
+          v-for="tag in tags"
+          :key="tag.id"
+          @click="searchKeywordTagAction('tag', tag.id)"
+        >
+          {{ `${tag.tagContent}` }}
+          <b-icon icon="x" />
+        </li>
+      </ul>
+    </section>
   </header>
 </template>
 
 <script>
+import { getTagsList } from "@/plugins/getTagsList.js";
 import InputFormForSearch from "@/components/Atoms/InputFormForSearch.vue";
 export default {
   components: {
@@ -36,11 +69,68 @@ export default {
     getter: Function,
     setter: Function,
     searchButtonAction: Function,
+    searchQuery: Object,
+    searchKeywordTagAction: Function,
   },
-  methods: {
-    test() {
-      this.$router.push("/");
-    },
+  data() {
+    return {
+      keyword: "",
+      station: "",
+      genre: "",
+      distance: null,
+      price: {
+        maxPrice: null,
+        minPrice: null,
+      },
+      tags: [],
+    };
+  },
+  methods:{
+    
+  },
+  mounted() {
+    Object.entries(this.searchQuery)
+      .map(([key, value]) => ({
+        key,
+        value,
+      }))
+      .filter((x) => x.value != "")
+      .forEach((query) => {
+        switch (query.key) {
+          case "keyword":
+          case "station":
+          case "genre":
+            this[query.key] = query.value;
+            break;
+          case "distance":
+            query.value =
+              query.value == ""
+                ? null
+                : query.value <= 1000
+                ? `${query.value}m`
+                : `${query.value / 1000}km`;
+            this[query.key] = query.value;
+            break;
+          case "minPrice":
+          case "maxPrice":
+            this.price[query.key] = query.value;
+            break;
+          case "tagsId":
+            getTagsList().then((res) => {
+              if (query.value != "") {
+                query.value = query.value.split(",").map((tagId) => ({
+                  id: res.find((x) => x.id == tagId).id,
+                  tagContent: res.find((x) => x.id == tagId).tagContent,
+                }));
+                this.tags.push(...query.value);
+              }
+            });
+            break;
+        }
+      });
+    if (this.price.minPrice == 0 && this.price.maxPrice == 1000) {
+      this.price.minPrice = this.price.maxPrice = null;
+    }
   },
 };
 </script>
@@ -69,6 +159,26 @@ export default {
 
 .button-message {
   margin-left: 5px;
+}
+
+.keyword-list {
+  list-style: none;
+  display: flex;
+  padding: 0;
+}
+
+.keyword-list li {
+  margin-left: 15px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: white;
+  background-color: #689e39;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.keyword-list li:hover {
+  opacity: 0.7;
 }
 
 @media (max-width: 767px) {

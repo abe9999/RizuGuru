@@ -88,6 +88,9 @@ export default {
         name: "RestaurantList",
         query: new searchQuery(
           {
+            keyword: this.filtering.keyword.value,
+            lat: this.$route.query.lat,
+            lng: this.$route.query.lng,
             station: this.filtering.station.value,
             genre: this.filtering.genre.value,
             distance:
@@ -98,11 +101,10 @@ export default {
                 : this.filtering.distance.value,
             minPrice: this.filtering.budget.value[0],
             maxPrice: this.filtering.budget.value[1],
-            tagsId: [
-              this.filtering.tagsId.value
-                .filter((x) => x.state == true)
-                .map((x) => x.id),
-            ],
+            tagsId: this.filtering.tagsId.value
+              .filter((x) => x.state == true)
+              .map((x) => x.id)
+              .join(","),
           },
           this.$route.query
         ),
@@ -127,20 +129,36 @@ export default {
       this.filtering.tagsId.value = res;
       var keys = Object.keys(this.query);
       keys.forEach((key) => {
-        if (key == "distance") {
-          if (this.query[key] == "") {
-            this.filtering.distance.value = 2500;
-          } else {
-            this.filtering.distance.value = this.query[key];
-          }
-        } else if (key == "minPrice") {
-          this.filtering.budget.value[0] = this.query[key];
-        } else if (key == "maxPrice") {
-          this.filtering.budget.value[1] = this.query[key];
-        } else if (key != "tagsId") {
-          if (this.filtering[key]) {
-            this.filtering[key].value = this.query[key];
-          }
+        switch (key) {
+          case "distance":
+            if (this.query[key] == "") {
+              this.filtering.distance.value = 2500;
+            } else {
+              this.filtering.distance.value = this.query[key];
+            }
+            break;
+          case "minPrice":
+            this.filtering.budget.value[0] = this.query[key];
+            break;
+          case "maxPrice":
+            this.filtering.budget.value[1] = this.query[key];
+            break;
+          case "tagsId":
+            // タグを既に選択していた場合、該当するタグをアクティブにする
+            if (this.query[key] != "") {
+              this.query[key] = this.query[key].split(",").forEach((tagId) => {
+                var index = this.filtering.tagsId.value.findIndex(
+                  (x) => x.id == tagId
+                );
+                this.filtering.tagsId.value[index].state = true;
+              });
+            }
+            break;
+          default:
+            if (this.filtering[key]) {
+              this.filtering[key].value = this.query[key];
+            }
+            break;
         }
       });
       this.loading = false;
