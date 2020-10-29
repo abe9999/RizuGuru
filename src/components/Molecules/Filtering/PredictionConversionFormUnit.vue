@@ -118,8 +118,9 @@ export default {
 
 .prediction-word {
   display: inline-block;
+  font-size: 15px;
   padding: 5px;
-  margin: 2.5px;
+  margin: 2.5px 5px;
   cursor: pointer;
   background-color: #f6f6f6;
   border-radius: 2.5px;
@@ -128,11 +129,5 @@ export default {
 .prediction-word:hover {
   color: white;
   background-color: gray;
-}
-
-@media (max-width: 767px) {
-  .prediction-word {
-    font-size: larger;
-  }
 }
 </style>
