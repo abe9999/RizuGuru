@@ -39,7 +39,10 @@
           現在地から{{ distance }}以内
           <b-icon icon="x" />
         </li>
-        <li v-if="price.minPrice" @click="searchKeywordTagAction('price')">
+        <li
+          v-if="!(price.minPrice == 0 && price.maxPrice == 1000)"
+          @click="searchKeywordTagAction('price')"
+        >
           {{ `￥${price.minPrice}～￥${price.maxPrice}` }}
           <b-icon icon="x" />
         </li>
@@ -85,14 +88,13 @@ export default {
       tags: [],
     };
   },
-  methods: {},
   mounted() {
     Object.entries(this.searchQuery)
       .map(([key, value]) => ({
         key,
         value,
       }))
-      .filter((x) => x.value != "")
+      .filter((x) => x.value !== "")
       .forEach((query) => {
         switch (query.key) {
           case "keyword":
@@ -102,9 +104,7 @@ export default {
             break;
           case "distance":
             query.value =
-              query.value == ""
-                ? null
-                : query.value <= 1000
+              query.value <= 1000
                 ? `${query.value}m`
                 : `${query.value / 1000}km`;
             this[query.key] = query.value;
@@ -126,9 +126,6 @@ export default {
             break;
         }
       });
-    if (this.price.minPrice == 0 && this.price.maxPrice == 1000) {
-      this.price.minPrice = this.price.maxPrice = null;
-    }
   },
 };
 </script>
@@ -169,36 +166,17 @@ export default {
 
 .keyword-list::-webkit-scrollbar {
   overflow: hidden;
-  width: 5px;
-  background: #eee;
-
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
 }
+
 .keyword-list::-webkit-scrollbar:horizontal {
   height: 10px;
 }
-.keyword-list::-webkit-scrollbar-button {
-  display: none;
-}
-.keyword-list::-webkit-scrollbar-piece {
-  background: #eee;
-}
-.keyword-list::-webkit-scrollbar-piece:start {
-  background: #eee;
-}
+
 .keyword-list::-webkit-scrollbar-thumb {
   overflow: hidden;
   -webkit-border-radius: 3px;
   border-radius: 3px;
   background: #777777e5;
-}
-.keyword-list::-webkit-scrollbar-corner {
-  overflow: hidden;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
-
-  background: #333;
 }
 
 .keyword-list li {
