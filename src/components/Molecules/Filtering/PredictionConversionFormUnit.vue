@@ -129,4 +129,10 @@ export default {
   color: white;
   background-color: gray;
 }
+
+@media (max-width: 767px) {
+  .prediction-word {
+    font-size: larger;
+  }
+}
 </style>
