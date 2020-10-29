@@ -3,6 +3,7 @@
     <b-form-input
       v-if="required"
       v-model="value"
+      :debounce="debounce"
       :state="validation"
       :placeholder="placeholder"
       :style="styleObj"
@@ -11,6 +12,7 @@
     <b-form-input
       v-else
       v-model="value"
+      :debounce="debounce"
       :placeholder="placeholder"
       :disabled="disabled"
     />
@@ -36,6 +38,11 @@ export default {
     required: {
       type: Boolean,
       required: false,
+    },
+    debounce: {
+      type: Number,
+      required: false,
+      default: 0,
     },
     placeholder: {
       type: String,

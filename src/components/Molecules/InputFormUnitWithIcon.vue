@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <section class="wrapper">
     <LabelWithIcon
       class="label"
       :title="itemData.displayName"
@@ -13,7 +13,7 @@
       :placeholder="itemData.placeholder"
       :validationSetter="itemData.validationSetter"
     />
-  </div>
+  </section>
 </template>
 
 <script>
