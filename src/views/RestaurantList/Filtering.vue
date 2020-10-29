@@ -35,7 +35,7 @@ export default {
           displayName: "駅",
           icon: require("@/assets/images/地図マーカーのアイコン素材1.png"),
           required: false,
-          placeholder: "四ツ谷駅",
+          placeholder: "四ツ谷",
           value: "",
         },
         genre: {

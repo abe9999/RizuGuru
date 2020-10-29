@@ -17,11 +17,13 @@
           </ul>
         </b-row>
         <!-- 駅キーワード入力欄 -->
-        <InputFormUnitWithIcon
+        <PredictionConversionFormUnit
           class="form"
           :itemData="filteringItemData.station"
           :getter="getter"
           :setter="setter"
+          :api="getStation"
+          predictionInformation="駅名を選択してください"
         />
         <!-- カテゴリーキーワード入力欄 -->
         <InputFormUnitWithIcon
@@ -69,14 +71,17 @@
 <script>
 import Headline from "@/components/Molecules/Headline.vue";
 import InputFormUnitWithIcon from "@/components/Molecules/InputFormUnitWithIcon.vue";
+import PredictionConversionFormUnit from "@/components/Molecules/Filtering/PredictionConversionFormUnit.vue";
 import SliderFormUnit from "@/components/Molecules/SliderFormUnit.vue";
 import TagFormUnitWithIcon from "@/components/Molecules/TagFormUnitWithIcon.vue";
 import Button from "@/components/Atoms/Button.vue";
+import { getStation } from "@/plugins/getStation.js";
 
 export default {
   components: {
     Headline,
     InputFormUnitWithIcon,
+    PredictionConversionFormUnit,
     SliderFormUnit,
     TagFormUnitWithIcon,
     Button,
@@ -91,6 +96,7 @@ export default {
   data() {
     return {
       keywordArr: [],
+      getStation: getStation,
     };
   },
   created() {
