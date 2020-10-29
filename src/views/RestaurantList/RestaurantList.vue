@@ -83,9 +83,11 @@ export default {
       // キーワードがURLクエリパラメータと一致していた場合は検索しない
       this.loading = true;
       if (this.keyword != this.$route.query.keyword) {
+        var query = new searchQuery(this.$route.query);
+        query.keyword = this.keyword;
         this.$router.push({
           path: "RestaurantList",
-          query: new searchQuery({ keyword: this.keyword }, this.$route.query),
+          query: new searchQuery(query),
         });
       } else {
         setTimeout(() => {
