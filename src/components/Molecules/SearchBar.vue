@@ -161,6 +161,7 @@ export default {
   white-space: nowrap;
   list-style: none;
   display: flex;
+  margin: 0;
   padding: 5px 0;
 }
 
