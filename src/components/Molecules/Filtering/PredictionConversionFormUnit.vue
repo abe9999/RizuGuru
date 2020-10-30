@@ -160,7 +160,6 @@ export default {
   box-sizing: border-box;
   display: flex;
   flex-wrap: wrap;
-  /* justify-content: space-around; */
 }
 
 .prediction-word {
@@ -184,6 +183,7 @@ export default {
 @media (max-width: 767px) {
   .prediction-word {
     width: 50%;
+    padding: 15px;
   }
 }
 </style>
