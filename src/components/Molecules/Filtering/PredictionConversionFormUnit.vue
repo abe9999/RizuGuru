@@ -72,9 +72,9 @@ export default {
     setInputWord({ value }) {
       this.inputWord = value;
       this.predictionList = [];
-      if (value !== "") {
-        this.api(value).then((res) => {
-          this.predictionList.push(...res.slice(0, 20));
+      if (value.trim().length) {
+        this.api(value.trim()).then((res) => {
+          this.predictionList.push(...res.slice(0, 12));
         });
       }
     },
