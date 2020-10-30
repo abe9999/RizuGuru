@@ -6,28 +6,37 @@
       :icon="itemData.icon"
     />
     <section v-if="selectedWord !== ''" @click="deleteSelectedWord">
-      <p class="selected-word">{{ selectedWord }}<b-icon icon="x" /></p>
+      <p class="selected-word">
+        {{ selectedWord }}<b-icon icon="x" class="icon" />
+      </p>
     </section>
     <section v-if="selectedWord === ''" class="prediction-wrapper">
-      <InputForm
-        :getter="getInputWord"
-        :setter="setInputWord"
-        :debounce="500"
-        :propertyName="itemData.propertyName"
-        :required="itemData.required"
-        :placeholder="itemData.placeholder"
-        :validationSetter="itemData.validationSetter"
-      />
-      <section v-if="predictionList.length">
-        <p class="prediction-information">{{ predictionInformation }}</p>
-        <p
-          class="prediction-word"
-          v-for="predictionWord in predictionList"
-          :key="predictionWord.id"
-          @click="selectSelectedWord(predictionWord)"
-        >
-          {{ predictionWord.name }}
+      <section class="prediction-top-container">
+        <InputForm
+          :getter="getInputWord"
+          :setter="setInputWord"
+          :debounce="500"
+          :propertyName="itemData.propertyName"
+          :required="itemData.required"
+          :placeholder="itemData.placeholder"
+          :validationSetter="itemData.validationSetter"
+        />
+      </section>
+      <section v-if="predictionList.length" class="prediction-bottom-container">
+        <p class="prediction-information">
+          <b-icon icon="info-circle-fill" class="icon" />
+          {{ predictionInformation }}
         </p>
+        <section class="prediction-word-container">
+          <p
+            class="prediction-word"
+            v-for="predictionWord in predictionList"
+            :key="predictionWord.id"
+            @click="selectSelectedWord(predictionWord)"
+          >
+            {{ predictionWord.name }}
+          </p>
+        </section>
       </section>
     </section>
   </section>
@@ -96,9 +105,13 @@ export default {
   margin-bottom: 25px;
 }
 
+.icon {
+  margin: 0 5px;
+}
+
 .selected-word {
   display: inline-block;
-  padding: 5px;
+  padding: 5px 10px;
   margin: 2.5px 20px;
   font-size: 15px;
   cursor: pointer;
@@ -112,22 +125,46 @@ export default {
   text-decoration: line-through;
 }
 
+.prediction-bottom-container {
+  padding: 5px;
+  background-color: #eee;
+  border-radius: 5px;
+}
+
 .prediction-information {
-  margin: 0;
+  margin: 5px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.prediction-word-container {
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  /* justify-content: space-around; */
 }
 
 .prediction-word {
-  display: inline-block;
-  font-size: 15px;
-  padding: 5px;
-  margin: 2.5px 5px;
+  width: 25%;
+  padding: 5px 10px;
+  margin: 2.5px 0;
   cursor: pointer;
-  background-color: #f6f6f6;
-  border-radius: 2.5px;
+  font-size: 15px;
+  text-align: center;
+  background-color: white;
+  border: #eee solid;
 }
 
-.prediction-word:hover {
-  color: white;
-  background-color: gray;
+@media (min-width: 767px) {
+  .prediction-word:hover {
+    color: white;
+    background-color: gray;
+  }
+}
+
+@media (max-width: 767px) {
+  .prediction-word {
+    width: 50%;
+  }
 }
 </style>
