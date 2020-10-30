@@ -125,10 +125,29 @@ export default {
   text-decoration: line-through;
 }
 
+.prediction-wrapper {
+  position: relative;
+}
+
 .prediction-bottom-container {
+  position: absolute;
+  z-index: 100;
+  width: 100%;
   padding: 5px;
   background-color: #eee;
   border-radius: 5px;
+}
+
+/* 吹き出しの三角部分 */
+.prediction-bottom-container:after {
+  position: absolute;
+  content: "";
+  top: -20px;
+  left: 50px;
+  transform: rotate(180deg);
+  border-style: solid;
+  border-color: #eee transparent transparent transparent;
+  border-width: 20px 20px 0 20px;
 }
 
 .prediction-information {
