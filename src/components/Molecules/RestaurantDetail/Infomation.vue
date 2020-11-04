@@ -3,9 +3,21 @@
     <Category category="店舗情報" />
     <hr />
     <table class="info-tbl">
-      <tr v-for="(info, index) in infoList" :key="index">
-        <th>{{ info.title }}</th>
-        <td>{{ info.value }}</td>
+      <tr>
+        <th>住所</th>
+        <td>{{ detail.address }}</td>
+      </tr>
+      <tr>
+        <th>営業時間</th>
+        <td>{{ detail.openingHours }}</td>
+      </tr>
+      <tr>
+        <th>定休日</th>
+        <td>{{ detail.regularHoliday }}</td>
+      </tr>
+      <tr>
+        <th>電話番号</th>
+        <td>{{ detail.phoneNumber }}</td>
       </tr>
     </table>
     <hr />
@@ -18,7 +30,6 @@ import Category from "@/components/Molecules/RestaurantDetail/CategoryName.vue";
 export default {
   props: {
     detail: Object,
-    infoList: Array
   },
   components: {
     Category,

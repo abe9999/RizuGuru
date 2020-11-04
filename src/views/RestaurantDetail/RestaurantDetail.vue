@@ -1,25 +1,25 @@
 <template>
-  <Loading v-if="loading" />
-  <div id="detail" v-else-if="!loading">
+  <Loading v-if="$apollo.loading" />
+  <div id="detail" v-else-if="!$apollo.loading">
     <Carousel />
-    <RestaurantName :detail="detail" />
+    <RestaurantName :detail="restaurantDetail" />
     <b-tabs
       active-nav-item-class="font-weight-bold"
       content-class="mt-3"
       justified
     >
       <b-tab title="店舗情報">
-        <Infomation :detail="detail" :infoList="infoList" />
-        <Link :detail="detail" />
-        <Access :detail="detail" />
-        <Payment :detail="detail" />
-        <Tag :detail="detail" />
+        <Infomation :detail="restaurantDetail" />
+        <Link :detail="restaurantDetail" />
+        <Access :detail="restaurantDetail" />
+        <Payment :detail="restaurantDetail" />
+        <Tag :detail="restaurantDetail" />
       </b-tab>
       <b-tab title="メニュー">
         <MenuList :detail="detail" />
       </b-tab>
       <b-tab title="地図">
-        <Map :detail="detail" />
+        <Map :detail="restaurantDetail" />
       </b-tab>
     </b-tabs>
   </div>
@@ -36,14 +36,17 @@ import Access from "@/components/Molecules/RestaurantDetail/Access.vue";
 import Payment from "@/components/Molecules/RestaurantDetail/Payment.vue";
 import Tag from "@/components/Molecules/RestaurantDetail/Tag.vue";
 import Map from "@/components/Molecules/RestaurantDetail/Map.vue";
-import { getDetail } from "@/plugins/getDetail.js";
+
+import { RestaurantDetailGql as apollo } from "@/views/RestaurantDetail/RestaurantDetailGql.js";
 
 export default {
+  apollo,
   data() {
     return {
       loading: true,
       detail: {},
       infoList: [],
+      restaurantDetail: {},
     };
   },
   components: {
@@ -57,23 +60,6 @@ export default {
     Payment,
     Tag,
     Map,
-  },
-  mounted() {
-    getDetail(this.$route.params.id)
-      .then((res) => {
-        this.detail = res;
-        this.infoList = [
-          { title: "住所", value: this.detail.address },
-          { title: "営業時間", value: this.detail.openingHours },
-          { title: "定休日", value: this.detail.regularHoliday },
-          { title: "電話番号", value: this.detail.phoneNumber },
-        ];
-        this.loading = false;
-      })
-      .catch((err) => {
-        console.error(err);
-        this.$router.push({ name: "NotFound", params: { errorMessage: err } });
-      });
   },
 };
 </script>
