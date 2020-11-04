@@ -16,14 +16,16 @@
       spinner="waveDots"
       @infinite="infiniteHandler"
     >
+      <div slot="no-results" class="no-results">
+        <!-- 検索結果が無かった場合の表示欄 -->
+        <div v-if="restaurantList.length == 0">
+          <img src="@/assets/images/no-results.png" />
+          <p>検索条件に該当する店舗が見つかりませんでした。</p>
+        </div>
+      </div>
       <div slot="no-more">
         <!-- 検索結果の最後の要素に達した場合の表示欄 -->
         <p></p>
-      </div>
-      <div slot="no-results" class="no-results">
-        <!-- 検索結果が無かった場合の表示欄 -->
-        <img src="@/assets/images/no-results.png" />
-        <p>検索条件に該当する店舗が見つかりませんでした。</p>
       </div>
       <div slot="error">
         <!-- 検索結果の最後の要素に達した場合の表示欄 -->

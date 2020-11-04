@@ -39,13 +39,13 @@
               >メニュー追加</router-link
             >
           </b-nav-item>
-          <b-nav-item>
+          <!-- <b-nav-item>
             <router-link
               to="/RestaurantRegistration/RegistrationTest"
               class="nav-link text-light"
               >店舗追加テスト</router-link
             >
-          </b-nav-item>
+          </b-nav-item> -->
           <b-nav-item>
             <router-link to="/ImageRegistration/Registration" class="nav-link text-light"
               >写真追加</router-link
