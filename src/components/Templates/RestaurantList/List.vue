@@ -79,10 +79,9 @@ export default {
   height: 40px;
   position: fixed;
   right: 0;
-  bottom: 10px;
+  bottom: 11%;
   background: #1c7061;
   opacity: 0.6;
-  transition: 1ms;
 }
 #page_top a {
   position: relative;
