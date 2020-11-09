@@ -26,27 +26,21 @@
 </template>
 
 <script>
-/* eslint-disable */
 import Category from "@/components/Molecules/RestaurantDetail/CategoryName.vue";
 import Enumerable from "linq";
-import { getMenu } from "@/plugins/getMenu.js";
 
 export default {
   data() {
     return {
-      menus: [],
       selected: "おすすめ順",
       selectItems: ["おすすめ順", "安い順", "高い順"],
     };
   },
   props: {
-    detail: Object,
+    menuList: Array,
   },
   components: {
     Category,
-  },
-  mounted() {
-    getMenu(this.$route.params.id).then((res) => (this.menus = res));
   },
   methods: {
     doSelect(index) {
@@ -56,15 +50,19 @@ export default {
   computed: {
     sortMenus() {
       if (this.selected == "おすすめ順") {
-        this.menus = Enumerable.from(this.menus).orderBy((x) => x.sortId);
+        return Enumerable.from(this.menuList)
+          .orderBy((x) => x.sortId)
+          .toArray();
       } else if (this.selected == "安い順") {
-        this.menus = Enumerable.from(this.menus).orderBy((x) => x.price);
+        return Enumerable.from(this.menuList)
+          .orderBy((x) => x.price)
+          .toArray();
       } else if (this.selected == "高い順") {
-        this.menus = Enumerable.from(this.menus).orderByDescending(
-          (x) => x.price
-        );
+        return Enumerable.from(this.menuList)
+          .orderByDescending((x) => x.price)
+          .toArray();
       }
-      return this.menus;
+      return null;
     },
   },
 };

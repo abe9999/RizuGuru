@@ -16,7 +16,7 @@
         <Tag :detail="restaurantDetail" />
       </b-tab>
       <b-tab title="メニュー">
-        <MenuList :detail="detail" />
+        <MenuList :menuList="menuList" />
       </b-tab>
       <b-tab title="地図">
         <Map :detail="restaurantDetail" />
@@ -74,6 +74,22 @@ export default {
         };
       },
     },
+    menuList: {
+      query: gql`
+        query($id: ID!) {
+          menuList(id: $id) {
+            name
+            price
+            # sortId
+          }
+        }
+      `,
+      variables() {
+        return {
+          id: this.$route.params.id,
+        };
+      },
+    },
   },
   data() {
     return {
@@ -81,6 +97,7 @@ export default {
       detail: {},
       infoList: [],
       restaurantDetail: {},
+      menuList: {},
     };
   },
   components: {
