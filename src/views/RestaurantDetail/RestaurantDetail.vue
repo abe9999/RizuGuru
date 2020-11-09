@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import gql from "graphql-tag";
 import Loading from "@/components/Atoms/Loading.vue";
 import Carousel from "@/components/Molecules/RestaurantDetail/Carousel.vue";
 import RestaurantName from "@/components/Molecules/RestaurantDetail/RestaurantName.vue";
@@ -37,10 +38,43 @@ import Payment from "@/components/Molecules/RestaurantDetail/Payment.vue";
 import Tag from "@/components/Molecules/RestaurantDetail/Tag.vue";
 import Map from "@/components/Molecules/RestaurantDetail/Map.vue";
 
-import { RestaurantDetailGql as apollo } from "@/views/RestaurantDetail/RestaurantDetailGql.js";
-
 export default {
-  apollo,
+  apollo: {
+    restaurantDetail: {
+      query: gql`
+        query($id: ID!) {
+          restaurantDetail(id: $id) {
+            name
+            address
+            latitude
+            longitude
+            access
+            phoneNumber
+            openingHours
+            regularHoliday
+            paymentMethod
+            link {
+              url
+              linkGenre {
+                path
+              }
+            }
+            restaurantToTag {
+              tag {
+                id
+                tagContent
+              }
+            }
+          }
+        }
+      `,
+      variables() {
+        return {
+          id: this.$route.params.id,
+        };
+      },
+    },
+  },
   data() {
     return {
       loading: true,
