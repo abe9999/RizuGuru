@@ -51,13 +51,7 @@ export default {
       ];
     });
   },
-  mounted() {
-    this.test().then((res) => console.log(res));
-  },
   methods: {
-    async test() {
-      return await (await fetch(`/api/RizuGuruFrontEndAPI`)).json();
-    },
     searchByCurrentLocationBtn() {
       if (!this.currentLocation.lat) {
         // alert("この端末では位置情報が取得できません");
