@@ -14,7 +14,7 @@ import InfiniteLoading from 'vue-infinite-loading';
 import ApolloClient from "apollo-boost";
 import VueApollo from "vue-apollo";
 const apolloClient = new ApolloClient({
-  uri: 'https://func-rizugurugraphqltest.azurewebsites.net/api/RizuGuru?code=kXP47Ptiw8h2Ra2KWVhJThqk15a1l1/RoW1n1G0sp9tb/EFktthdOQ=='
+  uri: 'https://func-rizugurufrontendfunction.azurewebsites.net/api/RizuGuru?code=hj0i58NcjEyaX2bBLtD/8vGg6jpXq0u3gAeMomGJ4q4uCYu9BDaGDw=='
 })
 const apolloProvider = new VueApollo({
   defaultClient: apolloClient
