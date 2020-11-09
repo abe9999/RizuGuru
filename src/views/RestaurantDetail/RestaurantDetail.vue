@@ -80,7 +80,6 @@ export default {
           menuList(id: $id) {
             name
             price
-            # sortId
           }
         }
       `,
