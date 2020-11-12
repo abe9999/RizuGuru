@@ -28,6 +28,11 @@
             >
           </b-nav-item>
           <b-nav-item>
+            <router-link to="/PrivacyPolicy" class="nav-link text-light"
+              >プライバシーポリシー</router-link
+            >
+          </b-nav-item>
+          <b-nav-item>
             <router-link
               to="/RestaurantRegistration/Registration"
               class="nav-link text-light"
@@ -35,7 +40,9 @@
             >
           </b-nav-item>
           <b-nav-item>
-            <router-link to="/MenuRegistration/Registration" class="nav-link text-light"
+            <router-link
+              to="/MenuRegistration/Registration"
+              class="nav-link text-light"
               >メニュー追加</router-link
             >
           </b-nav-item>
@@ -47,7 +54,9 @@
             >
           </b-nav-item> -->
           <b-nav-item>
-            <router-link to="/ImageRegistration/Registration" class="nav-link text-light"
+            <router-link
+              to="/ImageRegistration/Registration"
+              class="nav-link text-light"
               >写真追加</router-link
             >
           </b-nav-item>

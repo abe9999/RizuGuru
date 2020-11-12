@@ -2,7 +2,11 @@
   <header>
     <b-navbar toggleable="lg" type="dark" class="header">
       <b-navbar-brand href="/#/">
-        <img src="@/assets/images/ロゴ.jpg" alt style="width:50px; height:50px;" />
+        <img
+          src="@/assets/images/ロゴ.jpg"
+          alt
+          style="width: 50px; height: 50px"
+        />
       </b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -28,7 +32,14 @@
             <router-link to="/RestaurantList" class="nav-link text-light">現在地から探す</router-link>
           </b-nav-item> -->
           <b-nav-item>
-            <router-link to="/SearchMap" class="nav-link text-light">マップから検索</router-link>
+            <router-link to="/SearchMap" class="nav-link text-light"
+              >マップから検索</router-link
+            >
+          </b-nav-item>
+          <b-nav-item>
+            <router-link to="/PrivacyPolicy" class="nav-link text-light"
+              >プライバシーポリシー</router-link
+            >
           </b-nav-item>
           <!-- <b-nav-item>
             <router-link to="/Login" class="nav-link text-light">ログイン</router-link>

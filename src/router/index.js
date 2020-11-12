@@ -4,6 +4,7 @@ import Home from "../views/Home/Home.vue";
 import About from "../views/Home/About.vue";
 import NotFound from "../views/Home/NotFound.vue";
 import Login from "../views/Home/Login.vue";
+import PrivacyPolicy from "../views/Home/PrivacyPolicy.vue";
 import RestaurantList from "../views/RestaurantList/RestaurantList.vue";
 import Filtering from "../views/RestaurantList/Filtering.vue";
 import RestaurantDetail from "../views/RestaurantDetail/RestaurantDetail.vue";
@@ -38,6 +39,10 @@ const routes = [
   {
     path: "/Login",
     component: Login,
+  },
+  {
+    path: "/PrivacyPolicy",
+    component: PrivacyPolicy,
   },
   {
     name: "RestaurantList",
